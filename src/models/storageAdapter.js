@@ -66,7 +66,11 @@ class StorageAdapter {
 
   // Settings
   getSettings() {
-    return this._get(KEYS.SETTINGS, DEFAULT_SETTINGS);
+    const data = this._get(KEYS.SETTINGS, DEFAULT_SETTINGS);
+    if (!data.gasApiUrl && DEFAULT_SETTINGS.gasApiUrl) {
+      data.gasApiUrl = DEFAULT_SETTINGS.gasApiUrl;
+    }
+    return data;
   }
 
   saveSettings(newSettings) {

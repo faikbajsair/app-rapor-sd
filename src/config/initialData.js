@@ -39,8 +39,8 @@ export const DEFAULT_SETTINGS = {
   licenseStatus: "Active - Enterprise",
   licenseExpiry: "2027-12-31",
   quotaStudents: 500,
-  // Google Apps Script API Webhook URL (Bisa diisi oleh user)
-  gasApiUrl: ""
+  // Google Apps Script API Webhook URL (Sudah terhubung ke Spreadsheet App Rapor SD)
+  gasApiUrl: "https://script.google.com/macros/s/AKfycbwuHHPCXAw_pj3LcMNnxOm2EiELo5VR92OPwUnhvFtKoKfUR4yR26QlheSf75HykCXw/exec"
 };
 
 export const DEFAULT_MAPEL = [
