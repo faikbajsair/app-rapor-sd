@@ -3,11 +3,13 @@ import { ROLES, ROLE_CONFIG } from './config/roles';
 import { storage } from './models/storageAdapter';
 import { gasApi } from './models/gasApi';
 import { CMSController } from './controllers/CMSController';
+import { AuthController } from './controllers/AuthController';
 
 import { Navbar } from './views/components/Navbar';
 import { Sidebar } from './views/components/Sidebar';
 import { RoleSwitcherModal } from './views/components/RoleSwitcherModal';
 
+import { LoginView } from './views/pages/LoginView';
 import { DashboardView } from './views/pages/DashboardView';
 import { NilaiView } from './views/pages/NilaiView';
 import { ABSView } from './views/pages/ABSView';
@@ -29,9 +31,19 @@ export function App() {
   const [presensiList, setPresensiList] = useState(storage.getPresensi());
   const [approval, setApproval] = useState(storage.getApproval());
 
-  // Navigation & User Role State
-  const [currentRole, setCurrentRole] = useState(ROLES.ADMIN);
-  const [activeTab, setActiveTab] = useState('dashboard');
+  // Authentication State
+  const [currentUser, setCurrentUser] = useState(() => AuthController.getSession());
+  const [currentRole, setCurrentRole] = useState(() => {
+    const session = AuthController.getSession();
+    return session ? session.role : ROLES.ADMIN;
+  });
+
+  // Navigation State
+  const [activeTab, setActiveTab] = useState(() => {
+    const session = AuthController.getSession();
+    if (!session) return 'dashboard';
+    return session.role === ROLES.WALI_MURID ? 'portal_ortu' : 'dashboard';
+  });
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
 
   // Cloud GAS Sync State
@@ -51,7 +63,6 @@ export function App() {
       setApproval(storage.getApproval());
     });
 
-    // Apply appearance on start
     CMSController.applyAppearance(settings);
 
     return () => unsubscribe();
@@ -62,7 +73,7 @@ export function App() {
     CMSController.applyAppearance(settings);
   }, [settings]);
 
-  // Check GAS status on mount if URL configured
+  // Check GAS status on mount
   useEffect(() => {
     if (settings.gasApiUrl) {
       gasApi.ping(settings.gasApiUrl).then(res => {
@@ -71,13 +82,50 @@ export function App() {
     }
   }, [settings.gasApiUrl]);
 
-  // Role Selection Handler
+  // Auth Handlers
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+    setCurrentRole(user.role);
+    if (user.role === ROLES.WALI_MURID) {
+      setActiveTab('portal_ortu');
+    } else {
+      const cfg = ROLE_CONFIG[user.role];
+      setActiveTab(cfg?.defaultPath || 'dashboard');
+    }
+  };
+
+  const handleLogout = () => {
+    AuthController.logout();
+    setCurrentUser(null);
+  };
+
+  // Role Selection Handler (For staff simulation)
   const handleSelectRole = (newRole) => {
     setCurrentRole(newRole);
     const targetConfig = ROLE_CONFIG[newRole];
-    if (targetConfig && targetConfig.defaultPath) {
-      setActiveTab(targetConfig.defaultPath);
+    if (targetConfig) {
+      const updatedUser = {
+        ...currentUser,
+        role: newRole,
+        roleLabel: targetConfig.label,
+        nama: targetConfig.nama || currentUser?.nama,
+        avatar: targetConfig.avatar
+      };
+      setCurrentUser(updatedUser);
+      AuthController.setSession(updatedUser);
+      if (targetConfig.defaultPath) {
+        setActiveTab(targetConfig.defaultPath);
+      }
     }
+  };
+
+  // Academic Period Handlers
+  const handleChangeTahunAjaran = (newTahun) => {
+    handleSaveSettings({ tahunAjaran: newTahun });
+  };
+
+  const handleChangeSemester = (newSemester) => {
+    handleSaveSettings({ semester: newSemester });
   };
 
   // Model Mutation Handlers
@@ -182,18 +230,35 @@ export function App() {
     window.print();
   };
 
+  // If NOT Logged In: Show Modern Login Page
+  if (!currentUser) {
+    return (
+      <LoginView
+        settings={settings}
+        siswaList={siswaList}
+        onLoginSuccess={handleLoginSuccess}
+      />
+    );
+  }
+
+  const isParent = currentRole === ROLES.WALI_MURID;
+
   return (
-    <div className="min-h-screen bg-[#F8FAF9] flex flex-col selection:bg-pastel-300 selection:text-pastel-950">
+    <div className="min-h-screen bg-[#F8FAF9] flex flex-col selection:bg-pastel-300 selection:text-pastel-950 font-sans">
       
       {/* Top Navbar */}
       <Navbar
         settings={settings}
+        currentUser={currentUser}
         currentRole={currentRole}
         onOpenRoleModal={() => setIsRoleModalOpen(true)}
         onSyncGas={handleSyncAllToGAS}
         isSyncing={isSyncing}
         gasConnected={gasConnected}
         onQuickPrint={handleQuickPrint}
+        onChangeTahunAjaran={handleChangeTahunAjaran}
+        onChangeSemester={handleChangeSemester}
+        onLogout={handleLogout}
       />
 
       {/* Main Workspace with Sidebar & View Container */}
@@ -282,11 +347,14 @@ export function App() {
               presensiList={presensiList}
               settings={settings}
               approval={approval}
+              currentRole={currentRole}
+              currentUser={currentUser}
             />
           )}
 
           {activeTab === 'portal_ortu' && (
             <WaliMuridView
+              currentUser={currentUser}
               siswaList={siswaList}
               mapelList={mapelList}
               nilaiList={nilaiList}
@@ -312,13 +380,15 @@ export function App() {
         </main>
       </div>
 
-      {/* Role Switcher Modal */}
-      <RoleSwitcherModal
-        isOpen={isRoleModalOpen}
-        onClose={() => setIsRoleModalOpen(false)}
-        currentRole={currentRole}
-        onSelectRole={handleSelectRole}
-      />
+      {/* Role Switcher Modal for Civitas */}
+      {!isParent && (
+        <RoleSwitcherModal
+          isOpen={isRoleModalOpen}
+          onClose={() => setIsRoleModalOpen(false)}
+          currentRole={currentRole}
+          onSelectRole={handleSelectRole}
+        />
+      )}
 
     </div>
   );

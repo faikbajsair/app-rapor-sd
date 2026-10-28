@@ -21,14 +21,22 @@ export function RaporPrintView({
   sikapList, 
   presensiList, 
   settings, 
-  approval 
+  approval,
+  currentRole,
+  currentUser
 }) {
-  const [selectedSiswaId, setSelectedSiswaId] = useState(siswaList[0]?.id || 'S01');
-  const [documentType, setDocumentType] = useState('rapor_akhir'); // 'rapor_akhir', 'rapor_pts', 'cover', 'buku_induk'
+  const isParent = currentRole === 'wali_murid';
+  const parentChildId = currentUser?.siswaId || siswaList[0]?.id;
+
+  const [selectedSiswaId, setSelectedSiswaId] = useState(isParent ? parentChildId : (siswaList[0]?.id || 'S01'));
+  const [documentType, setDocumentType] = useState(settings?.semester?.toLowerCase().includes('tengah') ? 'rapor_pts' : 'rapor_akhir');
   const [isBulkPrint, setIsBulkPrint] = useState(false);
 
-  const activeSiswa = siswaList.find(s => s.id === selectedSiswaId) || siswaList[0];
-  const studentsToRender = isBulkPrint ? siswaList : [activeSiswa];
+  const activeSiswa = isParent 
+    ? (siswaList.find(s => s.id === parentChildId) || siswaList[0])
+    : (siswaList.find(s => s.id === selectedSiswaId) || siswaList[0]);
+
+  const studentsToRender = (isBulkPrint && !isParent) ? siswaList : [activeSiswa];
 
   const handlePrint = () => {
     window.print();
@@ -55,16 +63,18 @@ export function RaporPrintView({
           </div>
 
           <div className="flex items-center space-x-2.5">
-            <button
-              onClick={() => setIsBulkPrint(!isBulkPrint)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold border transition-all ${
-                isBulkPrint 
-                  ? 'bg-pastel-300 text-pastel-950 border-pastel-400 shadow-2xs' 
-                  : 'bg-pastel-50 text-slate-700 border-pastel-200 hover:bg-pastel-100'
-              }`}
-            >
-              {isBulkPrint ? '✓ Mode Cetak Massal (Semua Siswa)' : 'Cetak Siswa Terpilih'}
-            </button>
+            {!isParent && (
+              <button
+                onClick={() => setIsBulkPrint(!isBulkPrint)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold border transition-all ${
+                  isBulkPrint 
+                    ? 'bg-pastel-300 text-pastel-950 border-pastel-400 shadow-2xs' 
+                    : 'bg-pastel-50 text-slate-700 border-pastel-200 hover:bg-pastel-100'
+                }`}
+              >
+                {isBulkPrint ? '✓ Mode Cetak Massal (Semua Siswa)' : 'Cetak Siswa Terpilih'}
+              </button>
+            )}
 
             <button
               onClick={handlePrint}
@@ -118,20 +128,29 @@ export function RaporPrintView({
             </div>
           </div>
 
-          {/* Student Picker (If not bulk) */}
-          {!isBulkPrint && (
+          {/* Student Picker (Locked for parent, selectable for staff) */}
+          {isParent ? (
             <div className="flex items-center space-x-2">
-              <span className="font-semibold text-slate-500">Pilih Siswa:</span>
-              <select
-                value={selectedSiswaId}
-                onChange={(e) => setSelectedSiswaId(e.target.value)}
-                className="py-1.5 px-3 rounded-xl border border-slate-200 font-bold text-slate-800 bg-pastel-50/60"
-              >
-                {siswaList.map(s => (
-                  <option key={s.id} value={s.id}>{s.nama} ({s.nisn})</option>
-                ))}
-              </select>
+              <span className="font-semibold text-slate-500">Data Rapor Ananda:</span>
+              <span className="px-3 py-1 rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-200 font-extrabold">
+                {activeSiswa.nama} ({activeSiswa.nisn})
+              </span>
             </div>
+          ) : (
+            !isBulkPrint && (
+              <div className="flex items-center space-x-2">
+                <span className="font-semibold text-slate-500">Pilih Siswa:</span>
+                <select
+                  value={selectedSiswaId}
+                  onChange={(e) => setSelectedSiswaId(e.target.value)}
+                  className="py-1.5 px-3 rounded-xl border border-slate-200 font-bold text-slate-800 bg-pastel-50/60"
+                >
+                  {siswaList.map(s => (
+                    <option key={s.id} value={s.id}>{s.nama} ({s.nisn})</option>
+                  ))}
+                </select>
+              </div>
+            )
           )}
 
         </div>

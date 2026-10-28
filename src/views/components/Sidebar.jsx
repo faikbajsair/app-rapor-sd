@@ -61,17 +61,17 @@ export function Sidebar({ activeTab, setActiveTab, currentRole, settings }) {
     },
     {
       id: 'rapor',
-      label: 'Cetak Rapor Digital',
+      label: currentRole === ROLES.WALI_MURID ? 'Unduh Rapor Digital' : 'Cetak Rapor Digital',
       icon: Printer,
-      roles: [ROLES.ADMIN, ROLES.KEPSEK, ROLES.WALI_KELAS],
-      badge: 'PDF / A4'
+      roles: [ROLES.ADMIN, ROLES.KEPSEK, ROLES.WALI_KELAS, ROLES.WALI_MURID],
+      badge: 'PDF A4'
     },
     {
       id: 'portal_ortu',
-      label: 'Portal Wali Murid',
+      label: currentRole === ROLES.WALI_MURID ? 'Perkembangan Ananda' : 'Portal Wali Murid',
       icon: Users,
-      roles: [ROLES.ADMIN, ROLES.WALI_MURID, ROLES.WALI_KELAS],
-      badge: 'Parent Portal'
+      roles: [ROLES.ADMIN, ROLES.WALI_MURID],
+      badge: 'Khusus Ortu'
     },
     {
       id: 'cms',

@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   Users, 
   Award, 
   BookOpen, 
   CalendarCheck, 
   Printer, 
-  Download, 
   Heart, 
   Sparkles, 
-  TrendingUp,
   FileText,
-  Star,
+  Lock,
+  ShieldCheck,
   CheckCircle,
-  Clock
+  Home,
+  UserCheck
 } from 'lucide-react';
 import { NilaiController } from '../../controllers/NilaiController';
 import { SikapController } from '../../controllers/SikapController';
 
 export function WaliMuridView({ 
+  currentUser,
   siswaList, 
   mapelList, 
   nilaiList, 
@@ -26,9 +27,10 @@ export function WaliMuridView({
   settings, 
   onNavigateToPrint 
 }) {
-  const [selectedChildId, setSelectedChildId] = useState(siswaList[0]?.id || 'S01');
+  // STRICT PRIVACY: Hanya ambil siswa yang terafiliasi dengan akun wali murid ini!
+  const targetStudentId = currentUser?.siswaId || siswaList[0]?.id;
+  const child = siswaList.find(s => s.id === targetStudentId) || siswaList[0];
 
-  const child = siswaList.find(s => s.id === selectedChildId) || siswaList[0];
   const studentNilai = nilaiList.filter(n => n.siswaId === child.id);
   const studentSikap = sikapList.find(s => s.siswaId === child.id) || {
     berimanBertakwa: 'Sangat Baik',
@@ -50,7 +52,7 @@ export function WaliMuridView({
   let countScore = 0;
   mapelList.forEach(m => {
     const rec = studentNilai.find(n => n.mapelId === m.id);
-    const score = rec ? NilaiController.hitungNilaiAkhir(rec, settings) : 82;
+    const score = rec ? NilaiController.hitungNilaiAkhir(rec, settings) : 84;
     if (score > 0) {
       totalScore += score;
       countScore++;
@@ -70,27 +72,27 @@ export function WaliMuridView({
           <img 
             src={child.foto} 
             alt={child.nama} 
-            className="w-16 h-16 rounded-2xl object-cover border-2 border-white shadow-xs"
+            className="w-16 h-16 rounded-2xl object-cover border-2 border-white shadow-xs shrink-0"
           />
           <div>
-            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-pastel-200 text-pastel-900 text-[10px] font-bold border border-pastel-300 mb-1">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-pastel-200 text-pastel-950 text-[10px] font-bold border border-pastel-300 mb-1 whitespace-nowrap">
               <Users className="w-3 h-3 text-pastel-700" />
-              <span>Portal Wali Murid & Orang Tua</span>
+              <span>Portal Wali Murid • Akses Privat Ananda</span>
             </div>
-            <h2 className="text-xl font-extrabold text-slate-800 tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight">
               {child.nama}
             </h2>
-            <p className="text-xs text-slate-500">
-              NISN: {child.nisn} • {settings.rombel} • Wali Kelas: {settings.waliKelas}
+            <p className="text-xs text-slate-600 font-medium">
+              NISN: <span className="font-bold text-slate-800">{child.nisn}</span> • NIS: {child.nis} • {settings.rombel}
             </p>
           </div>
         </div>
 
         {/* Action Button: Print / Download Report Card */}
-        <div className="flex items-center space-x-2.5">
+        <div className="flex items-center space-x-2.5 shrink-0">
           <button
             onClick={() => onNavigateToPrint(child.id)}
-            className="px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs flex items-center space-x-2"
+            className="px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs flex items-center space-x-2 whitespace-nowrap"
           >
             <Printer className="w-4 h-4 text-emerald-200" />
             <span>Lihat & Unduh Rapor Digital PDF</span>
@@ -98,23 +100,15 @@ export function WaliMuridView({
         </div>
       </div>
 
-      {/* Switch Child (If multi-student) */}
-      <div className="bg-white p-3.5 rounded-2xl border border-pastel-200 shadow-2xs flex items-center justify-between text-xs">
-        <span className="font-semibold text-slate-600">Pilih Data Ananda (Simulasi Wali Murid):</span>
-        <div className="flex items-center space-x-2">
-          {siswaList.map(s => (
-            <button
-              key={s.id}
-              onClick={() => setSelectedChildId(s.id)}
-              className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
-                selectedChildId === s.id
-                  ? 'bg-pastel-300 text-pastel-950 border border-pastel-400 shadow-2xs'
-                  : 'bg-slate-50 text-slate-600 hover:bg-pastel-50'
-              }`}
-            >
-              {s.nama.split(' ')[0]}
-            </button>
-          ))}
+      {/* Security & Identity Banner (NO OTHER STUDENTS EXPOSED) */}
+      <div className="p-3.5 px-4 rounded-2xl bg-white border border-pastel-200 shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="flex items-center space-x-2 text-slate-600">
+          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+          <span>Akun Terverifikasi Orang Tua: <strong className="text-slate-800">{child.namaAyah} / {child.namaIbu}</strong></span>
+        </div>
+        <div className="flex items-center space-x-2 text-[11px] text-emerald-800 font-semibold bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200">
+          <Lock className="w-3 h-3 text-emerald-600" />
+          <span>Hanya Data Ananda Yang Ditampilkan (Isolasi Data Terlindungi)</span>
         </div>
       </div>
 
@@ -129,7 +123,7 @@ export function WaliMuridView({
           <div className="text-3xl font-extrabold text-slate-800 mt-2">
             {rataRataAnak}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">
+          <p className="text-[11px] text-slate-500 mt-1 whitespace-nowrap">
             Predikat: <strong className="text-emerald-700">{overallPred.status} ({overallPred.label})</strong>
           </p>
         </div>
@@ -142,8 +136,8 @@ export function WaliMuridView({
           <div className="text-3xl font-extrabold text-emerald-950 mt-2">
             {100 - (studentPresensi.sakit + studentPresensi.izin + studentPresensi.alpa)}%
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            S: {studentPresensi.sakit} • I: {studentPresensi.izin} • A: {studentPresensi.alpa}
+          <p className="text-[11px] text-slate-500 mt-1 whitespace-nowrap">
+            Sakit: {studentPresensi.sakit} • Izin: {studentPresensi.izin} • Alpa: {studentPresensi.alpa}
           </p>
         </div>
 
@@ -155,7 +149,7 @@ export function WaliMuridView({
           <div className="text-2xl font-extrabold text-teal-950 mt-2">
             {studentSikap.berimanBertakwa || 'Sangat Baik'}
           </div>
-          <p className="text-[11px] text-teal-700 mt-1">
+          <p className="text-[11px] text-teal-700 mt-1 whitespace-nowrap">
             Karakter Beriman & Mandiri Unggul
           </p>
         </div>
@@ -168,8 +162,8 @@ export function WaliMuridView({
           <div className="text-2xl font-extrabold text-amber-950 mt-2">
             {(studentPresensi.prestasi || []).length + (studentPresensi.ekstrakurikuler || []).length} Kegiatan
           </div>
-          <p className="text-[11px] text-amber-800 mt-1">
-            Aktif & Berprestasi
+          <p className="text-[11px] text-amber-800 mt-1 whitespace-nowrap">
+            Aktif & Berprestasi Positif
           </p>
         </div>
 
@@ -185,7 +179,7 @@ export function WaliMuridView({
               <BookOpen className="w-4 h-4 text-pastel-700" />
               <span>Rincian Hasil Belajar Per Mata Pelajaran</span>
             </h3>
-            <span className="text-xs text-slate-400">Semester {settings.semester}</span>
+            <span className="text-xs text-slate-400 font-semibold">{settings.semester}</span>
           </div>
 
           <div className="space-y-3">
@@ -195,11 +189,11 @@ export function WaliMuridView({
               const pred = NilaiController.getPredikat(score, m.kkm);
 
               return (
-                <div key={m.id} className="p-3.5 rounded-2xl bg-pastel-50/30 border border-pastel-200/80 space-y-2">
+                <div key={m.id} className="p-3.5 rounded-2xl bg-pastel-50/40 border border-pastel-200/80 space-y-2">
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xs font-bold text-slate-800">{m.nama}</span>
-                      <span className="text-[10px] text-slate-400 ml-2">Guru: {m.guru}</span>
+                      <span className="text-[10px] text-slate-400 ml-2">Pengampu: {m.guru}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <span className="text-xs font-extrabold text-slate-800">{score}</span>
@@ -233,7 +227,7 @@ export function WaliMuridView({
           <div className="bg-gradient-to-br from-pastel-100/90 to-white rounded-3xl p-6 border border-pastel-300 shadow-soft space-y-3">
             <h3 className="text-sm font-bold text-slate-800 flex items-center space-x-2">
               <Heart className="w-4 h-4 text-rose-500" />
-              <span>Perkembangan Karakter & Akhlak</span>
+              <span>Perkembangan Karakter & Profil Pancasila</span>
             </h3>
             <p className="text-xs text-slate-700 leading-relaxed font-serif italic bg-white p-4 rounded-2xl border border-pastel-200 shadow-2xs">
               "{narasiSikap}"
@@ -244,13 +238,13 @@ export function WaliMuridView({
           <div className="bg-white rounded-3xl p-6 border border-pastel-200 shadow-2xs space-y-3">
             <h3 className="text-sm font-bold text-slate-800 flex items-center space-x-2">
               <FileText className="w-4 h-4 text-emerald-600" />
-              <span>Pesan Wali Kelas untuk Ananda</span>
+              <span>Pesan & Catatan Wali Kelas</span>
             </h3>
             <div className="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-200 text-xs text-emerald-950 italic leading-relaxed">
               "{studentPresensi.catatanWaliKelas || 'Pertahankan semangat belajar dan hafalan Al-Qur\'an ananda tercinta.'}"
             </div>
             <div className="text-right text-[11px] text-slate-500 font-medium">
-              — {settings.waliKelas}
+              — {settings.waliKelas} (Wali Kelas)
             </div>
           </div>
 
@@ -258,7 +252,7 @@ export function WaliMuridView({
           <div className="bg-white rounded-3xl p-6 border border-pastel-200 shadow-2xs space-y-3">
             <h3 className="text-sm font-bold text-slate-800 flex items-center space-x-2">
               <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>Ekstrakurikuler & Prestasi</span>
+              <span>Ekstrakurikuler & Prestasi Ananda</span>
             </h3>
 
             <div className="space-y-2">
