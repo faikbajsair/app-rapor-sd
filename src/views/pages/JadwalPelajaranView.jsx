@@ -1214,7 +1214,7 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
                       PILIH MATA PELAJARAN / GURU BIDANG STUDY:
                     </span>
                     <span className="text-xs font-bold text-slate-700">
-                      Terdapat 6 Lembar Jadwal Resmi Guru Bidang Study T.P 2026/2027
+                      Terdapat {JADWAL_GURU_BIDANG_STUDY.length} Lembar Jadwal Resmi Guru Bidang Study T.P 2026/2027
                     </span>
                   </div>
 
@@ -1253,7 +1253,7 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
                         : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
                     }`}
                   >
-                    Semua Bidang Study (6 Guru)
+                    Semua Bidang Study ({JADWAL_GURU_BIDANG_STUDY.length} Mapel)
                   </button>
                   {JADWAL_GURU_BIDANG_STUDY.map((item) => (
                     <button

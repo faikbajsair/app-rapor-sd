@@ -790,28 +790,28 @@ export const JADWAL_GURU_BIDANG_STUDY = [
     guru: "Muhammad Raihan, S.Pd",
     jpPerPekan: 12,
     grid: {
-      SENIN: { 2: "3 MALIK / 3 ZUHAIR", 3: "3 MALIK / 3 ZUHAIR", 4: "2 WAQQAS / 2 ZAID", 5: "2 WAQQAS / 2 ZAID" },
-      SELASA: { 2: "6 UMAR / 6 HAFSHAH", 3: "6 UMAR / 6 HAFSHAH" },
-      RABU: { 2: "4 ALI / 4 SUMAYYAH", 3: "4 ALI / 4 SUMAYYAH" },
-      KAMIS: { 2: "1 UMAR / 1 ABBAS", 3: "1 UMAR / 1 ABBAS" },
-      JUMAT: { 2: "5 UTSMAN / 5 RUMAYSHA", 3: "5 UTSMAN / 5 RUMAYSHA" }
+      SENIN: { 2: "KELAS 3", 3: "KELAS 3", 4: "KELAS 2", 5: "KELAS 2" },
+      SELASA: { 2: "KELAS 6", 3: "KELAS 6" },
+      RABU: { 2: "KELAS 4", 3: "KELAS 4" },
+      KAMIS: { 4: "KELAS 1", 5: "KELAS 1" },
+      JUMAT: { 2: "KELAS 5", 3: "KELAS 5" }
     },
     jadwal: {
       SENIN: [
-        { jam: "07.30 - 08.30", kelas: "3 ZUHAIR & 3 MALIK", sesi: "Jam Ke-2 & 3" },
-        { jam: "08.30 - 09.30", kelas: "2 WAQQAS & 2 ZAID", sesi: "Jam Ke-4 & 5" }
+        { jam: "07.30 - 08.30", kelas: "KELAS 3 (Zuhair & Malik)", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "KELAS 2 (Waqqas & Zaid)", sesi: "Jam Ke-4 & 5" }
       ],
       SELASA: [
-        { jam: "07.30 - 08.30", kelas: "6 UMAR & 6 HAFSHAH", sesi: "Jam Ke-2 & 3" }
+        { jam: "07.30 - 08.30", kelas: "KELAS 6 (Umar & Hafshah)", sesi: "Jam Ke-2 & 3" }
       ],
       RABU: [
-        { jam: "07.30 - 08.30", kelas: "4 ALI & 4 SUMAYYAH", sesi: "Jam Ke-2 & 3" }
+        { jam: "07.30 - 08.30", kelas: "KELAS 4 (Ali & Sumayyah)", sesi: "Jam Ke-2 & 3" }
       ],
       KAMIS: [
-        { jam: "07.30 - 08.30", kelas: "1 UMAR & 1 ABBAS", sesi: "Jam Ke-2 & 3" }
+        { jam: "08.30 - 09.30", kelas: "KELAS 1 (Umar & Abbas)", sesi: "Jam Ke-4 & 5" }
       ],
       JUMAT: [
-        { jam: "07.30 - 08.30", kelas: "5 UTSMAN & 5 RUMAYSHA", sesi: "Jam Ke-2 & 3" }
+        { jam: "07.30 - 08.30", kelas: "KELAS 5 (Utsman & Rumaysha)", sesi: "Jam Ke-2 & 3" }
       ]
     }
   },
@@ -823,7 +823,7 @@ export const JADWAL_GURU_BIDANG_STUDY = [
     grid: {
       SENIN: { 2: "4 ALI", 3: "4 ALI", 4: "3 ZUHAIR", 5: "3 ZUHAIR", 12: "3 MALIK", 13: "3 MALIK", 14: "4 SUMAYYAH", 15: "4 SUMAYYAH" },
       SELASA: {},
-      RABU: { 2: "5 UTSMAN", 3: "5 UTSMAN", 8: "1 ABBAS", 9: "1 ABBAS", 12: "1 UMAR", 13: "1 UMAR", 14: "5 RUMAYSHA", 15: "5 RUMAYSHA" },
+      RABU: { 2: "5 USMAN", 3: "5 USMAN", 8: "1 ABAS", 9: "1 ABAS", 12: "1 UMAR", 13: "1 UMAR", 14: "5 RUMAYSHA", 15: "5 RUMAYSHA" },
       KAMIS: { 4: "2 ZAID", 5: "2 ZAID", 12: "2 WAQQAS", 13: "2 WAQQAS" },
       JUMAT: { 2: "6 HAFSHAH", 3: "6 HAFSHAH", 8: "6 UMAR", 9: "6 UMAR" }
     },
@@ -836,8 +836,8 @@ export const JADWAL_GURU_BIDANG_STUDY = [
       ],
       SELASA: [],
       RABU: [
-        { jam: "07.30 - 08.30", kelas: "5 UTSMAN", sesi: "Jam Ke-2 & 3" },
-        { jam: "10.30 - 11.30", kelas: "1 ABBAS", sesi: "Jam Ke-8 & 9" },
+        { jam: "07.30 - 08.30", kelas: "5 USMAN", sesi: "Jam Ke-2 & 3" },
+        { jam: "10.30 - 11.30", kelas: "1 ABAS", sesi: "Jam Ke-8 & 9" },
         { jam: "13.00 - 14.00", kelas: "1 UMAR", sesi: "Jam Ke-12 & 13" },
         { jam: "14.00 - 15.00", kelas: "5 RUMAYSHA", sesi: "Jam Ke-14 & 15" }
       ],
@@ -849,6 +849,110 @@ export const JADWAL_GURU_BIDANG_STUDY = [
         { jam: "07.30 - 08.30", kelas: "6 HAFSHAH", sesi: "Jam Ke-2 & 3" },
         { jam: "10.30 - 11.30", kelas: "6 UMAR", sesi: "Jam Ke-8 & 9" }
       ]
+    }
+  },
+  {
+    id: "MATH_BAWAH",
+    mapel: "MATHEMATICS 1-2-3",
+    guru: "Wiji Atikasari, S.Pd",
+    jpPerPekan: 24,
+    grid: {
+      SENIN: { 4: "1 UMAR", 5: "1 UMAR", 8: "1 ABAS", 9: "1 ABAS", 12: "3 ZUHAIR", 13: "3 ZUHAIR" },
+      SELASA: { 2: "3 ZUHAIR", 3: "3 ZUHAIR", 4: "2 WAQQAS", 5: "2 WAQQAS", 8: "2 ZAID", 9: "2 ZAID", 12: "3 MALIK", 13: "3 MALIK" },
+      RABU: { 2: "3 MALIK", 3: "3 MALIK", 4: "1 UMAR", 5: "1 UMAR", 12: "1 ABAS", 13: "1 ABAS" },
+      KAMIS: { 4: "2 WAQQAS", 5: "2 WAQQAS", 8: "2 ZAID", 9: "2 ZAID" },
+      JUMAT: {}
+    },
+    jadwal: {
+      SENIN: [
+        { jam: "08.30 - 09.30", kelas: "1 UMAR", sesi: "Jam Ke-4 & 5" },
+        { jam: "10.30 - 11.30", kelas: "1 ABBAS", sesi: "Jam Ke-8 & 9" },
+        { jam: "13.00 - 14.00", kelas: "3 ZUHAIR", sesi: "Jam Ke-12 & 13" }
+      ],
+      SELASA: [
+        { jam: "07.30 - 08.30", kelas: "3 ZUHAIR", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "2 WAQQAS", sesi: "Jam Ke-4 & 5" },
+        { jam: "10.30 - 11.30", kelas: "2 ZAID", sesi: "Jam Ke-8 & 9" },
+        { jam: "13.00 - 14.00", kelas: "3 MALIK", sesi: "Jam Ke-12 & 13" }
+      ],
+      RABU: [
+        { jam: "07.30 - 08.30", kelas: "3 MALIK", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "1 UMAR", sesi: "Jam Ke-4 & 5" },
+        { jam: "13.00 - 14.00", kelas: "1 ABBAS", sesi: "Jam Ke-12 & 13" }
+      ],
+      KAMIS: [
+        { jam: "08.30 - 09.30", kelas: "2 WAQQAS", sesi: "Jam Ke-4 & 5" },
+        { jam: "10.30 - 11.30", kelas: "2 ZAID", sesi: "Jam Ke-8 & 9" }
+      ],
+      JUMAT: []
+    }
+  },
+  {
+    id: "MATH_ATAS",
+    mapel: "MATHEMATICS 4-5-6",
+    guru: "Feby Dwitri Putri, S.Pd",
+    jpPerPekan: 24,
+    grid: {
+      SENIN: { 2: "4 SUMAYYAH", 3: "4 SUMAYYAH", 4: "4 ALI", 5: "4 ALI", 8: "5 RUMAYSHA", 9: "5 RUMAYSHA", 12: "5 USMAN", 13: "5 USMAN" },
+      SELASA: { 2: "4 SUMAYYAH", 3: "4 SUMAYYAH", 8: "5 RUMAYSHA", 9: "5 RUMAYSHA", 12: "5 USMAN", 13: "5 USMAN", 14: "4 ALI", 15: "4 ALI" },
+      RABU: { 12: "6 UMAR", 13: "6 UMAR", 14: "6 HAFSHAH", 15: "6 HAFSHAH" },
+      KAMIS: { 8: "6 HAFSHAH", 9: "6 HAFSHAH", 14: "6 UMAR", 15: "6 UMAR" },
+      JUMAT: {}
+    },
+    jadwal: {
+      SENIN: [
+        { jam: "07.30 - 08.30", kelas: "4 SUMAYYAH", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "4 ALI", sesi: "Jam Ke-4 & 5" },
+        { jam: "10.30 - 11.30", kelas: "5 RUMAYSHA", sesi: "Jam Ke-8 & 9" },
+        { jam: "13.00 - 14.00", kelas: "5 USMAN", sesi: "Jam Ke-12 & 13" }
+      ],
+      SELASA: [
+        { jam: "07.30 - 08.30", kelas: "4 SUMAYYAH", sesi: "Jam Ke-2 & 3" },
+        { jam: "10.30 - 11.30", kelas: "5 RUMAYSHA", sesi: "Jam Ke-8 & 9" },
+        { jam: "13.00 - 14.00", kelas: "5 USMAN", sesi: "Jam Ke-12 & 13" },
+        { jam: "14.00 - 15.00", kelas: "4 ALI", sesi: "Jam Ke-14 & 15" }
+      ],
+      RABU: [
+        { jam: "13.00 - 14.00", kelas: "6 UMAR", sesi: "Jam Ke-12 & 13" },
+        { jam: "14.00 - 15.00", kelas: "6 HAFSHAH", sesi: "Jam Ke-14 & 15" }
+      ],
+      KAMIS: [
+        { jam: "10.30 - 11.30", kelas: "6 HAFSHAH", sesi: "Jam Ke-8 & 9" },
+        { jam: "14.00 - 15.00", kelas: "6 UMAR", sesi: "Jam Ke-14 & 15" }
+      ],
+      JUMAT: []
+    }
+  },
+  {
+    id: "BS",
+    mapel: "BAHASA SUNDA",
+    guru: "Guru Muatan Lokal Bahasa Daerah",
+    jpPerPekan: 9,
+    grid: {
+      SENIN: { 14: "6 UMAR", 15: "6 HAFSHAH" },
+      SELASA: { 14: "5 RUMAYSHA", 15: "5 UTSMAN" },
+      RABU: { 14: "4 SUMAYYAH", 15: "4 ALI" },
+      KAMIS: { 2: "3 ZUHAIR", 3: "3 MALIK" },
+      JUMAT: {}
+    },
+    jadwal: {
+      SENIN: [
+        { jam: "14.00 - 14.30", kelas: "6 UMAR", sesi: "Jam Ke-14" },
+        { jam: "14.30 - 15.00", kelas: "6 HAFSHAH", sesi: "Jam Ke-15" }
+      ],
+      SELASA: [
+        { jam: "14.00 - 14.30", kelas: "5 RUMAYSHA", sesi: "Jam Ke-14" },
+        { jam: "14.30 - 15.00", kelas: "5 UTSMAN", sesi: "Jam Ke-15" }
+      ],
+      RABU: [
+        { jam: "14.00 - 14.30", kelas: "4 SUMAYYAH", sesi: "Jam Ke-14" },
+        { jam: "14.30 - 15.00", kelas: "4 ALI", sesi: "Jam Ke-15" }
+      ],
+      KAMIS: [
+        { jam: "07.30 - 08.00", kelas: "3 ZUHAIR", sesi: "Jam Ke-2" },
+        { jam: "08.00 - 08.30", kelas: "3 MALIK", sesi: "Jam Ke-3" }
+      ],
+      JUMAT: []
     }
   }
 ];

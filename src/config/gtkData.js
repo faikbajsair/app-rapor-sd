@@ -136,16 +136,16 @@ export const INITIAL_GTK_LIST = [
     usia: "29 Tahun 8 Bulan",
     pendidikan: "S1",
     statusJabatan: "Guru Tetap",
-    jabatan: "Guru Mapel Matematika",
+    jabatan: "Guru Mapel Mathematics (Kelas 4-5-6)",
     jabatanLainnya: "",
     role: ROLES.GURU_MAPEL,
     email: "feby.dwitri@alimamischool.com",
     password: "admin",
     avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80",
-    kelasDiampu: ["Kelas 1-A", "Kelas 1-B", "Kelas 2-A", "Kelas 2-B", "Kelas 3-A", "Kelas 3-B", "Kelas 4-A", "Kelas 4-B"],
-    mapelDiampu: ["MAT"],
+    kelasDiampu: ["4 Ali", "4 Sumayyah", "5 Utsman", "5 Rumaysha", "6 Umar", "6 Hafshah"],
+    mapelDiampu: ["Math", "MTK"],
     kholaqohDiampu: [],
-    badge: "Guru Matematika (Fase A-B)"
+    badge: "Guru Mathematics 4-5-6 (24 JP)"
   },
   {
     id: "GTK_06",
@@ -158,16 +158,16 @@ export const INITIAL_GTK_LIST = [
     usia: "42 Tahun 0 Bulan",
     pendidikan: "S1",
     statusJabatan: "Guru Tetap",
-    jabatan: "Guru Mapel Matematika",
+    jabatan: "Guru Mapel Mathematics (Kelas 1-2-3)",
     jabatanLainnya: "Waka Kesiswaan",
     role: ROLES.GURU_MAPEL,
     email: "wiji.atikasari@alimamischool.com",
     password: "admin",
     avatar: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=150&auto=format&fit=crop&q=80",
-    kelasDiampu: ["Kelas 5-A", "Kelas 5-B", "Kelas 6-A", "Kelas 6-B"],
-    mapelDiampu: ["MAT"],
+    kelasDiampu: ["1 Umar", "1 Abbas", "2 Waqqash", "2 Zaid", "3 Zuhair", "3 Malik"],
+    mapelDiampu: ["Math", "MTK"],
     kholaqohDiampu: [],
-    badge: "Guru Math & Waka Kesiswaan"
+    badge: "Guru Math 1-2-3 & Waka Kesiswaan (24 JP)"
   },
   {
     id: "GTK_07",
