@@ -20,14 +20,16 @@ import {
   Flame,
   BookCheck,
   CalendarDays,
-  Shirt
+  Shirt,
+  Info
 } from 'lucide-react';
 import { 
   SEKOLAH_IDENTITAS, 
   MAPEL_KODE, 
   STRUKTUR_KURIKULUM, 
   TOTAL_JP_SEMESTER, 
-  JAM_PELAJARAN_RESMI, 
+  JAM_PELAJARAN_KELAS_BAWAH,
+  JAM_PELAJARAN_KELAS_ATAS, 
   DAFTAR_KELAS, 
   JADWAL_GABUNGAN,
   SESI_KELAS_BAWAH,
@@ -76,6 +78,8 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
     if (!kode) return '-';
     return MAPEL_KODE[kode]?.namaSingkat || MAPEL_KODE[kode]?.nama || kode;
   };
+
+  const isKelasBawah = currentKelas.tingkat <= 3;
 
   // Hitung jadwal khusus untuk guru terpilih
   const jadwalGuruSeminggu = useMemo(() => {
@@ -401,7 +405,7 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
                     <td className="py-1.5 text-slate-400">7</td>
                     <td className="py-1.5 text-[11px]">10.00 - 10.30</td>
                     <td colSpan="6" className="py-1.5 text-center text-[11px] font-extrabold">
-                      Shalat Duha & Kultum
+                      Shalat Duha, Muraja'ah, & Kultum
                     </td>
                   </tr>
 
@@ -462,16 +466,16 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
                   })}
 
                   {/* Murajaah & Pulang */}
-                  <tr className="bg-emerald-50 text-emerald-900 font-bold">
+                  <tr className="bg-lime-50 text-lime-950 font-bold">
                     <td className="py-1.5 text-slate-400">14</td>
                     <td className="py-1.5 text-[11px]">14.00 - 14.10</td>
                     <td colSpan="6" className="py-1.5 text-center text-[11px]">
                       MURAJA'AH AL-QUR'AN
                     </td>
                   </tr>
-                  <tr className="bg-slate-200 text-slate-900 font-black">
+                  <tr className="bg-slate-900 text-white font-black">
                     <td className="py-1.5 text-slate-400">15</td>
-                    <td className="py-1.5 text-[11px]">14.10</td>
+                    <td className="py-1.5 text-[11px]">{selectedHari === 'JUMAT' ? '12.00 - 12.30' : '14.10'}</td>
                     <td colSpan="6" className="py-1.5 text-center text-[11px]">
                       PULANG BERSAMA (RESPONSI / REMEDIAL)
                     </td>
@@ -574,7 +578,7 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
                     <td className="py-1.5 text-slate-400">7</td>
                     <td className="py-1.5 text-[11px]">10.00 - 10.30</td>
                     <td colSpan="7" className="py-1.5 text-center text-[11px] font-extrabold">
-                      Shalat Duha & Kultum
+                      Shalat Duha, Muraja'ah, & Kultum
                     </td>
                   </tr>
 
@@ -686,7 +690,7 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
       )}
 
       {/* =========================================================================
-       * TAB 2: LEMBAR RESMI PER KELAS (FORMAT PERSIS SPREADSHEET KELAS 1 & KELAS 2)
+       * TAB 2: LEMBAR RESMI PER KELAS (FORMAT PERSIS DOKUMEN CETAK KELAS 1 S.D 6)
        * ========================================================================= */}
       {activeTab === 'PER_KELAS' && (
         <div className="space-y-6">
@@ -713,20 +717,33 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
             </div>
           </div>
 
-          {/* FORMAT LEMBAR RESMI KELAS (PERSIS DENGAN DOKUMEN CETAK SPREADSHEET) */}
+          {/* FORMAT LEMBAR RESMI KELAS (PERSIS DENGAN DOKUMEN CETAK SPREADSHEET SEKOLAH) */}
           <div className="bg-white rounded-3xl border border-slate-300 shadow-lg overflow-hidden p-6 sm:p-8 space-y-6 print:border-none print:shadow-none print:p-0">
             
-            {/* Header Surat Lembar Jadwal */}
-            <div className="text-center pb-4 border-b-2 border-slate-800 space-y-1">
-              <h2 className="text-lg sm:text-xl font-black uppercase tracking-wider text-slate-900">
-                JADWAL PELAJARAN SEMESTER GANJIL
-              </h2>
-              <h3 className="text-base sm:text-lg font-extrabold uppercase text-emerald-900">
-                {SEKOLAH_IDENTITAS.namaSekolah}
-              </h3>
-              <p className="text-xs font-bold text-slate-600">
-                TAHUN PELAJARAN {SEKOLAH_IDENTITAS.tahunPelajaran}
-              </p>
+            {/* Header Surat Lembar Jadwal Resmi dengan Logo */}
+            <div className="flex items-center justify-between pb-4 border-b-2 border-slate-800 gap-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-800 to-teal-700 p-1.5 text-white flex flex-col items-center justify-center shadow-xs border border-emerald-950 shrink-0">
+                  <span className="font-serif text-lg font-black tracking-tight leading-none text-amber-300">الإمام</span>
+                  <span className="text-[7.5px] font-black uppercase tracking-wider mt-0.5 text-center leading-tight">Al-Imam</span>
+                  <span className="text-[5.5px] text-emerald-200 font-bold tracking-tight">Islamic School</span>
+                </div>
+                <div className="text-left hidden sm:block">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-900 block">NPSN: 20253872 • NSS: 102020207062</span>
+                  <span className="text-[9px] font-bold text-slate-500 block">Limus Pratama Regensi, Cileungsi, Bogor</span>
+                </div>
+              </div>
+              <div className="text-center flex-1 pr-0 sm:pr-16">
+                <h2 className="text-base sm:text-xl font-black uppercase tracking-wider text-slate-900 leading-tight">
+                  JADWAL PELAJARAN SEMESTER GANJIL
+                </h2>
+                <h3 className="text-sm sm:text-base font-extrabold uppercase text-emerald-900 leading-tight">
+                  {SEKOLAH_IDENTITAS.namaSekolah}
+                </h3>
+                <p className="text-xs font-bold text-slate-600">
+                  TAHUN PELAJARAN {SEKOLAH_IDENTITAS.tahunPelajaran}
+                </p>
+              </div>
             </div>
 
             {/* Informasi Kelas & Wali Kelas */}
@@ -757,11 +774,11 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
                   </tr>
                   {/* Row Seragam */}
                   <tr className="bg-slate-50 font-black text-[10px] text-slate-700 border-b border-slate-800">
-                    <th className="py-1 px-2 border-r border-slate-800 text-red-700">{currentKelas.seragam?.SENIN || "MERAH PUTIH"}</th>
-                    <th className="py-1 px-2 border-r border-slate-800 text-emerald-700">{currentKelas.seragam?.SELASA || "HIJAU"}</th>
-                    <th className="py-1 px-2 border-r border-slate-800 text-amber-700">{currentKelas.seragam?.RABU || "BATIK"}</th>
-                    <th className="py-1 px-2 border-r border-slate-800 text-cyan-700">{currentKelas.seragam?.KAMIS || "OLAHRAGA"}</th>
-                    <th className="py-1 px-2 text-indigo-700">{currentKelas.seragam?.JUMAT || "KOTAK-KOTAK"}</th>
+                    <th className="py-1 px-2 border-r border-slate-800 text-red-700">{currentKelas.seragam?.SENIN}</th>
+                    <th className="py-1 px-2 border-r border-slate-800 text-emerald-700">{currentKelas.seragam?.SELASA}</th>
+                    <th className="py-1 px-2 border-r border-slate-800 text-amber-700">{currentKelas.seragam?.RABU}</th>
+                    <th className="py-1 px-2 border-r border-slate-800 text-cyan-700">{currentKelas.seragam?.KAMIS}</th>
+                    <th className="py-1 px-2 text-indigo-700">{currentKelas.seragam?.JUMAT}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800 font-semibold text-slate-900">
@@ -776,51 +793,31 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
                     </td>
                   </tr>
 
-                  {/* 2. Sesi 1 */}
-                  <tr className="border-b border-slate-800">
-                    <td className="py-1.5 px-1 border-r border-slate-800">2</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">07.30 - 08.00</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SENIN.kelasBawah[currentKelas.id]?.[0])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SELASA.kelasBawah[currentKelas.id]?.[0])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.RABU.kelasBawah[currentKelas.id]?.[0])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.KAMIS.kelasBawah[currentKelas.id]?.[0])}</td>
-                    <td className="font-bold">{getMapelName(JADWAL_GABUNGAN.JUMAT.kelasBawah[currentKelas.id]?.[0])}</td>
-                  </tr>
+                  {/* Sesi 1 s.d 4 */}
+                  {[0, 1, 2, 3].map((idx) => {
+                    const rowNum = idx + 2;
+                    const jamText = isKelasBawah ? SESI_KELAS_BAWAH[idx]?.jam : SESI_KELAS_ATAS[idx]?.jam;
+                    const getSlot = (day) => {
+                      const data = isKelasBawah 
+                        ? JADWAL_GABUNGAN[day]?.kelasBawah?.[currentKelas.id]
+                        : JADWAL_GABUNGAN[day]?.kelasAtas?.[currentKelas.id];
+                      return data?.[idx];
+                    };
 
-                  {/* 3. Sesi 2 */}
-                  <tr className="border-b border-slate-800">
-                    <td className="py-1.5 px-1 border-r border-slate-800">3</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">08.00 - 08.30</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SENIN.kelasBawah[currentKelas.id]?.[1])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SELASA.kelasBawah[currentKelas.id]?.[1])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.RABU.kelasBawah[currentKelas.id]?.[1])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.KAMIS.kelasBawah[currentKelas.id]?.[1])}</td>
-                    <td className="font-bold">{getMapelName(JADWAL_GABUNGAN.JUMAT.kelasBawah[currentKelas.id]?.[1])}</td>
-                  </tr>
+                    return (
+                      <tr key={idx} className="border-b border-slate-800">
+                        <td className="py-1.5 px-1 border-r border-slate-800">{rowNum}</td>
+                        <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">{jamText}</td>
+                        <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('SENIN'))}</td>
+                        <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('SELASA'))}</td>
+                        <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('RABU'))}</td>
+                        <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('KAMIS'))}</td>
+                        <td className="font-bold">{getMapelName(getSlot('JUMAT'))}</td>
+                      </tr>
+                    );
+                  })}
 
-                  {/* 4. Sesi 3 */}
-                  <tr className="border-b border-slate-800">
-                    <td className="py-1.5 px-1 border-r border-slate-800">4</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">08.30 - 09.00</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SENIN.kelasBawah[currentKelas.id]?.[2])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SELASA.kelasBawah[currentKelas.id]?.[2])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.RABU.kelasBawah[currentKelas.id]?.[2])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.KAMIS.kelasBawah[currentKelas.id]?.[2])}</td>
-                    <td className="font-bold">{getMapelName(JADWAL_GABUNGAN.JUMAT.kelasBawah[currentKelas.id]?.[2])}</td>
-                  </tr>
-
-                  {/* 5. Sesi 4 */}
-                  <tr className="border-b border-slate-800">
-                    <td className="py-1.5 px-1 border-r border-slate-800">5</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">09.00 - 09.30</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SENIN.kelasBawah[currentKelas.id]?.[3])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SELASA.kelasBawah[currentKelas.id]?.[3])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.RABU.kelasBawah[currentKelas.id]?.[3])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.KAMIS.kelasBawah[currentKelas.id]?.[3])}</td>
-                    <td className="font-bold">{getMapelName(JADWAL_GABUNGAN.JUMAT.kelasBawah[currentKelas.id]?.[3])}</td>
-                  </tr>
-
-                  {/* 6. Istirahat */}
+                  {/* Istirahat */}
                   <tr className="bg-slate-900 text-white font-black border-b border-slate-800">
                     <td className="py-1 px-1 border-r border-slate-800">6</td>
                     <td className="py-1 px-2 border-r border-slate-800 text-[11px]">09.30 - 10.00</td>
@@ -829,7 +826,7 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
                     </td>
                   </tr>
 
-                  {/* 7. Shalat Duha, Muraja'ah, & Kultum */}
+                  {/* Shalat Duha */}
                   <tr className="bg-lime-200 text-lime-950 font-black border-b border-slate-800">
                     <td className="py-1 px-1 border-r border-slate-800">7</td>
                     <td className="py-1 px-2 border-r border-slate-800 text-[11px]">10.00 - 10.30</td>
@@ -838,86 +835,162 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
                     </td>
                   </tr>
 
-                  {/* 8. Sesi 5 */}
-                  <tr className="border-b border-slate-800">
-                    <td className="py-1.5 px-1 border-r border-slate-800">8</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">10.30 - 11.00</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SENIN.kelasBawah[currentKelas.id]?.[4])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SELASA.kelasBawah[currentKelas.id]?.[4])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.RABU.kelasBawah[currentKelas.id]?.[4])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.KAMIS.kelasBawah[currentKelas.id]?.[4])}</td>
-                    <td className="font-bold">{getMapelName(JADWAL_GABUNGAN.JUMAT.kelasBawah[currentKelas.id]?.[4])}</td>
-                  </tr>
+                  {/* Sesi 5 & 6 */}
+                  {[4, 5].map((idx) => {
+                    const rowNum = idx + 4;
+                    const jamText = isKelasBawah ? SESI_KELAS_BAWAH[idx]?.jam : SESI_KELAS_ATAS[idx]?.jam;
+                    const getSlot = (day) => {
+                      const data = isKelasBawah 
+                        ? JADWAL_GABUNGAN[day]?.kelasBawah?.[currentKelas.id]
+                        : JADWAL_GABUNGAN[day]?.kelasAtas?.[currentKelas.id];
+                      return data?.[idx];
+                    };
 
-                  {/* 9. Sesi 6 */}
-                  <tr className="border-b border-slate-800">
-                    <td className="py-1.5 px-1 border-r border-slate-800">9</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">11.00 - 11.30</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SENIN.kelasBawah[currentKelas.id]?.[5])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SELASA.kelasBawah[currentKelas.id]?.[5])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.RABU.kelasBawah[currentKelas.id]?.[5])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.KAMIS.kelasBawah[currentKelas.id]?.[5])}</td>
-                    <td className="font-bold">{getMapelName(JADWAL_GABUNGAN.JUMAT.kelasBawah[currentKelas.id]?.[5])}</td>
-                  </tr>
+                    return (
+                      <tr key={idx} className="border-b border-slate-800">
+                        <td className="py-1.5 px-1 border-r border-slate-800">{rowNum}</td>
+                        <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">{jamText}</td>
+                        <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('SENIN'))}</td>
+                        <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('SELASA'))}</td>
+                        <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('RABU'))}</td>
+                        <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('KAMIS'))}</td>
+                        <td className="font-bold">{getMapelName(getSlot('JUMAT'))}</td>
+                      </tr>
+                    );
+                  })}
 
-                  {/* 10. Literasi / Sholat Jumat */}
+                  {/* Literasi / Sholat Jumat */}
                   <tr className="border-b border-slate-800 font-bold">
                     <td className="py-1.5 px-1 border-r border-slate-800">10</td>
                     <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">11.30 - 12.00</td>
                     <td className="border-r border-slate-800">LITERASI</td>
                     <td className="border-r border-slate-800">LITERASI</td>
+                    <td className="border-r border-slate-800">{currentKelas.tingkat === 3 ? "ADAB AHLAK" : "LITERASI"}</td>
                     <td className="border-r border-slate-800">LITERASI</td>
-                    <td className="border-r border-slate-800">LITERASI</td>
-                    <td className="font-black bg-blue-100 text-blue-950">SHOLAT JUMAT</td>
-                  </tr>
-
-                  {/* 11. Makan Siang / Pulang Jumat */}
-                  <tr className="border-b border-slate-800 font-bold">
-                    <td className="py-1.5 px-1 border-r border-slate-800">11</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">12.00 - 13.00</td>
-                    <td colSpan="4" className="bg-slate-900 text-white font-extrabold text-[11px] py-1 border-r border-slate-800">
-                      Makan Siang - Shalat Dzuhur Berjama'ah
-                    </td>
-                    <td rowSpan="5" className="bg-slate-100 text-slate-800 font-black text-sm align-middle">
-                      PULANG
+                    <td className="font-black bg-blue-100 text-blue-950">
+                      {isKelasBawah ? "SHOLAT JUMAT" : "SHOLAT JUMAT/KEPUTRIAN"}
                     </td>
                   </tr>
 
-                  {/* 12. Sesi 7 */}
-                  <tr className="border-b border-slate-800">
-                    <td className="py-1.5 px-1 border-r border-slate-800">12</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">13.00 - 13.30</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SENIN.kelasBawah[currentKelas.id]?.[6])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SELASA.kelasBawah[currentKelas.id]?.[6])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.RABU.kelasBawah[currentKelas.id]?.[6])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.KAMIS.kelasBawah[currentKelas.id]?.[6])}</td>
-                  </tr>
+                  {/* Makan Siang & Sesi Siang */}
+                  {isKelasBawah ? (
+                    <>
+                      {/* Kelas Bawah: Makan Siang (12.00 - 13.00) dan Jumat Pulang */}
+                      <tr className="border-b border-slate-800 font-bold">
+                        <td className="py-1.5 px-1 border-r border-slate-800">11</td>
+                        <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">12.00 - 13.00</td>
+                        <td colSpan="4" className="bg-slate-900 text-white font-extrabold text-[11px] py-1 border-r border-slate-800">
+                          Makan Siang - Shalat Dzuhur Berjama'ah
+                        </td>
+                        <td rowSpan="5" className="bg-slate-100 text-slate-800 font-black text-sm align-middle">
+                          PULANG
+                        </td>
+                      </tr>
 
-                  {/* 13. Sesi 8 */}
-                  <tr className="border-b border-slate-800">
-                    <td className="py-1.5 px-1 border-r border-slate-800">13</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">13.30 - 14.00</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SENIN.kelasBawah[currentKelas.id]?.[7])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.SELASA.kelasBawah[currentKelas.id]?.[7])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.RABU.kelasBawah[currentKelas.id]?.[7])}</td>
-                    <td className="border-r border-slate-800 font-bold">{getMapelName(JADWAL_GABUNGAN.KAMIS.kelasBawah[currentKelas.id]?.[7])}</td>
-                  </tr>
+                      {/* Sesi 7 & 8 */}
+                      {[6, 7].map((idx) => {
+                        const rowNum = idx + 6;
+                        const jamText = SESI_KELAS_BAWAH[idx]?.jam;
+                        const getSlot = (day) => JADWAL_GABUNGAN[day]?.kelasBawah?.[currentKelas.id]?.[idx];
 
-                  {/* 14. Murajaah */}
-                  <tr className="border-b border-slate-800 font-black bg-lime-100 text-lime-950">
-                    <td className="py-1 px-1 border-r border-slate-800">14</td>
-                    <td className="py-1 px-2 border-r border-slate-800 text-[11px]">14.00 - 14.10</td>
-                    <td colSpan="4" className="border-r border-slate-800">MURAJA'AH</td>
-                  </tr>
+                        return (
+                          <tr key={idx} className="border-b border-slate-800">
+                            <td className="py-1.5 px-1 border-r border-slate-800">{rowNum}</td>
+                            <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">{jamText}</td>
+                            <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('SENIN'))}</td>
+                            <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('SELASA'))}</td>
+                            <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('RABU'))}</td>
+                            <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('KAMIS'))}</td>
+                          </tr>
+                        );
+                      })}
 
-                  {/* 15. Pulang */}
-                  <tr className="bg-slate-900 text-white font-black">
-                    <td className="py-1 px-1 border-r border-slate-800">15</td>
-                    <td className="py-1 px-2 border-r border-slate-800 text-[11px]">14.10</td>
-                    <td colSpan="4" className="border-r border-slate-800 uppercase tracking-widest text-xs">
-                      PULANG
-                    </td>
-                  </tr>
+                      {/* Murajaah & Pulang */}
+                      <tr className="border-b border-slate-800 font-black bg-lime-100 text-lime-950">
+                        <td className="py-1 px-1 border-r border-slate-800">14</td>
+                        <td className="py-1 px-2 border-r border-slate-800 text-[11px]">14.00 - 14.10</td>
+                        <td colSpan="4" className="border-r border-slate-800">MURAJA'AH</td>
+                      </tr>
+                      <tr className="bg-slate-900 text-white font-black">
+                        <td className="py-1 px-1 border-r border-slate-800">15</td>
+                        <td className="py-1 px-2 border-r border-slate-800 text-[11px]">14.10</td>
+                        <td colSpan="4" className="border-r border-slate-800 uppercase tracking-widest text-xs">
+                          PULANG
+                        </td>
+                      </tr>
+                    </>
+                  ) : (
+                    <>
+                      {/* Kelas Atas: Makan Siang 12.00 - 13.00 */}
+                      <tr className="border-b border-slate-800 font-bold">
+                        <td className="py-1.5 px-1 border-r border-slate-800">11</td>
+                        <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">12.00 - 13.00</td>
+                        <td colSpan="5" className="bg-slate-900 text-white font-extrabold text-[11px] py-1 border-r border-slate-800">
+                          Makan Siang - Shalat Dzuhur Berjama'ah
+                        </td>
+                      </tr>
+
+                      {/* Sesi 7 & 8 (Jum'at: PRAMUKA) */}
+                      {[6, 7].map((idx) => {
+                        const rowNum = idx + 6;
+                        const jamText = SESI_KELAS_ATAS[idx]?.jam;
+                        const getSlot = (day) => JADWAL_GABUNGAN[day]?.kelasAtas?.[currentKelas.id]?.[idx];
+
+                        return (
+                          <tr key={idx} className="border-b border-slate-800">
+                            <td className="py-1.5 px-1 border-r border-slate-800">{rowNum}</td>
+                            <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">{jamText}</td>
+                            <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('SENIN'))}</td>
+                            <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('SELASA'))}</td>
+                            <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('RABU'))}</td>
+                            <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('KAMIS'))}</td>
+                            {idx === 6 ? (
+                              <td rowSpan="2" className="bg-amber-100 text-amber-950 font-black text-xs align-middle">
+                                PRAMUKA
+                              </td>
+                            ) : null}
+                          </tr>
+                        );
+                      })}
+
+                      {/* Sesi 9 & 10 (Jum'at: Pulang) */}
+                      {[8, 9].map((idx) => {
+                        const rowNum = idx + 6;
+                        const jamText = SESI_KELAS_ATAS[idx]?.jam;
+                        const getSlot = (day) => JADWAL_GABUNGAN[day]?.kelasAtas?.[currentKelas.id]?.[idx];
+
+                        return (
+                          <tr key={idx} className="border-b border-slate-800">
+                            <td className="py-1.5 px-1 border-r border-slate-800">{rowNum}</td>
+                            <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">{jamText}</td>
+                            <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('SENIN'))}</td>
+                            <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('SELASA'))}</td>
+                            <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('RABU'))}</td>
+                            <td className="border-r border-slate-800 font-bold">{getMapelName(getSlot('KAMIS'))}</td>
+                            {idx === 8 ? (
+                              <td rowSpan="3" className="bg-slate-100 text-slate-800 font-black text-sm align-middle">
+                                PULANG
+                              </td>
+                            ) : null}
+                          </tr>
+                        );
+                      })}
+
+                      {/* Shalat Ashar & Pulang */}
+                      <tr className="border-b border-slate-800 font-bold bg-lime-100 text-lime-950">
+                        <td className="py-1.5 px-1 border-r border-slate-800">16</td>
+                        <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">15.00 - 15.30</td>
+                        <td colSpan="4" className="border-r border-slate-800">Shalat Ashar Berjamaah</td>
+                      </tr>
+                      <tr className="bg-slate-900 text-white font-black">
+                        <td className="py-1.5 px-1 border-r border-slate-800">17</td>
+                        <td className="py-1.5 px-2 border-r border-slate-800 text-[11px]">15.30</td>
+                        <td colSpan="4" className="border-r border-slate-800 uppercase tracking-widest text-xs">
+                          PULANG
+                        </td>
+                      </tr>
+                    </>
+                  )}
 
                 </tbody>
               </table>
@@ -925,18 +998,21 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
 
             {/* Kolom Tanda Tangan Resmi Kepala Sekolah */}
             <div className="pt-6 flex justify-end">
-              <div className="text-center w-64 space-y-2">
+              <div className="text-center w-64 space-y-1">
                 <span className="text-xs font-bold text-slate-700 block">Mengetahui</span>
                 <span className="text-xs font-black text-slate-900 block">Kepala Sekolah</span>
                 
-                {/* Tanda Tangan Grafis */}
-                <div className="py-3 flex items-center justify-center">
-                  <div className="text-emerald-900 font-serif italic font-black text-2xl tracking-tighter transform -rotate-6 border-b-2 border-emerald-900 px-4">
-                    Radinal Amnan
-                  </div>
+                {/* Tanda Tangan Grafis Autentik Specimen */}
+                <div className="py-1 flex items-center justify-center">
+                  <svg viewBox="0 0 160 70" className="w-36 h-16 text-slate-900 fill-none stroke-current stroke-[2.2] stroke-linecap-round stroke-linejoin-round">
+                    {/* Kurva loop utama tanda tangan Radinal Amnan Bajsair */}
+                    <path d="M 40 45 C 32 35, 42 16, 56 16 C 68 16, 76 34, 60 54 C 48 68, 36 62, 34 50 C 32 38, 48 30, 72 32 C 92 34, 102 18, 96 50 C 90 70, 98 70, 114 56 C 124 46, 118 34, 112 32 C 102 28, 96 44, 120 56 C 132 62, 144 58, 148 48" />
+                    {/* Goresan aksen tajam ke bawah */}
+                    <path d="M 94 40 L 102 68" />
+                  </svg>
                 </div>
 
-                <span className="text-xs font-black text-slate-900 underline block">
+                <span className="text-xs font-black text-slate-900 underline block tracking-tight">
                   {SEKOLAH_IDENTITAS.kepalaSekolah}
                 </span>
               </div>
@@ -959,24 +1035,125 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200">
-                    <tr><td className="py-1.5 px-3 border-r">1</td><td className="py-1.5 px-3 border-r">a. AQIDAH</td><td className="py-1.5 px-3 text-center border-r font-bold">2</td><td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel PAI</td><td className="py-1.5 px-3 text-center font-bold">4</td></tr>
-                    <tr><td className="py-1.5 px-3 border-r">2</td><td className="py-1.5 px-3 border-r">b. FIQIH</td><td className="py-1.5 px-3 text-center border-r font-bold">2</td><td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel PAI</td><td className="py-1.5 px-3 text-center font-bold">4</td></tr>
-                    <tr className="bg-red-50 text-red-700 font-bold"><td className="py-1.5 px-3 border-r">3</td><td className="py-1.5 px-3 border-r">c. SEJARAH KEBUDAYAAN ISLAM</td><td className="py-1.5 px-3 text-center border-r">-</td><td className="py-1.5 px-3 border-r">-</td><td className="py-1.5 px-3 text-center">-</td></tr>
-                    <tr><td className="py-1.5 px-3 border-r">4</td><td className="py-1.5 px-3 border-r">d. ADAB DAN AKHLAK</td><td className="py-1.5 px-3 text-center border-r font-bold">2</td><td className="py-1.5 px-3 border-r font-bold text-slate-900">{currentKelas.wali}</td><td className="py-1.5 px-3 text-center font-bold">12</td></tr>
-                    <tr><td className="py-1.5 px-3 border-r">5</td><td className="py-1.5 px-3 border-r">PENDIDIKAN PANCASILA DAN KEWARGANEGARAAN</td><td className="py-1.5 px-3 text-center border-r font-bold">2</td><td className="py-1.5 px-3 border-r font-bold text-slate-900">{currentKelas.wali}</td><td className="py-1.5 px-3 text-center font-bold">2</td></tr>
-                    <tr><td className="py-1.5 px-3 border-r">6</td><td className="py-1.5 px-3 border-r">BAHASA INDONESIA</td><td className="py-1.5 px-3 text-center border-r font-bold">4</td><td className="py-1.5 px-3 border-r font-bold text-slate-900">{currentKelas.wali}</td><td className="py-1.5 px-3 text-center font-bold">4</td></tr>
-                    <tr className="bg-red-50 text-red-700 font-bold"><td className="py-1.5 px-3 border-r">7</td><td className="py-1.5 px-3 border-r">ILMU PENGETAHUAN ALAM DAN SOSIAL</td><td className="py-1.5 px-3 text-center border-r">-</td><td className="py-1.5 px-3 border-r">-</td><td className="py-1.5 px-3 text-center">-</td></tr>
-                    <tr><td className="py-1.5 px-3 border-r">8</td><td className="py-1.5 px-3 border-r">SENI RUPA / SENI BUDAYA</td><td className="py-1.5 px-3 text-center border-r font-bold">2</td><td className="py-1.5 px-3 border-r font-bold text-slate-900">{currentKelas.wali}</td><td className="py-1.5 px-3 text-center font-bold">2</td></tr>
-                    <tr className="bg-red-50 text-red-700 font-bold"><td className="py-1.5 px-3 border-r">9</td><td className="py-1.5 px-3 border-r">BAHASA DAERAH (BAHASA SUNDA)</td><td className="py-1.5 px-3 text-center border-r">-</td><td className="py-1.5 px-3 border-r">-</td><td className="py-1.5 px-3 text-center">-</td></tr>
-                    <tr><td className="py-1.5 px-3 border-r">10</td><td className="py-1.5 px-3 border-r">MATEMATIKA (NASIONAL)</td><td className="py-1.5 px-3 text-center border-r font-bold">2</td><td className="py-1.5 px-3 border-r font-bold text-slate-900">{currentKelas.wali}</td><td className="py-1.5 px-3 text-center font-bold">2</td></tr>
-                    <tr><td className="py-1.5 px-3 border-r">11</td><td className="py-1.5 px-3 border-r">PENDIDIKAN JASMANI, OLAHRAGA, DAN KESEHATAN</td><td className="py-1.5 px-3 text-center border-r font-bold">2</td><td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel PJOK</td><td className="py-1.5 px-3 text-center font-bold">2</td></tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">1</td>
+                      <td className="py-1.5 px-3 border-r">a. AQIDAH</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">2</td>
+                      <td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel PAI</td>
+                      <td className="py-1.5 px-3 text-center font-bold">{currentKelas.tingkat === 3 ? "5" : "4"}</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">2</td>
+                      <td className="py-1.5 px-3 border-r">b. FIQIH</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">2</td>
+                      <td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel PAI</td>
+                      <td className="py-1.5 px-3 text-center font-bold">4</td>
+                    </tr>
+                    <tr className={currentKelas.tingkat <= 2 ? "bg-red-50 text-red-700 font-bold" : ""}>
+                      <td className="py-1.5 px-3 border-r">3</td>
+                      <td className="py-1.5 px-3 border-r">c. SEJARAH KEBUDAYAAN ISLAM</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">{currentKelas.tingkat <= 2 ? "-" : "1"}</td>
+                      <td className="py-1.5 px-3 border-r font-medium text-emerald-800">{currentKelas.tingkat <= 2 ? "-" : "Guru Mapel PAI"}</td>
+                      <td className="py-1.5 px-3 text-center font-bold">{currentKelas.tingkat <= 2 ? "-" : "1"}</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">4</td>
+                      <td className="py-1.5 px-3 border-r">d. ADAB DAN AKHLAK</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">{currentKelas.tingkat === 3 ? "1" : "2"}</td>
+                      <td className="py-1.5 px-3 border-r font-bold text-slate-900">{currentKelas.wali}</td>
+                      <td className="py-1.5 px-3 text-center font-bold">12</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">5</td>
+                      <td className="py-1.5 px-3 border-r">PENDIDIKAN PANCASILA DAN KEWARGANEGARAAN</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">2</td>
+                      <td className="py-1.5 px-3 border-r font-bold text-slate-900">{currentKelas.wali}</td>
+                      <td className="py-1.5 px-3 text-center font-bold">2</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">6</td>
+                      <td className="py-1.5 px-3 border-r">BAHASA INDONESIA</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">{currentKelas.tingkat >= 4 ? "5" : currentKelas.tingkat === 3 ? "2" : "4"}</td>
+                      <td className="py-1.5 px-3 border-r font-bold text-slate-900">{currentKelas.wali}</td>
+                      <td className="py-1.5 px-3 text-center font-bold">{currentKelas.tingkat >= 4 ? "5" : currentKelas.tingkat === 3 ? "2" : "4"}</td>
+                    </tr>
+                    <tr className={currentKelas.tingkat <= 2 ? "bg-red-50 text-red-700 font-bold" : ""}>
+                      <td className="py-1.5 px-3 border-r">7</td>
+                      <td className="py-1.5 px-3 border-r">ILMU PENGETAHUAN ALAM DAN SOSIAL</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">{currentKelas.tingkat <= 2 ? "-" : currentKelas.tingkat >= 4 ? "5" : "2"}</td>
+                      <td className="py-1.5 px-3 border-r font-bold text-slate-900">{currentKelas.tingkat <= 2 ? "-" : currentKelas.wali}</td>
+                      <td className="py-1.5 px-3 text-center font-bold">{currentKelas.tingkat <= 2 ? "-" : currentKelas.tingkat >= 4 ? "5" : "2"}</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">8</td>
+                      <td className="py-1.5 px-3 border-r">SENI RUPA / SENI BUDAYA</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">2</td>
+                      <td className="py-1.5 px-3 border-r font-bold text-slate-900">{currentKelas.wali}</td>
+                      <td className="py-1.5 px-3 text-center font-bold">2</td>
+                    </tr>
+                    <tr className={currentKelas.tingkat <= 2 ? "bg-red-50 text-red-700 font-bold" : ""}>
+                      <td className="py-1.5 px-3 border-r">9</td>
+                      <td className="py-1.5 px-3 border-r">BAHASA DAERAH (BAHASA SUNDA)</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">{currentKelas.tingkat <= 2 ? "-" : "1"}</td>
+                      <td className="py-1.5 px-3 border-r font-bold text-slate-900">{currentKelas.tingkat <= 2 ? "-" : currentKelas.wali}</td>
+                      <td className="py-1.5 px-3 text-center font-bold">{currentKelas.tingkat <= 2 ? "-" : "1"}</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">10</td>
+                      <td className="py-1.5 px-3 border-r">MATEMATIKA (NASIONAL)</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">2</td>
+                      <td className="py-1.5 px-3 border-r font-bold text-slate-900">{currentKelas.wali}</td>
+                      <td className="py-1.5 px-3 text-center font-bold">2</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">11</td>
+                      <td className="py-1.5 px-3 border-r">PENDIDIKAN JASMANI, OLAHRAGA, DAN KESEHATAN</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">2</td>
+                      <td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel PJOK</td>
+                      <td className="py-1.5 px-3 text-center font-bold">2</td>
+                    </tr>
                     <tr className="bg-slate-100 font-black text-slate-800"><td colSpan="5" className="py-1.5 px-3">B. MUATAN LOKAL</td></tr>
-                    <tr><td className="py-1.5 px-3 border-r">12</td><td className="py-1.5 px-3 border-r">MATHEMATICS (CAMBRIDGE)</td><td className="py-1.5 px-3 text-center border-r font-bold">4</td><td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel Math</td><td className="py-1.5 px-3 text-center font-bold">4</td></tr>
-                    <tr><td className="py-1.5 px-3 border-r">13</td><td className="py-1.5 px-3 border-r">BAHASA ARAB</td><td className="py-1.5 px-3 text-center border-r font-bold">2</td><td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel B. Arab</td><td className="py-1.5 px-3 text-center font-bold">2</td></tr>
-                    <tr><td className="py-1.5 px-3 border-r">14</td><td className="py-1.5 px-3 border-r">BAHASA INGGRIS</td><td className="py-1.5 px-3 text-center border-r font-bold">2</td><td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel B. Inggris</td><td className="py-1.5 px-3 text-center font-bold">2</td></tr>
-                    <tr><td className="py-1.5 px-3 border-r">15</td><td className="py-1.5 px-3 border-r">INFORMATIKA / KOMPUTER</td><td className="py-1.5 px-3 text-center border-r font-bold">2</td><td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel Komputer</td><td className="py-1.5 px-3 text-center font-bold">2</td></tr>
-                    <tr><td className="py-1.5 px-3 border-r">16</td><td className="py-1.5 px-3 border-r">AL QURAN (TAHSIN & TAHFIDZ)</td><td className="py-1.5 px-3 text-center border-r font-bold">10</td><td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Kholaqoh Qur'an</td><td className="py-1.5 px-3 text-center font-bold">10</td></tr>
-                    <tr className="bg-slate-200 font-black text-slate-900 border-t-2"><td colSpan="2" className="py-2 px-3">JUMLAH TOTAL</td><td className="py-2 px-3 text-center font-black">38</td><td className="py-2 px-3">Total Jam Efektif</td><td className="py-2 px-3 text-center font-black">38 JP</td></tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">12</td>
+                      <td className="py-1.5 px-3 border-r">MATHEMATICS (CAMBRIDGE)</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">4</td>
+                      <td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel Math</td>
+                      <td className="py-1.5 px-3 text-center font-bold">4</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">13</td>
+                      <td className="py-1.5 px-3 border-r">BAHASA ARAB</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">2</td>
+                      <td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel B. Arab</td>
+                      <td className="py-1.5 px-3 text-center font-bold">2</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">14</td>
+                      <td className="py-1.5 px-3 border-r">BAHASA INGGRIS</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">2</td>
+                      <td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel B. Inggris</td>
+                      <td className="py-1.5 px-3 text-center font-bold">2</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">15</td>
+                      <td className="py-1.5 px-3 border-r">INFORMATIKA / KOMPUTER</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">2</td>
+                      <td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Mapel Komputer</td>
+                      <td className="py-1.5 px-3 text-center font-bold">2</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-3 border-r">16</td>
+                      <td className="py-1.5 px-3 border-r">AL QURAN (TAHSIN & TAHFIDZ)</td>
+                      <td className="py-1.5 px-3 text-center border-r font-bold">10</td>
+                      <td className="py-1.5 px-3 border-r font-medium text-emerald-800">Guru Kholaqoh Qur'an</td>
+                      <td className="py-1.5 px-3 text-center font-bold">10</td>
+                    </tr>
+                    <tr className="bg-slate-200 font-black text-slate-900 border-t-2">
+                      <td colSpan="2" className="py-2 px-3">JUMLAH TOTAL</td>
+                      <td className="py-2 px-3 text-center font-black">{currentKelas.totalJPEfektif}</td>
+                      <td className="py-2 px-3">Total Jam Efektif Belajar</td>
+                      <td className="py-2 px-3 text-center font-black">{currentKelas.totalJPEfektif} JP</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -1229,7 +1406,7 @@ export function JadwalPelajaranView({ currentUser, currentRole, settings }) {
               </div>
 
               <div className="space-y-2 max-h-80 overflow-y-auto pr-1 text-xs">
-                {JAM_PELAJARAN_RESMI.map((slot) => (
+                {JAM_PELAJARAN_KELAS_ATAS.map((slot) => (
                   <div 
                     key={slot.no}
                     className={`p-2.5 rounded-xl border flex items-center justify-between ${

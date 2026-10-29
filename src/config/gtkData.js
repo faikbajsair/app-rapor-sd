@@ -14,8 +14,30 @@ import { ROLES } from './roles';
 export const INITIAL_GTK_LIST = [
   // --- PIMPINAN SEKOLAH ---
   {
-    id: "GTK_01",
+    id: "GTK_00",
     no: 1,
+    nama: "Radinal Amnan Bajsair, S.Kom",
+    nip: "",
+    nuptk: "",
+    tempatLahir: "Bogor",
+    tanggalLahir: "1988-05-12",
+    usia: "38 Tahun 5 Bulan",
+    pendidikan: "S1 Ilmu Komputer",
+    statusJabatan: "Kepala Sekolah",
+    jabatan: "Kepala Sekolah",
+    jabatanLainnya: "Penanggung Jawab KBM & Kurikulum",
+    role: ROLES.KEPSEK,
+    email: "radinal.amnan@alimamischool.com",
+    password: "admin",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+    kelasDiampu: ["Semua Kelas"],
+    mapelDiampu: ["Semua Mapel"],
+    kholaqohDiampu: ["Semua Kholaqoh"],
+    badge: "Kepala Sekolah"
+  },
+  {
+    id: "GTK_01",
+    no: 2,
     nama: "Kholid Hasan, S.Pd",
     nip: "",
     nuptk: "",

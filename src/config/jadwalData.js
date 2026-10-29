@@ -5,7 +5,7 @@
  * - Tab: HOME (Profil & Identitas GTK)
  * - Tab: 1. Struktur Kurikulum (Komponen JP Mata Pelajaran & Mulok)
  * - Tab: Jadwal Gabungan (Matriks Lengkap Kelas Bawah & Kelas Atas)
- * - Tab: Kelas 1 s.d Kelas 6 (Format Resmi Lembar Jadwal per Rombel + Seragam & Tanda Tangan)
+ * - Tab: Kelas 1, 2, 3, 4, 5, 6 (Format Resmi Lembar Jadwal per Rombel + Seragam & Tanda Tangan)
  * - Tab: Bidang Study (Jadwal Mengajar per Guru Mapel & Wali Kelas)
  */
 
@@ -28,7 +28,7 @@ export const SEKOLAH_IDENTITAS = {
 export const MAPEL_KODE = {
   Q: {
     kode: "Q",
-    namaSingkat: "AL QURAN",
+    namaSingkat: "AL-QUR'AN",
     nama: "Al-Quran (Tahsin & Tahfidz)",
     kategori: "Al-Qur'an",
     guruTipe: "Guru Kholaqoh / Mapel",
@@ -46,8 +46,8 @@ export const MAPEL_KODE = {
   },
   F: {
     kode: "F",
-    namaSingkat: "FIQIH",
-    nama: "Fiqih",
+    namaSingkat: "FIKIH",
+    nama: "Fikih",
     kategori: "PAI",
     guruTipe: "Guru Mapel PAI",
     badgeClass: "bg-orange-200 text-orange-950 border-orange-300 font-black",
@@ -65,7 +65,7 @@ export const MAPEL_KODE = {
   Math: {
     kode: "Math",
     namaSingkat: "MATHEMATICS",
-    nama: "Mathematics (Inggris / Cambridge)",
+    nama: "Mathematics (Cambridge)",
     kategori: "Muatan Lokal",
     guruTipe: "Guru Mapel Math",
     badgeClass: "bg-yellow-300 text-yellow-950 border-yellow-400 font-black",
@@ -145,7 +145,7 @@ export const MAPEL_KODE = {
   },
   MIPAS: {
     kode: "MIPAS",
-    namaSingkat: "MIPAS",
+    namaSingkat: "IPAS",
     nama: "Ilmu Pengetahuan Alam dan Sosial (IPAS)",
     kategori: "Wajib Nasional",
     guruTipe: "Wali Kelas",
@@ -194,8 +194,8 @@ export const MAPEL_KODE = {
     nama: "Muraja'ah Hafalan Al-Qur'an",
     kategori: "Al-Qur'an",
     guruTipe: "Wali Kelas / Guru Kholaqoh",
-    badgeClass: "bg-emerald-100 text-emerald-900 border-emerald-300 font-bold",
-    hex: "#d1fae5"
+    badgeClass: "bg-lime-100 text-lime-950 border-lime-300 font-bold",
+    hex: "#d9f99d"
   },
   Responsi: {
     kode: "Responsi",
@@ -203,8 +203,8 @@ export const MAPEL_KODE = {
     nama: "Prosesi Pulang Bersama (Responsi / Pengayaan)",
     kategori: "Bimbingan",
     guruTipe: "Wali Kelas",
-    badgeClass: "bg-slate-200 text-slate-700 border-slate-300 font-medium",
-    hex: "#e2e8f0"
+    badgeClass: "bg-slate-900 text-white border-slate-900 font-black",
+    hex: "#0f172a"
   }
 };
 
@@ -222,7 +222,7 @@ export const STRUKTUR_KURIKULUM = [
       { no: "4", mapel: "Ilmu Pengetahuan Alam dan Sosial (MIPAS)", kode: "MIPAS", k1: "-", k2: "-", k3: "2 JP", k4: "5 JP", k5: "5 JP", k6: "5 JP", jpTotalPekan: 5 },
       { no: "5", mapel: "Seni Rupa / Seni Budaya", kode: "Seni", k1: "2 JP", k2: "2 JP", k3: "2 JP", k4: "2 JP", k5: "2 JP", k6: "2 JP", jpTotalPekan: 2 },
       { no: "6", mapel: "Bahasa Daerah (Bahasa Sunda)", kode: "BS", k1: "-", k2: "-", k3: "1 JP", k4: "1 JP", k5: "1 JP", k6: "1 JP", jpTotalPekan: 1 },
-      { no: "7", mapel: "Matematika", kode: "MTK", k1: "2 JP", k2: "2 JP", k3: "2 JP", k4: "2 JP", k5: "2 JP", k6: "2 JP", jpTotalPekan: 2 },
+      { no: "7", mapel: "Matematika (Nasional)", kode: "MTK", k1: "2 JP", k2: "2 JP", k3: "2 JP", k4: "2 JP", k5: "2 JP", k6: "2 JP", jpTotalPekan: 2 },
       { no: "8", mapel: "Pendidikan Jasmani, Olahraga, dan Kesehatan (PJOK)", kode: "PJOK", k1: "2 JP", k2: "2 JP", k3: "2 JP", k4: "2 JP", k5: "2 JP", k6: "2 JP", jpTotalPekan: 2 }
     ]
   },
@@ -247,8 +247,8 @@ export const TOTAL_JP_SEMESTER = {
   k6: "47 JP"
 };
 
-// JAM PELAJARAN HARIAN (LENGKAP SESUAI LEMBAR RESMI KELAS 1 & KELAS 2)
-export const JAM_PELAJARAN_RESMI = [
+// JAM PELAJARAN HARIAN KELAS BAWAH (15 BARIS SESUAI LEMBAR RESMI KELAS 1, 2, 3)
+export const JAM_PELAJARAN_KELAS_BAWAH = [
   { no: 1, jam: "07.15 - 07.30", label: "Upacara (Senin) / Dzikir Pagi (Selasa-Jumat)", isSpecial: true },
   { no: 2, jam: "07.30 - 08.00", label: "Jam Ke-1" },
   { no: 3, jam: "08.00 - 08.30", label: "Jam Ke-2" },
@@ -259,11 +259,32 @@ export const JAM_PELAJARAN_RESMI = [
   { no: 8, jam: "10.30 - 11.00", label: "Jam Ke-5" },
   { no: 9, jam: "11.00 - 11.30", label: "Jam Ke-6" },
   { no: 10, jam: "11.30 - 12.00", label: "LITERASI (Jumat: SHOLAT JUMAT)", isSpecial: true },
-  { no: 11, jam: "12.00 - 13.00", label: "Makan Siang - Shalat Dzuhur Berjama'ah (Jumat: PULANG Kls Bawah)", isBreak: true },
+  { no: 11, jam: "12.00 - 13.00", label: "Makan Siang - Shalat Dzuhur Berjama'ah (Jumat: PULANG)", isBreak: true },
   { no: 12, jam: "13.00 - 13.30", label: "Jam Ke-7" },
   { no: 13, jam: "13.30 - 14.00", label: "Jam Ke-8" },
   { no: 14, jam: "14.00 - 14.10", label: "MURAJA'AH", isSpecial: true },
-  { no: 15, jam: "14.10", label: "PULANG (Kelas Bawah)", isSpecial: true }
+  { no: 15, jam: "14.10", label: "PULANG", isSpecial: true }
+];
+
+// JAM PELAJARAN HARIAN KELAS ATAS (17 BARIS SESUAI LEMBAR RESMI KELAS 4, 5, 6)
+export const JAM_PELAJARAN_KELAS_ATAS = [
+  { no: 1, jam: "07.15 - 07.30", label: "Upacara (Senin) / Dzikir Pagi (Selasa-Jumat)", isSpecial: true },
+  { no: 2, jam: "07.30 - 08.00", label: "Jam Ke-1" },
+  { no: 3, jam: "08.00 - 08.30", label: "Jam Ke-2" },
+  { no: 4, jam: "08.30 - 09.00", label: "Jam Ke-3" },
+  { no: 5, jam: "09.00 - 09.30", label: "Jam Ke-4" },
+  { no: 6, jam: "09.30 - 10.00", label: "ISTIRAHAT", isBreak: true },
+  { no: 7, jam: "10.00 - 10.30", label: "Shalat Duha, Muraja'ah, & Kultum", isSpecial: true },
+  { no: 8, jam: "10.30 - 11.00", label: "Jam Ke-5" },
+  { no: 9, jam: "11.00 - 11.30", label: "Jam Ke-6" },
+  { no: 10, jam: "11.30 - 12.00", label: "LITERASI (Jumat: SHOLAT JUMAT / KEPUTRIAN)", isSpecial: true },
+  { no: 11, jam: "12.00 - 13.00", label: "Makan Siang - Shalat Dzuhur Berjama'ah", isBreak: true },
+  { no: 12, jam: "13.00 - 13.30", label: "Jam Ke-7 (Jumat: PRAMUKA)" },
+  { no: 13, jam: "13.30 - 14.00", label: "Jam Ke-8 (Jumat: PRAMUKA lalu PULANG)" },
+  { no: 14, jam: "14.00 - 14.30", label: "Jam Ke-9" },
+  { no: 15, jam: "14.30 - 15.00", label: "Jam Ke-10" },
+  { no: 16, jam: "15.00 - 15.30", label: "Shalat Ashar Berjamaah", isSpecial: true },
+  { no: 17, jam: "15.30", label: "PULANG", isSpecial: true }
 ];
 
 // DAFTAR ROMBEL KELAS LENGKAP DENGAN WALI KELAS & KETENTUAN SERAGAM RESMI
@@ -275,6 +296,7 @@ export const DAFTAR_KELAS = [
     tingkat: 1, 
     wali: "Siti Habzah Diniyanti, S.Sos", 
     kategori: "Kelas Bawah",
+    totalJPEfektif: 38,
     seragam: {
       SENIN: "MERAH PUTIH",
       SELASA: "HIJAU",
@@ -289,6 +311,7 @@ export const DAFTAR_KELAS = [
     tingkat: 1, 
     wali: "Putri Hidayah, S.Pd", 
     kategori: "Kelas Bawah",
+    totalJPEfektif: 38,
     seragam: {
       SENIN: "MERAH PUTIH",
       SELASA: "HIJAU",
@@ -305,6 +328,7 @@ export const DAFTAR_KELAS = [
     tingkat: 2, 
     wali: "Syahnatun Nurbaitih, S.Pd", 
     kategori: "Kelas Bawah",
+    totalJPEfektif: 38,
     seragam: {
       SENIN: "OLAHRAGA",
       SELASA: "HIJAU",
@@ -319,6 +343,7 @@ export const DAFTAR_KELAS = [
     tingkat: 2, 
     wali: "Lauren Pratama Sari, S.Pd., Gr.", 
     kategori: "Kelas Bawah",
+    totalJPEfektif: 38,
     seragam: {
       SENIN: "OLAHRAGA",
       SELASA: "HIJAU",
@@ -331,30 +356,32 @@ export const DAFTAR_KELAS = [
   // Kelas 3
   { 
     id: "3Zuhair", 
-    nama: "3 Zuhair Bin Al-Awwam", 
+    nama: "3 Ka'ab Bin Zuhair", 
     tingkat: 3, 
-    wali: "Nurnaningsih, S.Si", 
+    wali: "Nurul wahyuni, S.Pd.", 
     kategori: "Kelas Bawah",
+    totalJPEfektif: 39,
     seragam: {
-      SENIN: "MERAH PUTIH",
+      SENIN: "OLAHRAGA",
       SELASA: "HIJAU",
       RABU: "BATIK",
-      KAMIS: "OLAHRAGA",
-      JUMAT: "KOTAK-KOTAK"
+      KAMIS: "KOTAK-KOTAK",
+      JUMAT: "MERAH PUTIH"
     }
   },
   { 
     id: "3Malik", 
-    nama: "3 Malik Bin Anas", 
+    nama: "3 Ka'ab Bin Malik", 
     tingkat: 3, 
-    wali: "Lutfi Nur A, S.Pd", 
+    wali: "Nurul Fadlillah, S.Pd.", 
     kategori: "Kelas Bawah",
+    totalJPEfektif: 39,
     seragam: {
-      SENIN: "MERAH PUTIH",
+      SENIN: "OLAHRAGA",
       SELASA: "HIJAU",
       RABU: "BATIK",
-      KAMIS: "OLAHRAGA",
-      JUMAT: "KOTAK-KOTAK"
+      KAMIS: "KOTAK-KOTAK",
+      JUMAT: "MERAH PUTIH"
     }
   },
 
@@ -363,13 +390,14 @@ export const DAFTAR_KELAS = [
     id: "4Ali", 
     nama: "4 Ali Bin Abi Thalib", 
     tingkat: 4, 
-    wali: "Nuroh, S.Pd", 
+    wali: "Zahra Aulia, S.Pd.", 
     kategori: "Kelas Atas",
+    totalJPEfektif: 47,
     seragam: {
       SENIN: "MERAH PUTIH",
       SELASA: "HIJAU",
-      RABU: "BATIK",
-      KAMIS: "OLAHRAGA",
+      RABU: "BATIK & OLAHRAGA",
+      KAMIS: "KOTAK-KOTAK",
       JUMAT: "PRAMUKA"
     }
   },
@@ -379,11 +407,12 @@ export const DAFTAR_KELAS = [
     tingkat: 4, 
     wali: "Siti Rohmah, S.Pd", 
     kategori: "Kelas Atas",
+    totalJPEfektif: 47,
     seragam: {
       SENIN: "MERAH PUTIH",
       SELASA: "HIJAU",
-      RABU: "BATIK",
-      KAMIS: "OLAHRAGA",
+      RABU: "BATIK & OLAHRAGA",
+      KAMIS: "KOTAK-KOTAK",
       JUMAT: "PRAMUKA"
     }
   },
@@ -395,11 +424,12 @@ export const DAFTAR_KELAS = [
     tingkat: 5, 
     wali: "Hafidzul Furqon, S.Pd", 
     kategori: "Kelas Atas",
+    totalJPEfektif: 47,
     seragam: {
       SENIN: "MERAH PUTIH",
       SELASA: "HIJAU",
-      RABU: "BATIK",
-      KAMIS: "OLAHRAGA",
+      RABU: "BATIK & OLAHRAGA",
+      KAMIS: "KOTAK-KOTAK",
       JUMAT: "PRAMUKA"
     }
   },
@@ -409,11 +439,12 @@ export const DAFTAR_KELAS = [
     tingkat: 5, 
     wali: "Siti Fatimah, S.Pd", 
     kategori: "Kelas Atas",
+    totalJPEfektif: 47,
     seragam: {
       SENIN: "MERAH PUTIH",
       SELASA: "HIJAU",
-      RABU: "BATIK",
-      KAMIS: "OLAHRAGA",
+      RABU: "BATIK & OLAHRAGA",
+      KAMIS: "KOTAK-KOTAK",
       JUMAT: "PRAMUKA"
     }
   },
@@ -425,11 +456,12 @@ export const DAFTAR_KELAS = [
     tingkat: 6, 
     wali: "Muhammad Ihsan, S.Pd", 
     kategori: "Kelas Atas",
+    totalJPEfektif: 47,
     seragam: {
       SENIN: "MERAH PUTIH",
       SELASA: "HIJAU",
-      RABU: "BATIK",
-      KAMIS: "OLAHRAGA",
+      RABU: "BATIK & OLAHRAGA",
+      KAMIS: "KOTAK-KOTAK",
       JUMAT: "PRAMUKA"
     }
   },
@@ -439,11 +471,12 @@ export const DAFTAR_KELAS = [
     tingkat: 6, 
     wali: "Ahmad Fauzi, S.Pd", 
     kategori: "Kelas Atas",
+    totalJPEfektif: 47,
     seragam: {
       SENIN: "MERAH PUTIH",
       SELASA: "HIJAU",
-      RABU: "BATIK",
-      KAMIS: "OLAHRAGA",
+      RABU: "BATIK & OLAHRAGA",
+      KAMIS: "KOTAK-KOTAK",
       JUMAT: "PRAMUKA"
     }
   },
@@ -453,17 +486,18 @@ export const DAFTAR_KELAS = [
     tingkat: 6, 
     wali: "Umi Kulsum, S.Pd", 
     kategori: "Kelas Atas",
+    totalJPEfektif: 47,
     seragam: {
       SENIN: "MERAH PUTIH",
       SELASA: "HIJAU",
-      RABU: "BATIK",
-      KAMIS: "OLAHRAGA",
+      RABU: "BATIK & OLAHRAGA",
+      KAMIS: "KOTAK-KOTAK",
       JUMAT: "PRAMUKA"
     }
   }
 ];
 
-// MATRIKS JADWAL PELAJARAN LENGKAP SENIN - JUM'AT (BERDASARKAN SPREADSHEET RESMI KELAS 1, KELAS 2 & GABUNGAN)
+// MATRIKS JADWAL PELAJARAN LENGKAP SENIN - JUM'AT (BERDASARKAN SPREADSHEET RESMI KELAS 1, 2, 3, 4, 5, 6 & GABUNGAN)
 export const JADWAL_GABUNGAN = {
   SENIN: {
     label: "Senin",
@@ -476,7 +510,7 @@ export const JADWAL_GABUNGAN = {
       "3Malik": ["PJOK", "PJOK", "B.Ind", "B.Ind", "Q", "Q", "K", "K"]
     },
     kelasAtas: {
-      "4Ali": ["K", "K", "PP", "PP", "Q", "Q", "MIPAS", "MIPAS", "Math", "Math"],
+      "4Ali": ["K", "K", "Math", "Math", "Q", "Q", "MIPAS", "MIPAS", "PP", "PP"],
       "4Sumayyah": ["Math", "Math", "BA", "BA", "Q", "Q", "MIPAS", "MIPAS", "K", "K"],
       "5Utsman": ["AD", "AD", "Q", "Q", "PP", "PP", "SKI", "SKI", "Math", "Math"],
       "5Rumaysha": ["AD", "AD", "Q", "Q", "Math", "Math", "BS", "BS", "PP", "PP"],
@@ -513,10 +547,10 @@ export const JADWAL_GABUNGAN = {
       "2Waqqash": ["Q", "Q", "A", "A", "B.Ind", "B.Ind", "BI", "BI"],
       "2Zaid": ["Q", "Q", "BI", "BI", "B.Ind", "B.Ind", "A", "A"],
       "3Zuhair": ["F", "F", "PP", "PP", "Q", "Q", "BA", "BA"],
-      "3Malik": ["F", "F", "PP", "PP", "Q", "Q", "BA", "BA"]
+      "3Malik": ["Math", "Math", "BA", "BA", "Q", "Q", "MIPAS", "MIPAS"]
     },
     kelasAtas: {
-      "4Ali": ["AD", "AD", "PJOK", "PJOK", "Q", "Q", "MIPAS", "MIPAS", "SKI", "SKI"],
+      "4Ali": ["PJOK", "PJOK", "AD", "AD", "Q", "Q", "MIPAS", "MIPAS", "SKI", "BS"],
       "4Sumayyah": ["AD", "AD", "PJOK", "PJOK", "Q", "Q", "MIPAS", "MIPAS", "BS", "BS"],
       "5Utsman": ["K", "K", "Q", "Q", "MIPAS", "MIPAS", "A", "A", "B.Ind", "B.Ind"],
       "5Rumaysha": ["MIPAS", "MIPAS", "Q", "Q", "A", "A", "B.Ind", "B.Ind", "K", "K"],
@@ -532,11 +566,11 @@ export const JADWAL_GABUNGAN = {
       "1Abbas": ["Q", "Q", "PJOK", "PJOK", "MTK", "MTK", "PP", "PP"],
       "2Waqqash": ["Q", "Q", "Math", "Math", "F", "F", "K", "K"],
       "2Zaid": ["Q", "Q", "K", "K", "Math", "Math", "F", "F"],
-      "3Zuhair": ["BS", "BS", "BI", "BI", "Q", "Q", "MIPAS", "MIPAS"],
-      "3Malik": ["SKI", "SKI", "F", "F", "Q", "Q", "BI", "BI"]
+      "3Zuhair": ["BS", "SKI", "BI", "BI", "Q", "Q", "MIPAS", "MIPAS"],
+      "3Malik": ["SKI", "BS", "F", "F", "Q", "Q", "BI", "BI"]
     },
     kelasAtas: {
-      "4Ali": ["F", "F", "B.Ind", "B.Ind", "Q", "Q", "BA", "BA", "Seni", "Seni"],
+      "4Ali": ["F", "F", "B.Ind", "B.Ind", "Q", "Q", "MIPAS", "B.Ind", "Seni", "Seni"],
       "4Sumayyah": ["B.Ind", "B.Ind", "F", "F", "Q", "Q", "Math", "Math", "Seni", "Seni"],
       "5Utsman": ["Seni", "Seni", "Q", "Q", "MTK", "MTK", "MIPAS", "MIPAS", "BA", "BA"],
       "5Rumaysha": ["Seni", "Seni", "Q", "Q", "MTK", "MTK", "MIPAS", "MIPAS", "B.Ind", "B.Ind"],
