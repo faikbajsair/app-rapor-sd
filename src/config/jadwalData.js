@@ -451,31 +451,16 @@ export const DAFTAR_KELAS = [
 
   // Kelas 6
   { 
-    id: "6Abu", 
-    nama: "6 Abu Bakar Ash-Shiddiq", 
-    tingkat: 6, 
-    wali: "Muhammad Ihsan, S.Pd", 
-    kategori: "Kelas Atas",
-    totalJPEfektif: 47,
-    seragam: {
-      SENIN: "MERAH PUTIH",
-      SELASA: "HIJAU",
-      RABU: "BATIK & OLAHRAGA",
-      KAMIS: "KOTAK-KOTAK",
-      JUMAT: "PRAMUKA"
-    }
-  },
-  { 
     id: "6Umar", 
     nama: "6 Umar Bin Khattab", 
     tingkat: 6, 
-    wali: "Ahmad Fauzi, S.Pd", 
+    wali: "Ishmah, M.Pd.", 
     kategori: "Kelas Atas",
     totalJPEfektif: 47,
     seragam: {
       SENIN: "MERAH PUTIH",
-      SELASA: "HIJAU",
-      RABU: "BATIK & OLAHRAGA",
+      SELASA: "OLAHRAGA & HIJAU",
+      RABU: "BATIK",
       KAMIS: "KOTAK-KOTAK",
       JUMAT: "PRAMUKA"
     }
@@ -484,13 +469,13 @@ export const DAFTAR_KELAS = [
     id: "6Hafshah", 
     nama: "6 Hafshah Binti Umar", 
     tingkat: 6, 
-    wali: "Umi Kulsum, S.Pd", 
+    wali: "Meta Dwi Liyani, S.Pd., Gr.", 
     kategori: "Kelas Atas",
     totalJPEfektif: 47,
     seragam: {
       SENIN: "MERAH PUTIH",
-      SELASA: "HIJAU",
-      RABU: "BATIK & OLAHRAGA",
+      SELASA: "OLAHRAGA & HIJAU",
+      RABU: "BATIK",
       KAMIS: "KOTAK-KOTAK",
       JUMAT: "PRAMUKA"
     }
@@ -514,9 +499,8 @@ export const JADWAL_GABUNGAN = {
       "4Sumayyah": ["Math", "Math", "BA", "BA", "Q", "Q", "MIPAS", "MIPAS", "K", "K"],
       "5Utsman": ["AD", "AD", "Q", "Q", "PP", "PP", "Math", "Math", "MIPAS", "MIPAS"],
       "5Rumaysha": ["AD", "AD", "Q", "Q", "Math", "Math", "PP", "PP", "MIPAS", "MIPAS"],
-      "6Abu": ["MIPAS", "MIPAS", "Q", "Q", "A", "A", "MIPAS", "MIPAS", "SKI", "SKI"],
-      "6Umar": ["MIPAS", "MIPAS", "Q", "Q", "A", "A", "MIPAS", "MIPAS", "BS", "BS"],
-      "6Hafshah": ["A", "A", "Q", "Q", "B.Ind", "B.Ind", "MIPAS", "MIPAS", "SKI", "SKI"]
+      "6Umar": ["MIPAS", "B.Ind", "Q", "Q", "A", "A", "MIPAS", "MIPAS", "BS", "SKI"],
+      "6Hafshah": ["A", "A", "Q", "Q", "B.Ind", "B.Ind", "MIPAS", "MIPAS", "SKI", "BS"]
     }
   },
   SELASA: {
@@ -534,9 +518,8 @@ export const JADWAL_GABUNGAN = {
       "4Sumayyah": ["Math", "Math", "A", "A", "Q", "Q", "PP", "PP", "B.Ind", "B.Ind"],
       "5Utsman": ["BI", "BI", "Q", "Q", "F", "F", "Math", "Math", "B.Ind", "BS"],
       "5Rumaysha": ["F", "F", "Q", "Q", "Math", "Math", "BI", "BI", "BS", "MIPAS"],
-      "6Abu": ["PJOK", "PJOK", "Q", "Q", "PP", "PP", "AD", "AD", "BI", "BI"],
       "6Umar": ["PJOK", "PJOK", "Q", "Q", "PP", "PP", "AD", "AD", "B.Ind", "B.Ind"],
-      "6Hafshah": ["PJOK", "PJOK", "Q", "Q", "PP", "PP", "MIPAS", "MIPAS", "F", "F"]
+      "6Hafshah": ["PJOK", "PJOK", "Q", "Q", "PP", "PP", "MIPAS", "B.Ind", "F", "F"]
     }
   },
   RABU: {
@@ -554,7 +537,6 @@ export const JADWAL_GABUNGAN = {
       "4Sumayyah": ["PJOK", "PJOK", "AD", "AD", "Q", "Q", "MIPAS", "MIPAS", "BS", "SKI"],
       "5Utsman": ["K", "K", "Q", "Q", "MIPAS", "MIPAS", "A", "A", "B.Ind", "B.Ind"],
       "5Rumaysha": ["MIPAS", "MIPAS", "Q", "Q", "A", "A", "B.Ind", "B.Ind", "K", "K"],
-      "6Abu": ["BA", "BA", "Q", "Q", "Math", "Math", "MIPAS", "MIPAS", "F", "F"],
       "6Umar": ["F", "F", "Q", "Q", "BI", "BI", "Math", "Math", "MIPAS", "MIPAS"],
       "6Hafshah": ["BI", "BI", "Q", "Q", "MIPAS", "MIPAS", "B.Ind", "B.Ind", "Math", "Math"]
     }
@@ -574,7 +556,6 @@ export const JADWAL_GABUNGAN = {
       "4Sumayyah": ["B.Ind", "B.Ind", "F", "F", "Q", "Q", "MIPAS", "B.Ind", "Seni", "Seni"],
       "5Utsman": ["Seni", "Seni", "Q", "Q", "MTK", "MTK", "MIPAS", "SKI", "BA", "BA"],
       "5Rumaysha": ["Seni", "Seni", "Q", "Q", "MTK", "MTK", "BA", "BA", "SKI", "B.Ind"],
-      "6Abu": ["BS", "BS", "Q", "Q", "Seni", "Seni", "Math", "Math", "K", "K"],
       "6Umar": ["B.Ind", "B.Ind", "Q", "Q", "BA", "BA", "Seni", "Seni", "Math", "Math"],
       "6Hafshah": ["BA", "BA", "Q", "Q", "Math", "Math", "AD", "AD", "Seni", "Seni"]
     }
@@ -594,7 +575,6 @@ export const JADWAL_GABUNGAN = {
       "4Sumayyah": ["MTK", "MTK", "BI", "BI", "Q", "Q", "Pramuka", "Pramuka"],
       "5Utsman": ["PJOK", "PJOK", "Q", "Q", "B.Ind", "B.Ind", "Pramuka", "Pramuka"],
       "5Rumaysha": ["PJOK", "PJOK", "Q", "Q", "B.Ind", "B.Ind", "Pramuka", "Pramuka"],
-      "6Abu": ["AD", "AD", "Q", "Q", "MTK", "MTK", "Pramuka", "Pramuka"],
       "6Umar": ["MTK", "MTK", "Q", "Q", "K", "K", "Pramuka", "Pramuka"],
       "6Hafshah": ["K", "K", "Q", "Q", "MTK", "MTK", "Pramuka", "Pramuka"]
     }
@@ -625,4 +605,250 @@ export const SESI_KELAS_ATAS = [
   { sesi: 8, jam: "13.30 - 14.00" },
   { sesi: 9, jam: "14.00 - 14.30" },
   { sesi: 10, jam: "14.30 - 15.00" }
+];
+
+// STRUKTUR 17 BARIS RESMI SPREADSHEET JADWAL PELAJARAN SD AL-IMAM
+export const BARIS_JADWAL_SEKOLAH = [
+  { no: 1, jam: "07.15 - 07.30", tipe: "kegiatan", label: "Prosesi Pembacaan Dzikir & Muroja'ah", labelSenin: "Upacara" },
+  { no: 2, jam: "07.30 - 08.00", tipe: "kbm" },
+  { no: 3, jam: "08.00 - 08.30", tipe: "kbm" },
+  { no: 4, jam: "08.30 - 09.00", tipe: "kbm" },
+  { no: 5, jam: "09.00 - 09.30", tipe: "kbm" },
+  { no: 6, jam: "09.30 - 10.00", tipe: "istirahat", label: "ISTIRAHAT" },
+  { no: 7, jam: "10.00 - 10.30", tipe: "kegiatan", label: "Shalat Duha, Muraja'ah, & Kultum" },
+  { no: 8, jam: "10.30 - 11.00", tipe: "kbm" },
+  { no: 9, jam: "11.00 - 11.30", tipe: "kbm" },
+  { no: 10, jam: "11.30 - 12.00", tipe: "literasi", label: "LITERASI", labelJumat: "SHOLAT JUMAT/KEPUTRIAN" },
+  { no: 11, jam: "12.00 - 13.00", tipe: "istirahat", label: "Makan Siang - Shalat Dzuhur Berjama'ah" },
+  { no: 12, jam: "13.00 - 13.30", tipe: "kbm" },
+  { no: 13, jam: "13.30 - 14.00", tipe: "kbm" },
+  { no: 14, jam: "14.00 - 14.30", tipe: "kbm", labelJumat: "PULANG" },
+  { no: 15, jam: "14.30 - 15.00", tipe: "kbm" },
+  { no: 16, jam: "15.00 - 15.30", tipe: "kegiatan", label: "Shalat Ashar Berjamaah" },
+  { no: 17, jam: "15.30 -", tipe: "pulang", label: "PULANG" }
+];
+
+// JADWAL RESMI GURU BIDANG STUDY (SESUAI TAB SPREADSHEET 'Bidang Study')
+export const JADWAL_GURU_BIDANG_STUDY = [
+  {
+    id: "BA",
+    mapel: "BAHASA ARAB",
+    guru: "Heru Firdaus, S.Hum",
+    jpPerPekan: 24,
+    grid: {
+      SENIN: { 4: "4 SUMAYYAH", 5: "4 SUMAYYAH", 12: "1 ABAS", 13: "1 ABAS" },
+      SELASA: { 2: "4 ALI", 3: "4 ALI", 4: "2 ZAID", 5: "2 ZAID", 8: "2 WAQQAS", 9: "2 WAQQAS", 12: "1 UMAR", 13: "1 UMAR" },
+      RABU: { 4: "3 MALIK", 5: "3 MALIK", 12: "3 ZUHAIR", 13: "3 ZUHAIR" },
+      KAMIS: { 2: "6 HAFSHAH", 3: "6 HAFSHAH", 8: "6 UMAR", 9: "6 UMAR", 12: "5 RUMAYSHA", 13: "5 RUMAYSHA", 14: "5 USMAN", 15: "5 USMAN" },
+      JUMAT: {}
+    },
+    jadwal: {
+      SENIN: [
+        { jam: "08.30 - 09.30", kelas: "4 SUMAYYAH", sesi: "Jam Ke-4 & 5" },
+        { jam: "13.00 - 14.00", kelas: "1 ABAS", sesi: "Jam Ke-12 & 13" }
+      ],
+      SELASA: [
+        { jam: "07.30 - 08.30", kelas: "4 ALI", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "2 ZAID", sesi: "Jam Ke-4 & 5" },
+        { jam: "10.30 - 11.30", kelas: "2 WAQQAS", sesi: "Jam Ke-8 & 9" },
+        { jam: "13.00 - 14.00", kelas: "1 UMAR", sesi: "Jam Ke-12 & 13" }
+      ],
+      RABU: [
+        { jam: "08.30 - 09.30", kelas: "3 MALIK", sesi: "Jam Ke-4 & 5" },
+        { jam: "13.00 - 14.00", kelas: "3 ZUHAIR", sesi: "Jam Ke-12 & 13" }
+      ],
+      KAMIS: [
+        { jam: "07.30 - 08.30", kelas: "6 HAFSHAH", sesi: "Jam Ke-2 & 3" },
+        { jam: "10.30 - 11.30", kelas: "6 UMAR", sesi: "Jam Ke-8 & 9" },
+        { jam: "13.00 - 14.00", kelas: "5 RUMAYSHA", sesi: "Jam Ke-12 & 13" },
+        { jam: "14.00 - 15.00", kelas: "5 USMAN", sesi: "Jam Ke-14 & 15" }
+      ],
+      JUMAT: []
+    }
+  },
+  {
+    id: "BI",
+    mapel: "BAHASA INGGRIS",
+    guru: "Susan Eka Pratiwi, S.Pd",
+    jpPerPekan: 24,
+    grid: {
+      SENIN: { 12: "5 RUMAYSHA", 13: "5 RUMAYSHA" },
+      SELASA: { 2: "5 USMAN", 3: "5 USMAN", 4: "1 ABAS", 5: "1 ABAS", 8: "1 UMAR", 9: "1 UMAR", 12: "2 WAQQAS", 13: "2 WAQQAS" },
+      RABU: { 2: "6 HAFSHAH", 3: "6 HAFSHAH", 4: "2 ZAID", 5: "2 ZAID", 8: "6 UMAR", 9: "6 UMAR" },
+      KAMIS: { 4: "3 ZUHAIR", 5: "3 ZUHAIR", 12: "3 MALIK", 13: "3 MALIK" },
+      JUMAT: { 2: "4 ALI", 3: "4 ALI", 4: "4 SUMAYYAH", 5: "4 SUMAYYAH" }
+    },
+    jadwal: {
+      SENIN: [
+        { jam: "13.00 - 14.00", kelas: "5 RUMAYSHA", sesi: "Jam Ke-12 & 13" }
+      ],
+      SELASA: [
+        { jam: "07.30 - 08.30", kelas: "5 USMAN", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "1 ABAS", sesi: "Jam Ke-4 & 5" },
+        { jam: "10.30 - 11.30", kelas: "1 UMAR", sesi: "Jam Ke-8 & 9" },
+        { jam: "13.00 - 14.00", kelas: "2 WAQQAS", sesi: "Jam Ke-12 & 13" }
+      ],
+      RABU: [
+        { jam: "07.30 - 08.30", kelas: "6 HAFSHAH", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "2 ZAID", sesi: "Jam Ke-4 & 5" },
+        { jam: "10.30 - 11.30", kelas: "6 UMAR", sesi: "Jam Ke-8 & 9" }
+      ],
+      KAMIS: [
+        { jam: "08.30 - 09.30", kelas: "3 ZUHAIR", sesi: "Jam Ke-4 & 5" },
+        { jam: "13.00 - 14.00", kelas: "3 MALIK", sesi: "Jam Ke-12 & 13" }
+      ],
+      JUMAT: [
+        { jam: "07.30 - 08.30", kelas: "4 ALI", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "4 SUMAYYAH", sesi: "Jam Ke-4 & 5" }
+      ]
+    }
+  },
+  {
+    id: "PAI_ATAS",
+    mapel: "PAI Kelas Atas",
+    guru: "Indah Wulandari, S.Pd",
+    jpPerPekan: 28,
+    grid: {
+      SENIN: { 2: "6 HAFSHAH (A)", 3: "6 HAFSHAH (A)", 8: "6 UMAR (A)", 9: "6 UMAR (A)", 14: "6 HAFSHAH (S)", 15: "6 UMAR (S)" },
+      SELASA: { 2: "5 RUMAYSHA (F)", 3: "5 RUMAYSHA (F)", 4: "4 SUMAYYAH (A)", 5: "4 SUMAYYAH (A)", 8: "5 UTSMAN (F)", 9: "5 UTSMAN (F)", 12: "4 ALI (A)", 13: "4 ALI (A)", 14: "6 HAFSHAH (F)", 15: "6 HAFSHAH (F)" },
+      RABU: { 2: "6 UMAR (F)", 3: "6 UMAR (F)", 8: "5 RUMAYSHA (A)", 9: "5 RUMAYSHA (A)", 12: "5 UTSMAN (A)", 13: "5 UTSMAN (A)" },
+      KAMIS: { 2: "4 ALI (F)", 3: "4 ALI (F)", 4: "4 SUMAYYAH (F)", 5: "4 SUMAYYAH (F)", 13: "5 UTSMAN (S)", 14: "5 RUMAYSHA (S)" },
+      JUMAT: {}
+    },
+    jadwal: {
+      SENIN: [
+        { jam: "07.30 - 08.30", kelas: "6 HAFSHAH (Aqidah)", sesi: "Jam Ke-2 & 3" },
+        { jam: "10.30 - 11.30", kelas: "6 UMAR (Aqidah)", sesi: "Jam Ke-8 & 9" },
+        { jam: "14.00 - 14.30", kelas: "6 HAFSHAH (SKI)", sesi: "Jam Ke-14" },
+        { jam: "14.30 - 15.00", kelas: "6 UMAR (SKI)", sesi: "Jam Ke-15" }
+      ],
+      SELASA: [
+        { jam: "07.30 - 08.30", kelas: "5 RUMAYSHA (Fikih)", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "4 SUMAYYAH (Aqidah)", sesi: "Jam Ke-4 & 5" },
+        { jam: "10.30 - 11.30", kelas: "5 UTSMAN (Fikih)", sesi: "Jam Ke-8 & 9" },
+        { jam: "13.00 - 14.00", kelas: "4 ALI (Aqidah)", sesi: "Jam Ke-12 & 13" },
+        { jam: "14.00 - 15.00", kelas: "6 HAFSHAH (Fikih)", sesi: "Jam Ke-14 & 15" }
+      ],
+      RABU: [
+        { jam: "07.30 - 08.30", kelas: "6 UMAR (Fikih)", sesi: "Jam Ke-2 & 3" },
+        { jam: "10.30 - 11.30", kelas: "5 RUMAYSHA (Aqidah)", sesi: "Jam Ke-8 & 9" },
+        { jam: "13.00 - 14.00", kelas: "5 UTSMAN (Aqidah)", sesi: "Jam Ke-12 & 13" }
+      ],
+      KAMIS: [
+        { jam: "07.30 - 08.30", kelas: "4 ALI (Fikih)", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "4 SUMAYYAH (Fikih)", sesi: "Jam Ke-4 & 5" },
+        { jam: "13.30 - 14.00", kelas: "5 UTSMAN (SKI)", sesi: "Jam Ke-13" },
+        { jam: "14.00 - 14.30", kelas: "5 RUMAYSHA (SKI)", sesi: "Jam Ke-14" }
+      ],
+      JUMAT: []
+    }
+  },
+  {
+    id: "PAI_BAWAH",
+    mapel: "PAI Kelas Bawah",
+    guru: "Muhamad Rizky Kusumah, S.Pd",
+    jpPerPekan: 28,
+    grid: {
+      SENIN: { 2: "1 ABBAS (A)", 3: "1 ABBAS (A)", 4: "1 UMAR (A)", 5: "1 UMAR (A)" },
+      SELASA: { 2: "3 MALIK (A)", 3: "3 MALIK (A)", 4: "3 ZUHAIR (A)", 5: "3 ZUHAIR (A)" },
+      RABU: { 2: "3 ZUHAIR (F)", 3: "3 ZUHAIR (F)", 4: "2 WAQQAS (A)", 5: "2 WAQQAS (A)", 12: "2 ZAID (A)", 13: "2 ZAID (A)", 14: "4 ALI (S)", 15: "4 SUMAYYAH (S)" },
+      KAMIS: { 2: "3 MALIK (S)", 3: "3 ZUHAIR (S)", 4: "3 MALIK (F)", 5: "3 MALIK (F)", 8: "2 WAQQAS (F)", 9: "2 WAQQAS (F)", 12: "2 ZAID (F)", 13: "2 ZAID (F)" },
+      JUMAT: { 4: "1 ABBAS (F)", 5: "1 ABBAS (F)", 8: "1 UMAR (F)", 9: "1 UMAR (F)" }
+    },
+    jadwal: {
+      SENIN: [
+        { jam: "07.30 - 08.30", kelas: "1 ABBAS (Aqidah)", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "1 UMAR (Aqidah)", sesi: "Jam Ke-4 & 5" }
+      ],
+      SELASA: [
+        { jam: "07.30 - 08.30", kelas: "3 MALIK (Aqidah)", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "3 ZUHAIR (Aqidah)", sesi: "Jam Ke-4 & 5" }
+      ],
+      RABU: [
+        { jam: "07.30 - 08.30", kelas: "3 ZUHAIR (Fikih)", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "2 WAQQAS (Aqidah)", sesi: "Jam Ke-4 & 5" },
+        { jam: "13.00 - 14.00", kelas: "2 ZAID (Aqidah)", sesi: "Jam Ke-12 & 13" },
+        { jam: "14.00 - 14.30", kelas: "4 ALI (SKI)", sesi: "Jam Ke-14" },
+        { jam: "14.30 - 15.00", kelas: "4 SUMAYYAH (SKI)", sesi: "Jam Ke-15" }
+      ],
+      KAMIS: [
+        { jam: "07.30 - 08.00", kelas: "3 MALIK (SKI)", sesi: "Jam Ke-2" },
+        { jam: "08.00 - 08.30", kelas: "3 ZUHAIR (SKI)", sesi: "Jam Ke-3" },
+        { jam: "08.30 - 09.30", kelas: "3 MALIK (Fikih)", sesi: "Jam Ke-4 & 5" },
+        { jam: "10.30 - 11.30", kelas: "2 WAQQAS (Fikih)", sesi: "Jam Ke-8 & 9" },
+        { jam: "13.00 - 14.00", kelas: "2 ZAID (Fikih)", sesi: "Jam Ke-12 & 13" }
+      ],
+      JUMAT: [
+        { jam: "08.30 - 09.30", kelas: "1 ABBAS (Fikih)", sesi: "Jam Ke-4 & 5" },
+        { jam: "10.30 - 11.30", kelas: "1 UMAR (Fikih)", sesi: "Jam Ke-8 & 9" }
+      ]
+    }
+  },
+  {
+    id: "PJOK",
+    mapel: "PJOK",
+    guru: "Muhammad Raihan, S.Pd",
+    jpPerPekan: 12,
+    grid: {
+      SENIN: { 2: "3 MALIK / 3 ZUHAIR", 3: "3 MALIK / 3 ZUHAIR", 4: "2 WAQQAS / 2 ZAID", 5: "2 WAQQAS / 2 ZAID" },
+      SELASA: { 2: "6 UMAR / 6 HAFSHAH", 3: "6 UMAR / 6 HAFSHAH" },
+      RABU: { 2: "4 ALI / 4 SUMAYYAH", 3: "4 ALI / 4 SUMAYYAH" },
+      KAMIS: { 2: "1 UMAR / 1 ABBAS", 3: "1 UMAR / 1 ABBAS" },
+      JUMAT: { 2: "5 UTSMAN / 5 RUMAYSHA", 3: "5 UTSMAN / 5 RUMAYSHA" }
+    },
+    jadwal: {
+      SENIN: [
+        { jam: "07.30 - 08.30", kelas: "3 ZUHAIR & 3 MALIK", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "2 WAQQAS & 2 ZAID", sesi: "Jam Ke-4 & 5" }
+      ],
+      SELASA: [
+        { jam: "07.30 - 08.30", kelas: "6 UMAR & 6 HAFSHAH", sesi: "Jam Ke-2 & 3" }
+      ],
+      RABU: [
+        { jam: "07.30 - 08.30", kelas: "4 ALI & 4 SUMAYYAH", sesi: "Jam Ke-2 & 3" }
+      ],
+      KAMIS: [
+        { jam: "07.30 - 08.30", kelas: "1 UMAR & 1 ABBAS", sesi: "Jam Ke-2 & 3" }
+      ],
+      JUMAT: [
+        { jam: "07.30 - 08.30", kelas: "5 UTSMAN & 5 RUMAYSHA", sesi: "Jam Ke-2 & 3" }
+      ]
+    }
+  },
+  {
+    id: "TIK",
+    mapel: "INFORMATIKA",
+    guru: "Laila Paizrujah, S.Pd",
+    jpPerPekan: 24,
+    grid: {
+      SENIN: { 2: "4 ALI", 3: "4 ALI", 4: "3 ZUHAIR", 5: "3 ZUHAIR", 12: "3 MALIK", 13: "3 MALIK", 14: "4 SUMAYYAH", 15: "4 SUMAYYAH" },
+      SELASA: {},
+      RABU: { 2: "5 UTSMAN", 3: "5 UTSMAN", 8: "1 ABBAS", 9: "1 ABBAS", 12: "1 UMAR", 13: "1 UMAR", 14: "5 RUMAYSHA", 15: "5 RUMAYSHA" },
+      KAMIS: { 4: "2 ZAID", 5: "2 ZAID", 12: "2 WAQQAS", 13: "2 WAQQAS" },
+      JUMAT: { 2: "6 HAFSHAH", 3: "6 HAFSHAH", 8: "6 UMAR", 9: "6 UMAR" }
+    },
+    jadwal: {
+      SENIN: [
+        { jam: "07.30 - 08.30", kelas: "4 ALI", sesi: "Jam Ke-2 & 3" },
+        { jam: "08.30 - 09.30", kelas: "3 ZUHAIR", sesi: "Jam Ke-4 & 5" },
+        { jam: "13.00 - 14.00", kelas: "3 MALIK", sesi: "Jam Ke-12 & 13" },
+        { jam: "14.00 - 15.00", kelas: "4 SUMAYYAH", sesi: "Jam Ke-14 & 15" }
+      ],
+      SELASA: [],
+      RABU: [
+        { jam: "07.30 - 08.30", kelas: "5 UTSMAN", sesi: "Jam Ke-2 & 3" },
+        { jam: "10.30 - 11.30", kelas: "1 ABBAS", sesi: "Jam Ke-8 & 9" },
+        { jam: "13.00 - 14.00", kelas: "1 UMAR", sesi: "Jam Ke-12 & 13" },
+        { jam: "14.00 - 15.00", kelas: "5 RUMAYSHA", sesi: "Jam Ke-14 & 15" }
+      ],
+      KAMIS: [
+        { jam: "08.30 - 09.30", kelas: "2 ZAID", sesi: "Jam Ke-4 & 5" },
+        { jam: "13.00 - 14.00", kelas: "2 WAQQAS", sesi: "Jam Ke-12 & 13" }
+      ],
+      JUMAT: [
+        { jam: "07.30 - 08.30", kelas: "6 HAFSHAH", sesi: "Jam Ke-2 & 3" },
+        { jam: "10.30 - 11.30", kelas: "6 UMAR", sesi: "Jam Ke-8 & 9" }
+      ]
+    }
+  }
 ];
