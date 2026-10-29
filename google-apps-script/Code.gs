@@ -19,6 +19,9 @@ var SHEETS = {
   ABS: 'DATA_ABS',
   SIKAP: 'DATA_SIKAP',
   PRESENSI: 'DATA_PRESENSI',
+  GTK: 'DATA_GTK',
+  KHOLAQUH: 'DATA_KHOLAQUH',
+  KHOLAQUH_NILAI: 'DATA_KHOLAQUH_NILAI',
   USERS: 'DATA_USERS',
   LOGS: 'AUDIT_LOGS'
 };
@@ -51,7 +54,10 @@ function doGet(e) {
           nilai: getSheetDataAsObjects(ss.getSheetByName(SHEETS.NILAI)),
           abs: getSheetDataAsObjects(ss.getSheetByName(SHEETS.ABS)),
           sikap: getSheetDataAsObjects(ss.getSheetByName(SHEETS.SIKAP)),
-          presensi: getSheetDataAsObjects(ss.getSheetByName(SHEETS.PRESENSI))
+          presensi: getSheetDataAsObjects(ss.getSheetByName(SHEETS.PRESENSI)),
+          gtk: getSheetDataAsObjects(ss.getSheetByName(SHEETS.GTK)),
+          kholaqoh: getSheetDataAsObjects(ss.getSheetByName(SHEETS.KHOLAQUH)),
+          kholaqohNilai: getSheetDataAsObjects(ss.getSheetByName(SHEETS.KHOLAQUH_NILAI))
         },
         timestamp: new Date().toISOString()
       };
@@ -105,8 +111,11 @@ function doPost(e) {
       if (payload.abs) saveBatchToSheet(ss.getSheetByName(SHEETS.ABS), payload.abs, 'id');
       if (payload.sikap) saveBatchToSheet(ss.getSheetByName(SHEETS.SIKAP), payload.sikap, 'id');
       if (payload.presensi) saveBatchToSheet(ss.getSheetByName(SHEETS.PRESENSI), payload.presensi, 'id');
+      if (payload.gtk) saveBatchToSheet(ss.getSheetByName(SHEETS.GTK), payload.gtk, 'id');
+      if (payload.kholaqoh) saveBatchToSheet(ss.getSheetByName(SHEETS.KHOLAQUH), payload.kholaqoh, 'id');
+      if (payload.kholaqohNilai) saveBatchToSheet(ss.getSheetByName(SHEETS.KHOLAQUH_NILAI), payload.kholaqohNilai, 'id');
       
-      logAction(ss, 'SYNC_ALL', 'Sinkronisasi menyeluruh berhasil diproses.');
+      logAction(ss, 'SYNC_ALL', 'Sinkronisasi menyeluruh termasuk GTK & Kholaqoh berhasil diproses.');
       result = { status: 'success', message: 'Semua data berhasil disinkronkan ke Google Sheet!' };
       
     } else if (action === 'saveRecord') {
@@ -170,6 +179,18 @@ function ensureSheetsInitialized(ss) {
     {
       name: SHEETS.PRESENSI,
       headers: ['id', 'siswaId', 'semester', 'tahunAjaran', 'sakit', 'izin', 'alpa', 'terlambat', 'catatanWaliKelas', 'updatedAt']
+    },
+    {
+      name: SHEETS.GTK,
+      headers: ['id', 'no', 'nama', 'nuptk', 'nip', 'jabatan', 'jabatanLainnya', 'role', 'email', 'statusJabatan', 'pendidikan', 'kelasDiampu', 'mapelDiampu', 'kholaqohDiampu']
+    },
+    {
+      name: SHEETS.KHOLAQUH,
+      headers: ['id', 'kode', 'nama', 'gender', 'fase', 'pembimbingNama', 'targetJuz', 'jadwal', 'ruangan']
+    },
+    {
+      name: SHEETS.KHOLAQUH_NILAI,
+      headers: ['id', 'siswaId', 'kholaqohId', 'pembimbingId', 'tahsinJilid', 'tahsinHalaman', 'nilaiMakhraj', 'nilaiTajwid', 'nilaiFashahah', 'surahHafalan', 'nilaiKelancaran', 'adab', 'catatan', 'updatedAt']
     },
     {
       name: SHEETS.LOGS,

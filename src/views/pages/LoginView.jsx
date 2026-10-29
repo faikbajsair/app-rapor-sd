@@ -14,7 +14,7 @@ import {
 import { ROLES, ROLE_CONFIG } from '../../config/roles';
 import { AuthController } from '../../controllers/AuthController';
 
-export function LoginView({ settings, siswaList, onLoginSuccess }) {
+export function LoginView({ settings, siswaList, gtkList = [], onLoginSuccess }) {
   const [activeTab, setActiveTab] = useState('civitas'); // 'civitas' | 'wali_murid'
   
   // Form states for Civitas
@@ -30,11 +30,23 @@ export function LoginView({ settings, siswaList, onLoginSuccess }) {
   const handleCivitasSubmit = (e) => {
     e.preventDefault();
     setErrorMessage('');
-    const res = AuthController.loginCivitas(civitasUser, civitasPass);
+    const res = AuthController.loginCivitas(civitasUser, civitasPass, gtkList);
     if (res.success) {
       onLoginSuccess(res.user);
     } else {
       setErrorMessage(res.message);
+    }
+  };
+
+  const handleSelectGTKQuick = (e) => {
+    const selectedEmail = e.target.value;
+    if (!selectedEmail) return;
+    const gtk = gtkList.find(g => g.email === selectedEmail);
+    if (gtk) {
+      setCivitasUser(gtk.email);
+      setCivitasPass(gtk.password || 'admin');
+      const res = AuthController.loginCivitas(gtk.email, gtk.password || 'admin', gtkList);
+      if (res.success) onLoginSuccess(res.user);
     }
   };
 
@@ -53,7 +65,7 @@ export function LoginView({ settings, siswaList, onLoginSuccess }) {
     const cfg = ROLE_CONFIG[roleKey];
     setCivitasUser(cfg.email);
     setCivitasPass(cfg.password || 'admin');
-    const res = AuthController.loginCivitas(cfg.email, cfg.password || 'admin');
+    const res = AuthController.loginCivitas(cfg.email, cfg.password || 'admin', gtkList);
     if (res.success) onLoginSuccess(res.user);
   };
 
@@ -198,22 +210,77 @@ export function LoginView({ settings, siswaList, onLoginSuccess }) {
               </button>
             </form>
 
-            {/* Quick Demo Civitas Login Buttons */}
-            <div className="pt-4 border-t border-slate-100 space-y-2.5">
+            {/* Quick Demo Civitas Login Buttons & GTK Selector */}
+            <div className="pt-4 border-t border-slate-100 space-y-3">
+              
+              {/* Dropdown 34 Akun GTK Resmi */}
+              {gtkList && gtkList.length > 0 && (
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+                  <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
+                    <span className="flex items-center">
+                      <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                      Pilih Cepat Akun Guru (34 GTK):
+                    </span>
+                    <span className="text-[10px] text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-full font-extrabold">
+                      1-Klik Masuk
+                    </span>
+                  </label>
+                  <select
+                    onChange={handleSelectGTKQuick}
+                    defaultValue=""
+                    className="w-full px-3 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                  >
+                    <option value="" disabled>-- Pilih Guru / Tenaga Kependidikan --</option>
+                    <optgroup label="Pimpinan Sekolah">
+                      {gtkList.filter(g => g.role === ROLES.KEPSEK).map(g => (
+                        <option key={g.id} value={g.email}>{g.nama} ({g.jabatan})</option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Guru Wali Kelas (Kelas I - VI)">
+                      {gtkList.filter(g => g.role === ROLES.WALI_KELAS).map(g => (
+                        <option key={g.id} value={g.email}>{g.nama} ({g.badge})</option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Guru Mata Pelajaran">
+                      {gtkList.filter(g => g.role === ROLES.GURU_MAPEL).map(g => (
+                        <option key={g.id} value={g.email}>{g.nama} ({g.jabatan})</option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Guru Al-Qur'an & Kholaqoh (10 Guru + Kabid)">
+                      {gtkList.filter(g => g.role === ROLES.GURU_QURAN).map(g => (
+                        <option key={g.id} value={g.email}>{g.nama} ({g.badge || g.jabatan})</option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Guru Pendamping">
+                      {gtkList.filter(g => g.role === ROLES.PENDAMPING).map(g => (
+                        <option key={g.id} value={g.email}>{g.nama} (Pendamping)</option>
+                      ))}
+                    </optgroup>
+                  </select>
+                </div>
+              )}
+
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center">
-                <Sparkles className="w-3.5 h-3.5 mr-1 text-pastel-700" />
-                <span>Pilih Akun Demo Civitas (1-Klik Masuk):</span>
+                <span>Peran Utama Sistem:</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {[ROLES.ADMIN, ROLES.KEPSEK, ROLES.WALI_KELAS, ROLES.GURU_MAPEL].map((rKey) => {
+                {[
+                  ROLES.ADMIN, 
+                  ROLES.KEPSEK, 
+                  ROLES.WALI_KELAS, 
+                  ROLES.GURU_MAPEL,
+                  ROLES.GURU_QURAN,
+                  ROLES.PENDAMPING
+                ].map((rKey) => {
                   const cfg = ROLE_CONFIG[rKey];
+                  if (!cfg) return null;
                   return (
                     <button
                       key={rKey}
                       type="button"
                       onClick={() => handleQuickLoginCivitas(rKey)}
-                      className="p-2.5 rounded-xl border border-slate-200 hover:border-pastel-400 hover:bg-pastel-50/60 text-left transition-all flex items-center space-x-2.5 group"
+                      className="p-2.5 rounded-xl border border-slate-200 hover:border-pastel-400 hover:bg-pastel-50/60 text-left transition-all flex items-center space-x-2.5 group cursor-pointer"
                     >
                       <img 
                         src={cfg.avatar} 

@@ -13,6 +13,11 @@ import {
   DEFAULT_SIKAP,
   DEFAULT_PRESENSI
 } from '../config/initialData';
+import {
+  INITIAL_GTK_LIST,
+  INITIAL_KHOLAQUH_LIST,
+  INITIAL_KHOLAQUH_NILAI
+} from '../config/gtkData';
 
 const KEYS = {
   SETTINGS: 'rapor_sd_settings_v1',
@@ -22,7 +27,10 @@ const KEYS = {
   ABS: 'rapor_sd_abs_v1',
   SIKAP: 'rapor_sd_sikap_v1',
   PRESENSI: 'rapor_sd_presensi_v1',
-  APPROVAL: 'rapor_sd_approval_v1'
+  APPROVAL: 'rapor_sd_approval_v1',
+  GTK: 'rapor_sd_gtk_v1',
+  KHOLAQUH: 'rapor_sd_kholaquh_v1',
+  KHOLAQUH_NILAI: 'rapor_sd_kholaquh_nilai_v1'
 };
 
 class StorageAdapter {
@@ -219,10 +227,68 @@ class StorageAdapter {
     return approvalData;
   }
 
+  // GTK (Guru & Tenaga Kependidikan)
+  getGTK() {
+    return this._get(KEYS.GTK, INITIAL_GTK_LIST);
+  }
+
+  saveGTK(gtkList) {
+    this._set(KEYS.GTK, gtkList);
+    return gtkList;
+  }
+
+  upsertGTK(record) {
+    const list = this.getGTK();
+    const idx = list.findIndex(g => g.id === record.id || (g.email && g.email === record.email));
+    if (idx >= 0) {
+      list[idx] = { ...list[idx], ...record };
+    } else {
+      list.push({ ...record, id: record.id || `GTK_${Date.now()}` });
+    }
+    this.saveGTK(list);
+    return list;
+  }
+
+  // Kholaqoh (Kelompok Al-Qur'an / Halaqoh)
+  getKholaqoh() {
+    return this._get(KEYS.KHOLAQUH, INITIAL_KHOLAQUH_LIST);
+  }
+
+  saveKholaqoh(kholaqohList) {
+    this._set(KEYS.KHOLAQUH, kholaqohList);
+    return kholaqohList;
+  }
+
+  // Nilai Kholaqoh (Tahsin & Tahfidz Santri)
+  getKholaqohNilai() {
+    return this._get(KEYS.KHOLAQUH_NILAI, INITIAL_KHOLAQUH_NILAI);
+  }
+
+  saveKholaqohNilai(nilaiList) {
+    this._set(KEYS.KHOLAQUH_NILAI, nilaiList);
+    return nilaiList;
+  }
+
+  upsertKholaqohNilai(record) {
+    const list = this.getKholaqohNilai();
+    const idx = list.findIndex(k => k.siswaId === record.siswaId && k.kholaqohId === record.kholaqohId);
+    if (idx >= 0) {
+      list[idx] = { ...list[idx], ...record, updatedAt: new Date().toISOString() };
+    } else {
+      list.push({
+        ...record,
+        id: record.id || `KN_${record.siswaId}_${Date.now()}`,
+        updatedAt: new Date().toISOString()
+      });
+    }
+    this.saveKholaqohNilai(list);
+    return list;
+  }
+
   // Export & Import
   exportFullBackup() {
     return {
-      version: "1.0",
+      version: "1.1",
       exportDate: new Date().toISOString(),
       settings: this.getSettings(),
       siswa: this.getSiswa(),
@@ -231,7 +297,10 @@ class StorageAdapter {
       abs: this.getABS(),
       sikap: this.getSikap(),
       presensi: this.getPresensi(),
-      approval: this.getApproval()
+      approval: this.getApproval(),
+      gtk: this.getGTK(),
+      kholaqoh: this.getKholaqoh(),
+      kholaqohNilai: this.getKholaqohNilai()
     };
   }
 
@@ -245,6 +314,9 @@ class StorageAdapter {
     if (data.sikap) this._set(KEYS.SIKAP, data.sikap);
     if (data.presensi) this._set(KEYS.PRESENSI, data.presensi);
     if (data.approval) this._set(KEYS.APPROVAL, data.approval);
+    if (data.gtk) this._set(KEYS.GTK, data.gtk);
+    if (data.kholaqoh) this._set(KEYS.KHOLAQUH, data.kholaqoh);
+    if (data.kholaqohNilai) this._set(KEYS.KHOLAQUH_NILAI, data.kholaqohNilai);
     this.notify();
     return true;
   }
@@ -258,6 +330,9 @@ class StorageAdapter {
     localStorage.removeItem(KEYS.SIKAP);
     localStorage.removeItem(KEYS.PRESENSI);
     localStorage.removeItem(KEYS.APPROVAL);
+    localStorage.removeItem(KEYS.GTK);
+    localStorage.removeItem(KEYS.KHOLAQUH);
+    localStorage.removeItem(KEYS.KHOLAQUH_NILAI);
     this.notify();
   }
 }

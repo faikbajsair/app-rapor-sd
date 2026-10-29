@@ -7,6 +7,8 @@ export const ROLES = {
   KEPSEK: 'kepsek',
   WALI_KELAS: 'wali_kelas',
   GURU_MAPEL: 'guru_mapel',
+  GURU_QURAN: 'guru_quran',
+  PENDAMPING: 'pendamping',
   WALI_MURID: 'wali_murid'
 };
 
@@ -54,10 +56,10 @@ export const ROLE_CONFIG = {
   [ROLES.WALI_KELAS]: {
     role: ROLES.WALI_KELAS,
     label: 'Guru Wali Kelas',
-    badge: 'Wali Kelas 4-A',
-    email: 'walikelas@alimamischool.com',
+    badge: 'Wali Kelas',
+    email: 'putri.hidayah@alimamischool.com',
     password: 'admin',
-    nama: 'Ustdz. Fatimah Azzahra, S.Pd',
+    nama: 'Putri Hidayah, S.Pd',
     color: 'bg-green-100 text-green-800 border-green-300',
     description: 'Input Presensi/Absensi, Penilaian Sikap (Auto-Narrative), Catatan Wali Kelas, Cetak Rapor & Buku Induk.',
     defaultPath: 'rapor',
@@ -67,13 +69,37 @@ export const ROLE_CONFIG = {
     role: ROLES.GURU_MAPEL,
     label: 'Guru Mata Pelajaran',
     badge: 'Guru Penilai Mapel & ABS',
-    email: 'gurumapel@alimamischool.com',
+    email: 'feby.dwitri@alimamischool.com',
     password: 'admin',
-    nama: 'Ust. Ahmad Syarif, S.Pd',
+    nama: 'Feby Dwitri Putri, S.Pd',
     color: 'bg-cyan-100 text-cyan-800 border-cyan-300',
     description: 'Analisis Butir Soal (ABS Dinamis), Input Nilai Formatif & Sumatif, Grafik Tingkat Kesukaran Soal.',
     defaultPath: 'nilai',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80'
+  },
+  [ROLES.GURU_QURAN]: {
+    role: ROLES.GURU_QURAN,
+    label: "Guru Al-Qur'an & Kholaqoh",
+    badge: 'Pembimbing Kholaqoh & Tahfidz',
+    email: 'itang.setiawan@alimamischool.com',
+    password: 'admin',
+    nama: 'Itang Setiawan, S.Pd.I.',
+    color: 'bg-purple-100 text-purple-800 border-purple-300',
+    description: "Input Nilai Tahsin (Makhraj, Tajwid, Fashahah), Tahfidz (Hafalan Surat & Juz), serta Catatan Kholaqoh Santri.",
+    defaultPath: 'kholaqoh',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80'
+  },
+  [ROLES.PENDAMPING]: {
+    role: ROLES.PENDAMPING,
+    label: 'Guru Pendamping',
+    badge: 'Pendamping & Remedial',
+    email: 'sofiyyah@alimamischool.com',
+    password: 'admin',
+    nama: 'Sofiyyah, S.Pd',
+    color: 'bg-rose-100 text-rose-800 border-rose-300',
+    description: 'Pendampingan belajar siswa, observasi harian, dan koordinasi dengan wali kelas.',
+    defaultPath: 'dashboard',
+    avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&auto=format&fit=crop&q=80'
   },
   [ROLES.WALI_MURID]: {
     role: ROLES.WALI_MURID,
@@ -82,6 +108,6 @@ export const ROLE_CONFIG = {
     color: 'bg-amber-100 text-amber-800 border-amber-300',
     description: 'Pantau Perkembangan Akademik Anak, Grafik Nilai, Rekap Kehadiran, dan Unduh Rapor Digital.',
     defaultPath: 'portal_ortu',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80'
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'
   }
 };

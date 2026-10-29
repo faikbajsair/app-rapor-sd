@@ -6,7 +6,14 @@ export function RoleSwitcherModal({ isOpen, onClose, currentRole, onSelectRole }
   if (!isOpen) return null;
 
   // Hanya tampilkan peran Civitas Akademika di modal switch
-  const staffRoles = [ROLES.ADMIN, ROLES.KEPSEK, ROLES.WALI_KELAS, ROLES.GURU_MAPEL];
+  const staffRoles = [
+    ROLES.ADMIN, 
+    ROLES.KEPSEK, 
+    ROLES.WALI_KELAS, 
+    ROLES.GURU_MAPEL, 
+    ROLES.GURU_QURAN, 
+    ROLES.PENDAMPING
+  ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-200">

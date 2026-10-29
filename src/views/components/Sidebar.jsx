@@ -10,7 +10,10 @@ import {
   Settings, 
   Users, 
   Sparkles,
-  BarChart3
+  BarChart3,
+  BookMarked,
+  ShieldCheck,
+  CalendarCheck2
 } from 'lucide-react';
 import { ROLES } from '../../config/roles';
 
@@ -21,8 +24,15 @@ export function Sidebar({ activeTab, setActiveTab, currentRole, settings }) {
       id: 'dashboard',
       label: 'Monitoring Eksekutif',
       icon: LayoutDashboard,
-      roles: [ROLES.ADMIN, ROLES.KEPSEK, ROLES.WALI_KELAS, ROLES.GURU_MAPEL],
+      roles: [ROLES.ADMIN, ROLES.KEPSEK, ROLES.WALI_KELAS, ROLES.GURU_MAPEL, ROLES.GURU_QURAN, ROLES.PENDAMPING],
       badge: 'Utama'
+    },
+    {
+      id: 'kalender',
+      label: 'Kalender Akademik',
+      icon: CalendarCheck2,
+      roles: [ROLES.ADMIN, ROLES.KEPSEK, ROLES.WALI_KELAS, ROLES.GURU_MAPEL, ROLES.GURU_QURAN, ROLES.PENDAMPING, ROLES.WALI_MURID],
+      badge: '2026/2027'
     },
     {
       id: 'nilai',
@@ -32,11 +42,18 @@ export function Sidebar({ activeTab, setActiveTab, currentRole, settings }) {
       badge: 'N1 - N15'
     },
     {
+      id: 'kholaqoh',
+      label: "Al-Qur'an & Kholaqoh",
+      icon: BookMarked,
+      roles: [ROLES.ADMIN, ROLES.KEPSEK, ROLES.GURU_QURAN, ROLES.WALI_KELAS, ROLES.GURU_MAPEL],
+      badge: 'Tahfidz'
+    },
+    {
       id: 'abs',
       label: 'Analisis Butir Soal (ABS)',
       icon: HelpCircle,
       roles: [ROLES.ADMIN, ROLES.KEPSEK, ROLES.GURU_MAPEL],
-      badge: 'Tingkat Kesukaran'
+      badge: 'Kesukaran'
     },
     {
       id: 'sikap',
@@ -58,6 +75,13 @@ export function Sidebar({ activeTab, setActiveTab, currentRole, settings }) {
       icon: BookOpen,
       roles: [ROLES.ADMIN, ROLES.KEPSEK, ROLES.WALI_KELAS],
       badge: 'Database'
+    },
+    {
+      id: 'gtk',
+      label: 'Direktori GTK & Guru',
+      icon: ShieldCheck,
+      roles: [ROLES.ADMIN, ROLES.KEPSEK],
+      badge: '34 Guru'
     },
     {
       id: 'rapor',

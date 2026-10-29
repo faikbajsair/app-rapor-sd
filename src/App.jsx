@@ -19,6 +19,9 @@ import { BukuIndukView } from './views/pages/BukuIndukView';
 import { RaporPrintView } from './views/pages/RaporPrintView';
 import { CMSView } from './views/pages/CMSView';
 import { WaliMuridView } from './views/pages/WaliMuridView';
+import { KholaqohView } from './views/pages/KholaqohView';
+import { GTKView } from './views/pages/GTKView';
+import { KalenderAkademikView } from './views/pages/KalenderAkademikView';
 
 export function App() {
   // App Model State from StorageAdapter
@@ -30,6 +33,9 @@ export function App() {
   const [sikapList, setSikapList] = useState(storage.getSikap());
   const [presensiList, setPresensiList] = useState(storage.getPresensi());
   const [approval, setApproval] = useState(storage.getApproval());
+  const [gtkList, setGtkList] = useState(storage.getGTK());
+  const [kholaqohList, setKholaqohList] = useState(storage.getKholaqoh());
+  const [kholaqohNilaiList, setKholaqohNilaiList] = useState(storage.getKholaqohNilai());
 
   // Authentication State
   const [currentUser, setCurrentUser] = useState(() => AuthController.getSession());
@@ -61,6 +67,9 @@ export function App() {
       setSikapList(storage.getSikap());
       setPresensiList(storage.getPresensi());
       setApproval(storage.getApproval());
+      setGtkList(storage.getGTK());
+      setKholaqohList(storage.getKholaqoh());
+      setKholaqohNilaiList(storage.getKholaqohNilai());
     });
 
     CMSController.applyAppearance(settings);
@@ -226,8 +235,47 @@ export function App() {
     storage.resetToDefaults();
   };
 
-  const handleQuickPrint = () => {
-    window.print();
+  const handleSaveKholaqohNilai = (record) => {
+    storage.upsertKholaqohNilai(record);
+  };
+
+  const handleSyncKholaqohToTFZ = (record) => {
+    storage.upsertNilai(record);
+  };
+
+  const handleSwitchToGTK = (gtk) => {
+    const userSession = {
+      id: `USR_${gtk.id}`,
+      gtkId: gtk.id,
+      nama: gtk.nama,
+      email: gtk.email,
+      nuptk: gtk.nuptk || '',
+      nip: gtk.nip || '',
+      role: gtk.role,
+      roleLabel: gtk.jabatan,
+      jabatan: gtk.jabatan,
+      jabatanLainnya: gtk.jabatanLainnya || '',
+      statusJabatan: gtk.statusJabatan,
+      pendidikan: gtk.pendidikan,
+      kelasDiampu: gtk.kelasDiampu || [],
+      mapelDiampu: gtk.mapelDiampu || [],
+      kholaqohDiampu: gtk.kholaqohDiampu || [],
+      avatar: gtk.avatar || (ROLE_CONFIG[gtk.role]?.avatar),
+      badge: gtk.badge || gtk.jabatan,
+      loginTime: new Date().toISOString()
+    };
+    AuthController.setSession(userSession);
+    setCurrentUser(userSession);
+    setCurrentRole(userSession.role);
+    if (gtk.role === ROLES.GURU_QURAN) {
+      setActiveTab('kholaqoh');
+    } else if (gtk.role === ROLES.GURU_MAPEL) {
+      setActiveTab('nilai');
+    } else if (gtk.role === ROLES.WALI_KELAS) {
+      setActiveTab('rapor');
+    } else {
+      setActiveTab('dashboard');
+    }
   };
 
   // If NOT Logged In: Show Modern Login Page
@@ -236,6 +284,7 @@ export function App() {
       <LoginView
         settings={settings}
         siswaList={siswaList}
+        gtkList={gtkList}
         onLoginSuccess={handleLoginSuccess}
       />
     );
@@ -289,6 +338,12 @@ export function App() {
             />
           )}
 
+          {activeTab === 'kalender' && (
+            <KalenderAkademikView
+              settings={settings}
+            />
+          )}
+
           {activeTab === 'nilai' && (
             <NilaiView
               siswaList={siswaList}
@@ -297,6 +352,27 @@ export function App() {
               onSaveNilai={handleSaveNilai}
               onAddMapel={handleAddMapel}
               settings={settings}
+              currentUser={currentUser}
+            />
+          )}
+
+          {activeTab === 'kholaqoh' && (
+            <KholaqohView
+              kholaqohList={kholaqohList}
+              kholaqohNilaiList={kholaqohNilaiList}
+              siswaList={siswaList}
+              currentUser={currentUser}
+              onSaveKholaqohNilai={handleSaveKholaqohNilai}
+              onSyncToRaporTFZ={handleSyncKholaqohToTFZ}
+              settings={settings}
+            />
+          )}
+
+          {activeTab === 'gtk' && (
+            <GTKView
+              gtkList={gtkList}
+              onSwitchUser={handleSwitchToGTK}
+              currentUser={currentUser}
             />
           )}
 

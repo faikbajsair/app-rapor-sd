@@ -42,15 +42,24 @@ Aplikasi web modern berbasis **Model-View-Controller (MVC)** yang mentransformas
 
 ---
 
-## 👥 5 Peran Pengguna (Multi-User Access Control)
+## 👥 7 Peran Pengguna & Manajemen GTK (Multi-User Access Control)
 
 | Role | Akses Utama & Tanggung Jawab |
 | :--- | :--- |
 | **1. Administrator** | CMS Dashboard, Pengaturan Tampilan Visual (Tema Warna Pastel / Logo / Favicon), Manajemen Lisensi SaaS, Registrasi Mapel Baru & Siswa, Backup & Restore JSON. |
-| **2. Kepala Sekolah** | Dashboard Monitoring Eksekutif, Daya Serap Soal, Sebaran Kesukaran Soal, Approval Rapor & Fitur Tanda Tangan Digital dengan QR Code Terenkripsi. |
-| **3. Guru Wali Kelas** | Input Presensi Bulanan (S/I/A/Terlambat), Penilaian Sikap (Auto-Narrative Generator), Catatan/Saran Wali Kelas, Bulk Print / Cetak Massal Rapor & Buku Induk. |
-| **4. Guru Mata Pelajaran** | Analisis Butir Soal (ABS Dinamis PG/Isian/Uraian), Input Nilai Formatif & Sumatif, Grafik Tingkat Kesukaran Soal (Indeks P). |
-| **5. Wali Murid / Orang Tua** | Portal Khusus Orang Tua: Pantau nilai harian/akhir anak, grafik perkembangan akademik, rekap kehadiran, catatan guru, dan download Rapor Digital PDF. |
+| **2. Kepala Sekolah & Waka** | Dashboard Monitoring Eksekutif, Daya Serap Soal, Sebaran Kesukaran Soal, Approval Rapor & Fitur Tanda Tangan Digital dengan QR Code Terenkripsi. |
+| **3. Guru Wali Kelas** | Input Presensi Bulanan (S/I/A/Terlambat), Penilaian Sikap (Auto-Narrative Generator), Catatan/Saran Wali Kelas, Bulk Print / Cetak Massal Rapor & Buku Induk Kelas yang diampu. |
+| **4. Guru Mata Pelajaran** | Analisis Butir Soal (ABS Dinamis PG/Isian/Uraian), Input Nilai Formatif & Sumatif hanya pada **mapel & kelas yang ditugaskan**, Grafik Tingkat Kesukaran Soal (Indeks P). |
+| **5. Guru Al-Qur'an & Kholaqoh** | Penilaian Tahsin (Makhraj, Tajwid, Fashahah), Tahfidz (Surah/Juz yang dihafal, Nilai Kelancaran/Mutqin), Adab & Kehadiran per **kelompok Kholaqoh binaan**, serta sinkronisasi otomatis ke Nilai Rapor TFZ. |
+| **6. Guru Pendamping** | Pendampingan belajar siswa, observasi perkembangan karakter, dan koordinasi remedial. |
+| **7. Wali Murid / Orang Tua** | Portal Khusus Orang Tua: Pantau nilai harian/akhir anak, grafik perkembangan akademik, rekap kehadiran, catatan guru, dan download Rapor Digital PDF. |
+
+---
+
+## 🕌 Modul Khusus: Penilaian Al-Qur'an & Kholaqoh Tahfidz
+- Terdiri dari **10 Kelompok Kholaqoh Binaan** (Abu Bakar, Umar, Utsman, Ali, Khadijah, Aisyah, Hafshah, Fathimah, Ummu Salamah, Maryam, Asma) dipimpin oleh **Kepala Bidang Al-Qur'an (Ust. Anwaruddin, M.Pd)**.
+- **Pencatatan Presisi**: Meliputi aspek Makharijul Huruf, Ahkamut Tajwid, Fashahah Tilawah, dan Kelancaran Setoran Hafalan.
+- **Auto-Sync ke Nilai Rapor**: Nilai akhir Al-Qur'an santri dapat langsung disinkronkan ke Mata Pelajaran TFZ (Tahfidz & Tahsin Al-Qur'an) di lembar rapor kurikulum merdeka.
 
 ---
 

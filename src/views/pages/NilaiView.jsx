@@ -19,9 +19,36 @@ export function NilaiView({
   nilaiList, 
   onSaveNilai, 
   onAddMapel,
-  settings 
+  settings,
+  currentUser 
 }) {
-  const [selectedMapelId, setSelectedMapelId] = useState(mapelList[0]?.id || 'MAT');
+  // Filter mapel yang boleh diakses berdasarkan penugasan guru yang sedang login
+  const isGuruMapel = currentUser?.role === 'guru_mapel';
+  const isGuruQuran = currentUser?.role === 'guru_quran';
+  const isWaliKelas = currentUser?.role === 'wali_kelas';
+
+  const accessibleMapelList = mapelList.filter(m => {
+    if (isGuruMapel && currentUser?.mapelDiampu && currentUser.mapelDiampu.length > 0) {
+      return currentUser.mapelDiampu.includes(m.id);
+    }
+    if (isGuruQuran) {
+      return m.id === 'TFZ';
+    }
+    return true;
+  });
+
+  const activeMapels = accessibleMapelList.length > 0 ? accessibleMapelList : mapelList;
+
+  const [selectedMapelId, setSelectedMapelId] = useState(() => {
+    return activeMapels[0]?.id || 'MAT';
+  });
+
+  // Filter Kelas yang diampu
+  const defaultKelas = (isWaliKelas && currentUser?.kelasDiampu?.[0]) 
+    ? currentUser.kelasDiampu[0] 
+    : 'SEMUA';
+
+  const [selectedKelas, setSelectedKelas] = useState(defaultKelas);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddMapelModal, setShowAddMapelModal] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
@@ -33,7 +60,7 @@ export function NilaiView({
   const [newMapelKkm, setNewMapelKkm] = useState(75);
   const [newMapelGuru, setNewMapelGuru] = useState('');
 
-  const currentMapel = mapelList.find(m => m.id === selectedMapelId) || mapelList[0];
+  const currentMapel = activeMapels.find(m => m.id === selectedMapelId) || activeMapels[0] || mapelList[0];
 
   // Helper untuk mendapatkan atau membuat record nilai siswa
   const getRecord = (siswaId) => {
@@ -122,11 +149,13 @@ export function NilaiView({
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  // Filter Siswa
-  const filteredSiswa = siswaList.filter(s => 
-    s.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    s.nisn.includes(searchQuery)
-  );
+  // Filter Siswa berdasarkan Kelas yang diampu & Pencarian
+  const filteredSiswa = siswaList.filter(s => {
+    const matchKelas = selectedKelas === 'SEMUA' || s.kelas === selectedKelas || (!s.kelas && selectedKelas === 'SEMUA');
+    const matchSearch = s.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        (s.nisn && s.nisn.includes(searchQuery));
+    return matchKelas && matchSearch;
+  });
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -136,6 +165,36 @@ export function NilaiView({
         <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-slate-900 text-white text-xs font-semibold shadow-2xl flex items-center space-x-2 animate-in slide-in-from-bottom">
           <CheckCircle className="w-4 h-4 text-pastel-300" />
           <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Teacher Context Info (Jika login sebagai Guru) */}
+      {currentUser && (
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-white border border-emerald-200/80 shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex items-center space-x-3">
+            <img 
+              src={currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"} 
+              alt={currentUser.nama} 
+              className="w-10 h-10 rounded-xl object-cover border border-emerald-300 shrink-0" 
+            />
+            <div>
+              <div className="flex items-center space-x-2">
+                <span className="font-extrabold text-slate-800 text-sm">{currentUser.nama}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  {currentUser.roleLabel || currentUser.jabatan}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-600 mt-0.5">
+                {currentUser.kelasDiampu?.length ? `Penugasan Kelas: ${currentUser.kelasDiampu.join(', ')}` : ''} 
+                {currentUser.mapelDiampu?.length ? ` • Mapel: ${currentUser.mapelDiampu.join(', ')}` : ''}
+              </p>
+            </div>
+          </div>
+
+          <div className="text-right">
+            <span className="text-[10px] text-slate-400 block uppercase tracking-wider font-semibold">Tahun Pelajaran:</span>
+            <span className="text-xs font-extrabold text-emerald-800">{settings.tahunAjaran} • {settings.semester}</span>
+          </div>
         </div>
       )}
 
@@ -150,7 +209,7 @@ export function NilaiView({
               <div>
                 <h2 className="text-xl font-extrabold text-slate-800">Pengolahan Nilai Formatif & Sumatif</h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Dinamis tanpa batas mapel • Perhitungan otomatis Nilai Akhir & Narasi Capaian Pembelajaran
+                  Dinamis per mapel & kelas • Perhitungan otomatis Nilai Akhir & Narasi Capaian Pembelajaran
                 </p>
               </div>
             </div>
@@ -159,15 +218,15 @@ export function NilaiView({
           <div className="flex items-center space-x-2.5">
             <button
               onClick={() => setShowAddMapelModal(true)}
-              className="px-3.5 py-2 rounded-xl bg-pastel-100 hover:bg-pastel-200 text-pastel-900 text-xs font-bold border border-pastel-300 transition-colors flex items-center space-x-1.5"
+              className="px-3.5 py-2 rounded-xl bg-pastel-100 hover:bg-pastel-200 text-pastel-900 text-xs font-bold border border-pastel-300 transition-colors flex items-center space-x-1.5 cursor-pointer"
             >
               <PlusCircle className="w-4 h-4 text-pastel-700" />
-              <span>Tambah Mapel Baru</span>
+              <span>Tambah Mapel</span>
             </button>
 
             <button
               onClick={handleGenerateAllDeskripsi}
-              className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs flex items-center space-x-1.5"
+              className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs flex items-center space-x-1.5 cursor-pointer"
             >
               <Sparkles className="w-4 h-4 text-emerald-200" />
               <span>Auto-Generate Narasi</span>
@@ -177,19 +236,21 @@ export function NilaiView({
 
         {/* Dynamic Mapel Tabs Bar */}
         <div className="pt-2 border-t border-slate-100">
-          <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-            Pilih Mata Pelajaran ({mapelList.length} Mapel Terdaftar):
+          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center justify-between">
+            <span>
+              {isGuruMapel ? 'Mata Pelajaran yang Anda Ampu:' : `Pilih Mata Pelajaran (${activeMapels.length} Mapel):`}
+            </span>
           </div>
           <div className="flex items-center space-x-2 overflow-x-auto pb-2">
-            {mapelList.map((m) => {
+            {activeMapels.map((m) => {
               const isSelected = selectedMapelId === m.id;
               return (
                 <button
                   key={m.id}
                   onClick={() => setSelectedMapelId(m.id)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border cursor-pointer ${
                     isSelected
-                      ? 'bg-pastel-300 text-pastel-950 border-pastel-400 shadow-2xs'
+                      ? 'bg-pastel-300 text-pastel-950 border-pastel-400 shadow-2xs ring-2 ring-pastel-400/50'
                       : 'bg-pastel-50/60 text-slate-600 border-slate-200 hover:bg-pastel-100/70 hover:border-pastel-300'
                   }`}
                 >
@@ -219,21 +280,49 @@ export function NilaiView({
       {/* Grade Table Card */}
       <div className="bg-white rounded-3xl border border-pastel-200 shadow-2xs overflow-hidden">
         
-        {/* Table Toolbar */}
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between gap-4">
-          <div className="relative max-w-xs w-full">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-            <input
-              type="text"
-              placeholder="Cari siswa atau NISN..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-1.5 rounded-xl text-xs border border-slate-200 focus:outline-hidden focus:border-pastel-400 focus:ring-1 focus:ring-pastel-300"
-            />
+        {/* Table Toolbar: Filter Kelas & Pencarian */}
+        <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50/50">
+          
+          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            {/* Class Filter */}
+            <div className="flex items-center space-x-2">
+              <span className="text-xs font-bold text-slate-600 shrink-0">Filter Kelas:</span>
+              <select
+                value={selectedKelas}
+                onChange={(e) => setSelectedKelas(e.target.value)}
+                className="px-3 py-1.5 rounded-xl text-xs font-bold border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-pastel-400"
+              >
+                <option value="SEMUA">Semua Kelas</option>
+                <option value="Kelas 1-A">Kelas 1-A</option>
+                <option value="Kelas 1-B">Kelas 1-B</option>
+                <option value="Kelas 2-A">Kelas 2-A</option>
+                <option value="Kelas 2-B">Kelas 2-B</option>
+                <option value="Kelas 3-A">Kelas 3-A</option>
+                <option value="Kelas 3-B">Kelas 3-B</option>
+                <option value="Kelas 4-A">Kelas 4-A</option>
+                <option value="Kelas 4-B">Kelas 4-B</option>
+                <option value="Kelas 5-A">Kelas 5-A</option>
+                <option value="Kelas 5-B">Kelas 5-B</option>
+                <option value="Kelas 6-A">Kelas 6-A</option>
+                <option value="Kelas 6-B">Kelas 6-B</option>
+              </select>
+            </div>
+
+            {/* Search Box */}
+            <div className="relative max-w-xs w-full">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2" />
+              <input
+                type="text"
+                placeholder="Cari nama siswa atau NISN..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-1.5 rounded-xl text-xs border border-slate-200 bg-white focus:outline-none focus:border-pastel-400"
+              />
+            </div>
           </div>
 
           <div className="text-xs text-slate-500 font-medium">
-            Menampilkan <span className="font-bold text-slate-800">{filteredSiswa.length}</span> Siswa
+            Menampilkan <span className="font-bold text-slate-800">{filteredSiswa.length}</span> Siswa {selectedKelas !== 'SEMUA' && `(${selectedKelas})`}
           </div>
         </div>
 
