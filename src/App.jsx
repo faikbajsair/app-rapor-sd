@@ -22,6 +22,7 @@ import { WaliMuridView } from './views/pages/WaliMuridView';
 import { KholaqohView } from './views/pages/KholaqohView';
 import { GTKView } from './views/pages/GTKView';
 import { KalenderAkademikView } from './views/pages/KalenderAkademikView';
+import { JadwalPelajaranView } from './views/pages/JadwalPelajaranView';
 
 export function App() {
   // App Model State from StorageAdapter
@@ -340,6 +341,14 @@ export function App() {
 
           {activeTab === 'kalender' && (
             <KalenderAkademikView
+              settings={settings}
+            />
+          )}
+
+          {activeTab === 'jadwal' && (
+            <JadwalPelajaranView
+              currentUser={currentUser}
+              currentRole={currentRole}
               settings={settings}
             />
           )}

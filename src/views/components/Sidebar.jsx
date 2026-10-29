@@ -13,7 +13,8 @@ import {
   BarChart3,
   BookMarked,
   ShieldCheck,
-  CalendarCheck2
+  CalendarCheck2,
+  CalendarDays
 } from 'lucide-react';
 import { ROLES } from '../../config/roles';
 
@@ -33,6 +34,13 @@ export function Sidebar({ activeTab, setActiveTab, currentRole, settings }) {
       icon: CalendarCheck2,
       roles: [ROLES.ADMIN, ROLES.KEPSEK, ROLES.WALI_KELAS, ROLES.GURU_MAPEL, ROLES.GURU_QURAN, ROLES.PENDAMPING, ROLES.WALI_MURID],
       badge: '2026/2027'
+    },
+    {
+      id: 'jadwal',
+      label: 'Jadwal Pelajaran',
+      icon: CalendarDays,
+      roles: [ROLES.ADMIN, ROLES.KEPSEK, ROLES.WALI_KELAS, ROLES.GURU_MAPEL, ROLES.GURU_QURAN, ROLES.PENDAMPING, ROLES.WALI_MURID],
+      badge: 'KBM 26/27'
     },
     {
       id: 'nilai',
