@@ -405,7 +405,7 @@ export const DAFTAR_KELAS = [
     id: "4Sumayyah", 
     nama: "4 Sumayyah Binti Khayyat", 
     tingkat: 4, 
-    wali: "Siti Rohmah, S.Pd", 
+    wali: "Afrida Rosita Dewi, S.Pd., Gr.", 
     kategori: "Kelas Atas",
     totalJPEfektif: 47,
     seragam: {
@@ -422,30 +422,30 @@ export const DAFTAR_KELAS = [
     id: "5Utsman", 
     nama: "5 Utsman Bin Affan", 
     tingkat: 5, 
-    wali: "Hafidzul Furqon, S.Pd", 
+    wali: "Adhisti Nur Alifah, S.Pd.", 
     kategori: "Kelas Atas",
     totalJPEfektif: 47,
     seragam: {
       SENIN: "MERAH PUTIH",
       SELASA: "HIJAU",
-      RABU: "BATIK & OLAHRAGA",
+      RABU: "BATIK",
       KAMIS: "KOTAK-KOTAK",
-      JUMAT: "PRAMUKA"
+      JUMAT: "PRAMUKA & OLAHRAGA"
     }
   },
   { 
     id: "5Rumaysha", 
-    nama: "5 Rumaysha Binti Milhan", 
+    nama: "5 Rummaysha Binti Malhan", 
     tingkat: 5, 
-    wali: "Siti Fatimah, S.Pd", 
+    wali: "Heni Mariyah Umrah, S.Pd., Gr.", 
     kategori: "Kelas Atas",
     totalJPEfektif: 47,
     seragam: {
       SENIN: "MERAH PUTIH",
       SELASA: "HIJAU",
-      RABU: "BATIK & OLAHRAGA",
+      RABU: "BATIK",
       KAMIS: "KOTAK-KOTAK",
-      JUMAT: "PRAMUKA"
+      JUMAT: "PRAMUKA & OLAHRAGA"
     }
   },
 
@@ -512,8 +512,8 @@ export const JADWAL_GABUNGAN = {
     kelasAtas: {
       "4Ali": ["K", "K", "Math", "Math", "Q", "Q", "MIPAS", "MIPAS", "PP", "PP"],
       "4Sumayyah": ["Math", "Math", "BA", "BA", "Q", "Q", "MIPAS", "MIPAS", "K", "K"],
-      "5Utsman": ["AD", "AD", "Q", "Q", "PP", "PP", "SKI", "SKI", "Math", "Math"],
-      "5Rumaysha": ["AD", "AD", "Q", "Q", "Math", "Math", "BS", "BS", "PP", "PP"],
+      "5Utsman": ["AD", "AD", "Q", "Q", "PP", "PP", "Math", "Math", "MIPAS", "MIPAS"],
+      "5Rumaysha": ["AD", "AD", "Q", "Q", "Math", "Math", "PP", "PP", "MIPAS", "MIPAS"],
       "6Abu": ["MIPAS", "MIPAS", "Q", "Q", "A", "A", "MIPAS", "MIPAS", "SKI", "SKI"],
       "6Umar": ["MIPAS", "MIPAS", "Q", "Q", "A", "A", "MIPAS", "MIPAS", "BS", "BS"],
       "6Hafshah": ["A", "A", "Q", "Q", "B.Ind", "B.Ind", "MIPAS", "MIPAS", "SKI", "SKI"]
@@ -532,8 +532,8 @@ export const JADWAL_GABUNGAN = {
     kelasAtas: {
       "4Ali": ["BA", "BA", "B.Ind", "B.Ind", "Q", "Q", "A", "A", "Math", "Math"],
       "4Sumayyah": ["Math", "Math", "A", "A", "Q", "Q", "PP", "PP", "B.Ind", "B.Ind"],
-      "5Utsman": ["BI", "BI", "Q", "Q", "F", "F", "Math", "Math", "MIPAS", "MIPAS"],
-      "5Rumaysha": ["F", "F", "Q", "Q", "Math", "Math", "BI", "BI", "MIPAS", "MIPAS"],
+      "5Utsman": ["BI", "BI", "Q", "Q", "F", "F", "Math", "Math", "B.Ind", "BS"],
+      "5Rumaysha": ["F", "F", "Q", "Q", "Math", "Math", "BI", "BI", "BS", "MIPAS"],
       "6Abu": ["PJOK", "PJOK", "Q", "Q", "PP", "PP", "AD", "AD", "BI", "BI"],
       "6Umar": ["PJOK", "PJOK", "Q", "Q", "PP", "PP", "AD", "AD", "B.Ind", "B.Ind"],
       "6Hafshah": ["PJOK", "PJOK", "Q", "Q", "PP", "PP", "MIPAS", "MIPAS", "F", "F"]
@@ -551,7 +551,7 @@ export const JADWAL_GABUNGAN = {
     },
     kelasAtas: {
       "4Ali": ["PJOK", "PJOK", "AD", "AD", "Q", "Q", "MIPAS", "MIPAS", "SKI", "BS"],
-      "4Sumayyah": ["AD", "AD", "PJOK", "PJOK", "Q", "Q", "MIPAS", "MIPAS", "BS", "BS"],
+      "4Sumayyah": ["PJOK", "PJOK", "AD", "AD", "Q", "Q", "MIPAS", "MIPAS", "BS", "SKI"],
       "5Utsman": ["K", "K", "Q", "Q", "MIPAS", "MIPAS", "A", "A", "B.Ind", "B.Ind"],
       "5Rumaysha": ["MIPAS", "MIPAS", "Q", "Q", "A", "A", "B.Ind", "B.Ind", "K", "K"],
       "6Abu": ["BA", "BA", "Q", "Q", "Math", "Math", "MIPAS", "MIPAS", "F", "F"],
@@ -571,9 +571,9 @@ export const JADWAL_GABUNGAN = {
     },
     kelasAtas: {
       "4Ali": ["F", "F", "B.Ind", "B.Ind", "Q", "Q", "MIPAS", "B.Ind", "Seni", "Seni"],
-      "4Sumayyah": ["B.Ind", "B.Ind", "F", "F", "Q", "Q", "Math", "Math", "Seni", "Seni"],
-      "5Utsman": ["Seni", "Seni", "Q", "Q", "MTK", "MTK", "MIPAS", "MIPAS", "BA", "BA"],
-      "5Rumaysha": ["Seni", "Seni", "Q", "Q", "MTK", "MTK", "MIPAS", "MIPAS", "B.Ind", "B.Ind"],
+      "4Sumayyah": ["B.Ind", "B.Ind", "F", "F", "Q", "Q", "MIPAS", "B.Ind", "Seni", "Seni"],
+      "5Utsman": ["Seni", "Seni", "Q", "Q", "MTK", "MTK", "MIPAS", "SKI", "BA", "BA"],
+      "5Rumaysha": ["Seni", "Seni", "Q", "Q", "MTK", "MTK", "BA", "BA", "SKI", "B.Ind"],
       "6Abu": ["BS", "BS", "Q", "Q", "Seni", "Seni", "Math", "Math", "K", "K"],
       "6Umar": ["B.Ind", "B.Ind", "Q", "Q", "BA", "BA", "Seni", "Seni", "Math", "Math"],
       "6Hafshah": ["BA", "BA", "Q", "Q", "Math", "Math", "AD", "AD", "Seni", "Seni"]
