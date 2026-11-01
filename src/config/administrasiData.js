@@ -298,81 +298,138 @@ export const KATA_PENGANTAR_TEXT = [
   "Demikian harapan kami, semoga buku kerja administrasi ini bermanfaat dan bernilai ibadah di sisi Allah Subhanahu wa Ta'ala. Aamiin."
 ];
 
-// VISI DAN MISI SD AL-IMAM ISLAMIC SCHOOL
+// VISI, MISI, DAN TUJUAN SD AL IMAM ISLAMIC SCHOOL (SESUAI SHEET VISI MISI MASTER)
 export const VISI_MISI = {
   motto: "BERAQIDAH - BERAKHLAK - BERPRESTASI",
-  visi: "Menjadi Lembaga Pendidikan Islam Unggul yang Melahirkan Generasi Rabbani yang Beraqidah Shahihah, Berakhlak Mulia, Cerdas, dan Berprestasi Berdasarkan Al-Qur'an dan As-Sunnah Sesuai Pemahaman As-Salaf Ash-Shalih.",
+  visi: "BERAKIDAH SALAFUS SALIH, BERAKHLAK QUR’AN DAN SUNNAH, BERPRESTASI AKADEMIK/NONAKADEMIK",
   misi: [
-    "Menanamkan aqidah Islamiyah yang murni bersih dari syirik, bid'ah, dan takhayul.",
-    "Membiasakan akhlak karimah dan adab islami dalam seluruh sendi kehidupan santri di sekolah, rumah, dan masyarakat.",
-    "Menyelenggarakan pembelajaran Al-Qur'an secara intensif dengan metode tahsin yang tepat dan target hafalan berkualitas.",
-    "Menerapkan kurikulum nasional dan muatan lokal yang terintegrasi dengan nilai-nilai islam secara aktif, kreatif, dan menyenangkan.",
-    "Mengembangkan potensi minat, bakat, serta kemampuan sains dan teknologi peserta didik agar berdaya saing global.",
-    "Menjalin kemitraan yang harmonis dan bersinergi dengan orang tua dan masyarakat dalam pendidikan santri."
+    "Menanamkan nilai-nilai ke-Islaman sesuai akidah salafus salih.",
+    "Menciptakan iklim dan budaya sekolah keteladanan sesuai Al Qur’an dan As Sunnah.",
+    "Menyelenggarakan proses pembelajaran yang mudah, menyenangkan, berkarakter, dan prestatif (akademik/nonakademik)"
   ],
   tujuan: [
-    "Santri hafal minimal 1 hingga 3 juz Al-Qur'an dengan tajwid dan makhraj yang benar.",
-    "Santri mampu mempraktikkan shalat fardhu dan shalat sunnah sesuai bimbingan Rasulullah Shallallahu 'Alaihi wa Sallam.",
-    "Santri terbiasa berdzikir pagi petang dan hafal doa-doa harian nabawiyyah.",
-    "Santri memiliki kecakapan literasi, numerasi, dan penguasaan bahasa dasar (Arab & Inggris)."
+    "Peserta didik mampu menguasai ilmu pengetahuan dan keterampilan",
+    "Peserta didik memiliki prestasi yang tinggi dalam bidang akademik",
+    "Peserta didik memiliki prestasi yang tinggi dalam bidang non akademik",
+    "Peserta didik mampu melaksanakan dan mengembangkan budaya sekolah yang dijadikan sebagai identitas sekolah",
+    "Peserta didik memiliki sifat rajin dalam beribadah, hormat terhadap orang tua dan guru serta memiliki tata karma yang baik terhadap orang lain",
+    "Peserta didik memiliki sikap mau menerima kritik dan saran dari orang lain sesuai dengan ketentuan yang berlaku"
   ]
 };
 
-// PEMBIASAAN ISLAMI SEKOLAH
-export const PEMBIASAAN_SEKOLAH = [
-  {
-    kegiatan: "Prosesi Penyambutan 5S",
-    waktu: "07.00 - 07.15 WIB",
-    deskripsi: "Senyum, Salam, Sapa, Sopan, Santun saat santri tiba di gerbang sekolah bersama guru piket."
-  },
-  {
-    kegiatan: "Dzikir Pagi Berjamaah",
-    waktu: "07.15 - 07.30 WIB",
-    deskripsi: "Membaca Dzikir Pagi Al-Ma'tsurat / doa nabawiyyah di dalam kelas dipandu wali kelas."
-  },
-  {
-    kegiatan: "Shalat Duha, Muraja'ah & Kultum",
-    waktu: "09.30 - 10.30 WIB",
-    deskripsi: "Shalat sunnah Duha berjamaah di musholla/kelas, muraja'ah hafalan surat pilihan, dan tausiyah adab singkat."
-  },
-  {
-    kegiatan: "Adab Makan & Minum Sunnah",
-    waktu: "12.00 - 12.30 WIB",
-    deskripsi: "Membaca basmalah, makan dan minum sambil duduk dengan tangan kanan, tidak meniup makanan, dan membaca doa setelah makan."
-  },
-  {
-    kegiatan: "Shalat Dzuhur Berjama'ah",
-    waktu: "12.30 - 13.00 WIB",
-    deskripsi: "Shalat fardhu Dzuhur berjamaah, dzikir ba'da shalat, dan shalat rawatib ba'diyah."
-  },
-  {
-    kegiatan: "Literasi & Sholat Ashar Berjamaah",
-    waktu: "15.00 - 15.30 WIB",
-    deskripsi: "Pembiasaan membaca buku bermanfaat dan shalat Ashar berjamaah sebelum prosesi kepulangan santri."
-  }
+// DAILY & TEACHER’S HABITUATION (PEMBIASAAN GURU) (SESUAI SHEET PEMBIASAAN MASTER)
+export const PEMBIASAAN_GURU = [
+  { no: 1, judul: "Pembiasaan 6S (Senyum-Salam-Sapa-Sopan-Santun-Semangat)", deskripsi: "Penyambutan santri dan pembiasaan adab ramah di lingkungan sekolah." },
+  { no: 2, judul: "Dzikir pagi", deskripsi: "Membaca rangkaian dzikir pagi nabawiyyah bersama di kelas." },
+  { no: 3, judul: "Morning Talk", deskripsi: "Penguatan karakter, adab harian, dan motivasi belajar peserta didik." },
+  { no: 4, judul: "Shalat dhuha", deskripsi: "Pelaksanaan shalat sunnah dhuha secara rutin." },
+  { no: 5, judul: "Kultum", deskripsi: "Tausiyah singkat pembinaan akhlak dan aqidah." },
+  { no: 6, judul: "Tilawah Al-Quran", deskripsi: "Tilawah dan tadabbur Al-Qur'an harian santri dan guru." },
+  { no: 7, judul: "Pemantapan karakter tauhid", deskripsi: "Penanaman keimanan dan aqidah salafus shalih." },
+  { no: 8, judul: "Pembelajaran al Qur'an", deskripsi: "KBM Al-Qur'an (Tahsin & Tahfidz) terpadu." },
+  { no: 9, judul: "Pembelajaran tematik / mata pelajaran", deskripsi: "Pelaksanaan proses KBM kurikulum berkualitas." },
+  { no: 10, judul: "Pengelolaan kelas (berbasis parenting – pola asuh)", deskripsi: "Pola asuh kelas yang ramah, mendidik, dan penuh kasih sayang." },
+  { no: 11, judul: "Monitoring sikap siswa", deskripsi: "Observasi sikap, adab, kedisiplinan, dan interaksi sosial santri." },
+  { no: 12, judul: "Shalat dzuhur berjamaah", deskripsi: "Shalat fardhu dzuhur berjamaah dan adab di masjid." },
+  { no: 13, judul: "Shalat ashar berjamaah", deskripsi: "Shalat fardhu ashar berjamaah sebelum kepulangan santri." },
+  { no: 14, judul: "Pengajian rutin (Daurah Quran, At Ta'dib, Daurah akademik)", deskripsi: "Pengembangan ruhiyah dan wawasan keilmuan guru." },
+  { no: 15, judul: "Shaum Senin/ Kamis/Ayyaumul Bidh", deskripsi: "Pembiasaan puasa sunnah bagi civitas akademika." }
+];
+export const PEMBIASAAN_SEKOLAH = PEMBIASAAN_GURU;
+
+// TATA TERTIB GURU SD AL IMAM ISLAMIC SCHOOL (SESUAI SHEET TATA TERTIB MASTER)
+export const TATA_TERTIB_GURU = {
+  judul: "TATA TERTIB GURU SD AL IMAM ISLAMIC SCHOOL",
+  seksi: [
+    {
+      kode: "A",
+      kategori: "KEHADIRAN",
+      poin: [
+        "Guru hadir di sekolah minimal 15 menit sebelum jam pelajaran dimulai dan cek kehadiran",
+        "Guru yang hadir terlambat lebih dari 3 kali wajib mengisikan buku catatan keterlambatan yang ada di Kantor Kepala Sekolah",
+        "Guru piket harus hadir minimal 30 menit sebelum jam pelajaran dimulai",
+        "Guru yang berkepentingan meninggalkan sekolah sebelum berakhir jam kerja wajib meminta izin kepada kepala sekolah atau wakil kepala sekolah dan mengisikan buku ijin meninggalkan sekolah",
+        "Semua guru wajib mengenakan seragam kerja sesuai jadwal, rapi, dan bersih"
+      ]
+    },
+    {
+      kode: "B",
+      kategori: "WAKTU TIDAK HADIR",
+      poin: [
+        "Guru karena keadaan tertentu tidak masuk kerja, wajib meminta izin kepada kepala sekolah atau wakil kepala sekolah dan menyertakan surat keterangan",
+        "Guru yang tidak masuk karena sakit atau keperluan yang diijinkan lebih dari satu hari harus ada surat yang dapat dipertanggungjawabkan atau surat keterangan dokter jika sakit",
+        "Setelah masuk kembali harus melapor diri kepada kepala sekolah",
+        "Guru tidak akan di izinkan, ketika izin di hari piket lebih dari satu hari.",
+        "Guru yang tidak masuk kerja wajib berkoordinasi dengan bagian kurikulum perihal pembelajaran"
+      ]
+    },
+    {
+      kode: "C",
+      kategori: "PROSES PEMBELAJARAN",
+      poin: [
+        "Mempersiapkan perangkat pembelajaran (media) yang sesuai dan berkualitas serta berbahasa Inggris atau Berbahasa arab",
+        "Melaksanakan proses pembelajaran sesuai jadwal yang telah ditetapkan",
+        "Memonitoring pelaksanaan pembelajaran dan mengelola buku administrasi guru",
+        "Melaksanakan proses pembelajaran yang mudah, menyenangkan, membangun karakter dan berdampak pada perilaku siswa",
+        "Mengelola kelas dan menciptakan budaya kelas: tertib, rapi, disiplin, dan berkarakter",
+        "Melakukan penilaian berbasis kelas dan otentik (sesuai dengan tujuan pembelajaran)"
+      ]
+    },
+    {
+      kode: "D",
+      kategori: "HAL LAIN",
+      poin: [
+        "Senantiasa aktif mengikuti kegiatan shalat berjamaah, tilawah, dan dzikir",
+        "Berpakaian rapi, sopan, bersikap mendidik dan menjaga martabat profesi guru",
+        "Menjadi suri tauladan yang baik bagi siswa",
+        "Menyelesaikan persoalan siswa ditempuh dengan musyawarah dan edukatif",
+        "Menjaga kode etik guru",
+        "Mengenakan busana sesuai syariat Islam",
+        "Menjaga dan memelihara seluruh aset yang ada di sekolah",
+        "Ketentuan lainnya dalam peraturan pokok kepegawaian senantiasa diindahkan"
+      ]
+    }
+  ]
+};
+
+// TATA TERTIB KELAS (SESUAI SHEET TATA TERTIB KELAS MASTER)
+export const TATA_TERTIB_KELAS = [
+  "Anak-anak harus sudah hadir disekolah sebelum jam pelajaran dimulai.",
+  "Anak-anak harus berseragam yang rapi dan bersih.",
+  "Sebelum lonceng/bel berbunyi petugas kebersihan kelas harus sudah selesai membersihkan kelanya.",
+  "Setelah lonceng/bel berbunyi mulai belajar, anak-anak harus memasuki ruang kelas untuk melaksanakan dzikir Bersama dan muroja'ah juz 30.",
+  "Sebelum belajar diawali dengan membaca do'a dan penghormatan kepada guru.",
+  "Akhir pelajaran ditutup dengan membaca do'a dan penghormatan kepada guru.",
+  "Setiap hari senin harus mengikuti upacara bendera.",
+  "Anak-anak harus sopan, taat dan patuh kepada guru/kepala sekolah.",
+  "Anak-anak harus memelihara ketertiban, keindahan dan kebersihan alat-alat pelajaran dan kelasnya",
+  "Anak-anak dilarang mencoreti bangku, meja, pintu, jendela dan tembok sekolah dan kelasnya",
+  "Anak-anak harus memelihara tanam-tanaman disekolah.",
+  "Anak-anak dilarang menggangu kelas lain yang sedang belajar.",
+  "Anak-anak harus berjiwa jujur dan satria dalam setiap tindakan dan perbuatan.",
+  "Bila tidak masuk sekolah harus memberitahukan kepada guru/kepala sekolah",
+  "Bila hendak keluar kelas harus meminta izin."
 ];
 
-// TATA TERTIB GURU DAN KELAS
 export const TATA_TERTIB = {
-  guru: [
-    "Hadir di sekolah selambat-lambatnya 15 menit sebelum bel masuk berbunyi (pukul 07.00 WIB).",
-    "Berbusana syar'i, rapi, bersih, dan wangi (sesuai syariat Islam dan ketentuan seragam sekolah).",
-    "Menjadi teladan utama (qudwah hasanah) dalam perkataan, ibadah, dan perbuatan santri.",
-    "Menyiapkan administrasi pembelajaran, modul ajar, dan media sebelum KBM berlangsung.",
-    "Menyambut santri dengan kehangatan dan senyuman di awal kedatangan dan kepulangan.",
-    "Tidak meninggalkan kelas saat KBM berlangsung tanpa izin atau pengganti guru piket.",
-    "Menjaga kerahasiaan data pribadi santri dan menyelesaikan permasalahan secara bijak dan tabayyun."
+  guru: TATA_TERTIB_GURU.seksi.flatMap(s => s.poin),
+  kelas: TATA_TERTIB_KELAS
+};
+
+// PROGRAM KELAS / GOALS 2026-2027 (SESUAI SHEET PROGRAM KELAS MASTER)
+export const GOALS_PROGRAM_KELAS_2026_2027 = {
+  judul: "GOALS 2026-2027",
+  kekurangan: "Komunikasi kurang baik dengan partner, kurang tegas kepada anak-anak, sulit mengendalikan ego anak saat memilih/menentukan tempat duduk, kurang tegas kepada anak saat pergantian jam mapel, kurang paham ketika ada anak sedang meluapkan emosinya, dan masih ada beberapa anak yang menggunakan toilet samping TU karena mereka belum bisa memakai toilet duduk.",
+  perbaikan: "Selalu berkomunikasi dengan partner, akan lebih tegas kepada anak-anak baik dalam penentuan tempat duduk maupun saat pergantian jam mapel, akan mempelajari cara mengendalikan emosi terhadap anak, dan akan mengajarkan anak-anak cara menggunakan toilet duduk",
+  denganCara: [
+    "Sering berkomunikasi dengan partner",
+    "Akan membuat nomor sesuai jumlah anak lalu mereka akan mengambil dan dilakukan rolling min. seminggu sekali dan maks. 2 minggu sekali.",
+    "Ketika selesai pelajaran halaqoh kami akan menunggu di depan kelas agar anak-anak bisa langsung diarahkan masuk kelas.",
+    "Akan mempelajari cara mengendalikan emosi terhadap anak baik melalui buku, internet maupun berkonsultasi langsung dengan psikolog yang sekolah sediakan.",
+    "akan mengajarkan anak-anak cara menggunakan toilet duduk supaya mereka bisa menggunakan toilet yang ada di dalam kelas."
   ],
-  kelas: [
-    "Hadir di kelas sebelum pukul 07.15 WIB dan langsung meletakkan tas di loker masing-masing.",
-    "Mengucapkan salam secara islami saat masuk ke dalam ruangan kelas.",
-    "Menjaga adab terhadap guru dan menyimak penjelasan pelajaran dengan khusyuk.",
-    "Melaksanakan piket kebersihan kelas sesuai jadwal regu yang telah ditetapkan.",
-    "Membuang sampah pada tempat yang telah disediakan sesuai pemilahannya.",
-    "Tidak makan atau minum saat guru sedang menerangkan materi pelajaran.",
-    "Meminta izin dengan sopan saat hendak keluar ruangan kelas (misal: ke kamar mandi).",
-    "Menjaga dan merawat sarana prasarana kelas (meja, kursi, papan tulis, AC, dan buku)."
-  ]
+  goalsJangkaPendek: "Anak-anak mampu membaca dengan lancar tanpa dieja, dapat menulis dengan rapi, huruf tidak terbalik dan mengenal huruf kapital, lancar berhitung baik dalam penjumlahan maupun pengurangan. Menanamkan sikap mandiri, berani, dan sikap sopan santun pada anak.",
+  goalsJangkaPanjang: "Anak-anak mampu membaca buku cerita sendiri min. 15 menit setiap hari. Anak-anak paham tentang konsep uang, membaca jarum jam, dan menyelesaikan soal cerita sederhana. Mampu menuliskan karangan cerita pendek min. 1 paragraf. Anak-anak bisa berani tampil di depan umum seperti saat puncak projek nanti. Anak-anak bisa memiliki ambisi saat dalam pembelajaran."
 };
 
 // JADWAL REGU PIKET HARIAN (20 SISWA KELAS 1 ABDULLAH IBNU UMAR)

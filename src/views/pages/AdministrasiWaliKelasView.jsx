@@ -37,7 +37,11 @@ import {
   KATA_PENGANTAR_TEXT,
   VISI_MISI,
   PEMBIASAAN_SEKOLAH,
+  PEMBIASAAN_GURU,
   TATA_TERTIB,
+  TATA_TERTIB_GURU,
+  TATA_TERTIB_KELAS,
+  GOALS_PROGRAM_KELAS_2026_2027,
   PIKET_KELAS_DEFAULT,
   SARPRAS_KELAS_DEFAULT,
   CATATAN_ANEKDOT_DEFAULT,
@@ -225,10 +229,11 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
             { id: 'PENGANTAR', label: 'Kata Pengantar', badge: 'Resmi' },
             { id: 'IDENTITAS', label: 'Identitas Wali Kelas', badge: 'Profil' },
             { id: 'DATA_SISWA', label: 'Data Siswa (20 Santri)', badge: 'Kelas 1-A' },
-            { id: 'VISI_MISI', label: 'Visi Misi', badge: 'Nilai Islam' },
-            { id: 'PEMBIASAAN', label: 'Pembiasaan Adab', badge: 'Harian' },
-            { id: 'TATA_TERTIB', label: 'Tata Tertib', badge: 'Guru & Kelas' },
-            { id: 'PROGRAM_KELAS', label: 'Program Kelas', badge: 'Target TP' },
+            { id: 'VISI_MISI', label: 'Visi Misi & Tujuan', badge: 'Nilai Islam' },
+            { id: 'PEMBIASAAN', label: 'Pembiasaan Guru', badge: 'Daily Habit' },
+            { id: 'TATA_TERTIB', label: 'Tata Tertib Guru', badge: '4 Kategori' },
+            { id: 'TATA_TERTIB_KELAS', label: 'Tata Tertib Kelas', badge: '15 Aturan' },
+            { id: 'PROGRAM_KELAS', label: 'Program Kelas', badge: 'Goals 26/27' },
             { id: 'PIKET', label: 'Jadwal Piket', badge: '5 Regu' },
             { id: 'KESEHATAN', label: 'Riwayat Kesehatan', badge: 'Medis Siswa' },
             { id: 'SARPRAS', label: 'Sarpras Kelas', badge: 'Inventaris' },
@@ -316,9 +321,9 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
                       { id: 'IDENTITAS', label: 'IDENTITAS GURU' },
                       { id: 'DATA_SISWA', label: 'DATA SISWA' },
                       { id: 'VISI_MISI', label: 'VISI MISI' },
-                      { id: 'PEMBIASAAN', label: 'PEMBIASAAN SEKOLAH' },
+                      { id: 'PEMBIASAAN', label: 'PEMBIASAAN GURU' },
                       { id: 'TATA_TERTIB', label: 'TATA TERTIB GURU' },
-                      { id: 'TATA_TERTIB', label: 'TATA TERTIB KELAS' }
+                      { id: 'TATA_TERTIB_KELAS', label: 'TATA TERTIB KELAS' }
                     ].map((item, idx) => (
                       <button
                         key={idx}
@@ -828,6 +833,9 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
       {/* =========================================================================
        * TAB 7: PEMBIASAAN ADAB ISLAMI SEKOLAH
        * ========================================================================= */}
+      {/* =========================================================================
+       * TAB 7: DAILY & TEACHER’S HABITUATION (PEMBIASAAN GURU)
+       * ========================================================================= */}
       {activeTab === 'PEMBIASAAN' && (
         <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
           
@@ -838,26 +846,33 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
             </div>
             <div>
               <h2 className="text-xl font-black tracking-wider text-slate-900 uppercase">
-                PROGRAM PEMBIASAAN ADAB & IBADAH
+                DAILY & TEACHER’S HABITUATION (PEMBIASAAN GURU)
               </h2>
               <div className="text-xs font-extrabold text-emerald-800 uppercase">
-                SD AL-IMAM ISLAMIC SCHOOL • PANDUAN HARIAN SANTRI
+                SD AL-IMAM ISLAMIC SCHOOL • PANDUAN PEMBIASAAN HARIAN
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {PEMBIASAAN_SEKOLAH.map((item, idx) => (
-              <div key={idx} className="p-5 rounded-2xl bg-slate-50 border-2 border-slate-700 space-y-2 hover:border-emerald-700 transition-all">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-black text-slate-950 uppercase">{item.kegiatan}</h4>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-bold border border-emerald-300">
-                    {item.waktu}
-                  </span>
+          <div className="space-y-3">
+            {PEMBIASAAN_GURU.map((item, idx) => (
+              <div 
+                key={idx} 
+                className="flex items-start space-x-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-emerald-600 hover:bg-emerald-50/40 transition-all shadow-2xs group"
+              >
+                <span className="w-7 h-7 rounded-xl bg-emerald-800 text-white font-black text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs group-hover:bg-emerald-900 transition-colors">
+                  {idx + 1}
+                </span>
+                <div className="space-y-0.5 flex-1">
+                  <h4 className="text-xs sm:text-sm font-black text-slate-900">
+                    {item.judul}
+                  </h4>
+                  {item.deskripsi && (
+                    <p className="text-xs font-medium text-slate-600">
+                      {item.deskripsi}
+                    </p>
+                  )}
                 </div>
-                <p className="text-xs font-medium text-slate-700 leading-relaxed">
-                  {item.deskripsi}
-                </p>
               </div>
             ))}
           </div>
@@ -873,7 +888,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
       )}
 
       {/* =========================================================================
-       * TAB 8: TATA TERTIB GURU & KELAS
+       * TAB 8: TATA TERTIB GURU SD AL IMAM ISLAMIC SCHOOL
        * ========================================================================= */}
       {activeTab === 'TATA_TERTIB' && (
         <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
@@ -885,55 +900,79 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
             </div>
             <div>
               <h2 className="text-xl font-black tracking-wider text-slate-900 uppercase">
-                TATA TERTIB GURU & KELAS
+                TATA TERTIB GURU SD AL IMAM ISLAMIC SCHOOL
               </h2>
               <div className="text-xs font-extrabold text-emerald-800 uppercase">
-                DISIPLIN, KETELADANAN & KETERTIBAN KBM SD AL-IMAM
+                PEDOMAN KEDISIPLINAN, KETELADANAN & PROFESIONALISME GTK
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            {/* Tata Tertib Guru */}
-            <div className="p-6 rounded-2xl bg-slate-50 border-2 border-slate-700 space-y-4">
-              <div className="flex items-center space-x-2 border-b border-slate-200 pb-2">
-                <GraduationCap className="w-5 h-5 text-emerald-700" />
-                <h3 className="font-black text-sm uppercase tracking-wide text-slate-900">TATA TERTIB GURU</h3>
+            {TATA_TERTIB_GURU.seksi.map((seksi) => (
+              <div key={seksi.kode} className="p-6 rounded-2xl bg-slate-50 border-2 border-slate-700 space-y-4">
+                <div className="flex items-center space-x-2.5 border-b border-slate-200 pb-2.5">
+                  <span className="w-7 h-7 rounded-xl bg-slate-900 text-white font-black text-xs flex items-center justify-center shrink-0">
+                    {seksi.kode}
+                  </span>
+                  <h3 className="font-black text-xs sm:text-sm uppercase tracking-wide text-slate-900">
+                    {seksi.kategori}
+                  </h3>
+                </div>
+                <ul className="space-y-2.5 text-xs font-medium text-slate-800">
+                  {seksi.poin.map((item, pIdx) => (
+                    <li key={pIdx} className="flex items-start space-x-2">
+                      <span className="font-black text-emerald-800 shrink-0 mt-0.5">{pIdx + 1}.</span>
+                      <span className="leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="space-y-2.5 text-xs font-medium text-slate-800">
-                {TATA_TERTIB.guru.map((t, idx) => (
-                  <li key={idx} className="flex items-start space-x-2">
-                    <span className="font-black text-emerald-700 shrink-0">{idx + 1}.</span>
-                    <span>{t}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Tata Tertib Kelas */}
-            <div className="p-6 rounded-2xl bg-slate-50 border-2 border-slate-700 space-y-4">
-              <div className="flex items-center space-x-2 border-b border-slate-200 pb-2">
-                <School className="w-5 h-5 text-blue-700" />
-                <h3 className="font-black text-sm uppercase tracking-wide text-slate-900">TATA TERTIB KELAS & SANTRI</h3>
-              </div>
-              <ul className="space-y-2.5 text-xs font-medium text-slate-800">
-                {TATA_TERTIB.kelas.map((t, idx) => (
-                  <li key={idx} className="flex items-start space-x-2">
-                    <span className="font-black text-blue-700 shrink-0">{idx + 1}.</span>
-                    <span>{t}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
+            ))}
           </div>
 
         </div>
       )}
 
       {/* =========================================================================
-       * TAB 9: PROGRAM KELAS & TARGET WALI KELAS
+       * TAB 8B: TATA TERTIB KELAS
+       * ========================================================================= */}
+      {activeTab === 'TATA_TERTIB_KELAS' && (
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+          
+          <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
+              <span className="font-serif text-base font-black leading-none text-amber-300">الإمام</span>
+              <span className="text-[6px] font-black uppercase tracking-widest text-center mt-0.5">Al-Imam</span>
+            </div>
+            <div>
+              <h2 className="text-xl font-black tracking-wider text-slate-900 uppercase">
+                TATA TERTIB KELAS
+              </h2>
+              <div className="text-xs font-extrabold text-emerald-800 uppercase">
+                SD AL-IMAM ISLAMIC SCHOOL • ATURAN & KETERTIBAN SANTRI DI KELAS
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-slate-50 border-2 border-slate-700 space-y-3">
+            <ol className="space-y-3 text-xs sm:text-sm font-medium text-slate-800 divide-y divide-slate-200/60">
+              {TATA_TERTIB_KELAS.map((aturan, idx) => (
+                <li key={idx} className="flex items-start space-x-3 pt-2.5 first:pt-0">
+                  <span className="w-6 h-6 rounded-full bg-blue-700 text-white font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    {idx + 1}
+                  </span>
+                  <span className="leading-relaxed font-bold text-slate-900">{aturan}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+        </div>
+      )}
+
+      {/* =========================================================================
+       * TAB 9: PROGRAM KELAS / GOALS 2026-2027
        * ========================================================================= */}
       {activeTab === 'PROGRAM_KELAS' && (
         <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
@@ -945,43 +984,71 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
             </div>
             <div>
               <h2 className="text-xl font-black tracking-wider text-slate-900 uppercase">
-                PROGRAM KERJA WALI KELAS
+                {GOALS_PROGRAM_KELAS_2026_2027.judul}
               </h2>
               <div className="text-xs font-extrabold text-emerald-800 uppercase">
-                TAHUN PELAJARAN 2026/2027 • {currentWaliKelas.kelas}
+                PROGRAM KERJA & EVALUASI WALI KELAS • {currentWaliKelas.kelas}
               </div>
             </div>
           </div>
 
-          <div className="space-y-4">
-            {[
-              {
-                bidang: "1. Bidang Keagamaan & Al-Qur'an",
-                target: "Target hafalan min. Juz 30 (Surat An-Nas s.d Al-Balad), hafalan 10 Hadits Arbain pilihan, dan doa sehari-hari.",
-                kegiatan: "Muraja'ah harian, setoran tahfidz pagi, pembiasaan shalat berjamaah, dan buku pantau mutaba'ah yaumiyyah."
-              },
-              {
-                bidang: "2. Bidang Akademik & Literasi",
-                target: "Ketuntasan 100% membaca, menulis, dan berhitung (calistung) santri kelas 1 pada akhir Semester 1.",
-                kegiatan: "Pojok baca kelas, literasi pagi 15 menit, bimbingan pengayaan bagi santri yang membutuhkan perhatian khusus."
-              },
-              {
-                bidang: "3. Bidang Karakter & Adab Islam",
-                target: "Penerapan adab makan/minum, adab kepada orang tua & guru, serta pembiasaan saling memaafkan dan tolong menolong.",
-                kegiatan: "Kultum adab pekanan, reward bintang akhlak teladan, dan jurnal catatan anekdot wali kelas."
-              },
-              {
-                bidang: "4. Bidang Kemitraan Orang Tua (Parenting)",
-                target: "Komunikasi dua arah yang harmonis dan sinergis antara sekolah dan wali murid.",
-                kegiatan: "Grup koordinasi kelas resmi, pertemuan parenting tengah semester, dan konsultasi privat berkala."
-              }
-            ].map((p, idx) => (
-              <div key={idx} className="p-4 rounded-2xl bg-slate-50 border border-slate-300 space-y-1.5">
-                <h4 className="text-sm font-black text-slate-950">{p.bidang}</h4>
-                <div className="text-xs font-bold text-emerald-800">Target: {p.target}</div>
-                <div className="text-xs font-medium text-slate-600">Pelaksanaan: {p.kegiatan}</div>
+          <div className="border-2 border-slate-800 rounded-2xl overflow-hidden shadow-xs divide-y-2 divide-slate-800 text-xs sm:text-sm">
+            
+            {/* Baris 1: Kekurangan */}
+            <div className="grid grid-cols-1 md:grid-cols-4 bg-white">
+              <div className="p-4 bg-slate-100 md:border-r-2 md:border-slate-800 font-black text-slate-900 flex items-center">
+                Kekurangan :
               </div>
-            ))}
+              <div className="p-4 md:col-span-3 text-slate-800 font-medium leading-relaxed">
+                {GOALS_PROGRAM_KELAS_2026_2027.kekurangan}
+              </div>
+            </div>
+
+            {/* Baris 2: Perbaikan */}
+            <div className="grid grid-cols-1 md:grid-cols-4 bg-white">
+              <div className="p-4 bg-slate-100 md:border-r-2 md:border-slate-800 font-black text-slate-900 flex items-center">
+                Perbaikan :
+              </div>
+              <div className="p-4 md:col-span-3 text-slate-800 font-medium leading-relaxed">
+                {GOALS_PROGRAM_KELAS_2026_2027.perbaikan}
+              </div>
+            </div>
+
+            {/* Baris 3: Dengan Cara */}
+            <div className="grid grid-cols-1 md:grid-cols-4 bg-white">
+              <div className="p-4 bg-slate-100 md:border-r-2 md:border-slate-800 font-black text-slate-900 flex items-start">
+                Dengan Cara :
+              </div>
+              <div className="p-4 md:col-span-3 space-y-2">
+                {GOALS_PROGRAM_KELAS_2026_2027.denganCara.map((cara, cIdx) => (
+                  <div key={cIdx} className="flex items-start space-x-2">
+                    <span className="font-bold text-emerald-700 shrink-0 mt-0.5">•</span>
+                    <span className="text-slate-800 font-medium leading-relaxed">{cara}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Baris 4: Goals Jangka Pendek */}
+            <div className="grid grid-cols-1 md:grid-cols-4 bg-white">
+              <div className="p-4 bg-emerald-50 md:border-r-2 md:border-slate-800 font-black text-emerald-950 flex items-center">
+                Goals Jangka Pendek :
+              </div>
+              <div className="p-4 md:col-span-3 text-slate-800 font-medium leading-relaxed">
+                {GOALS_PROGRAM_KELAS_2026_2027.goalsJangkaPendek}
+              </div>
+            </div>
+
+            {/* Baris 5: Goals Jangka Panjang */}
+            <div className="grid grid-cols-1 md:grid-cols-4 bg-white">
+              <div className="p-4 bg-blue-50 md:border-r-2 md:border-slate-800 font-black text-blue-950 flex items-center">
+                Goals Jangka Panjang :
+              </div>
+              <div className="p-4 md:col-span-3 text-slate-800 font-medium leading-relaxed">
+                {GOALS_PROGRAM_KELAS_2026_2027.goalsJangkaPanjang}
+              </div>
+            </div>
+
           </div>
 
         </div>
