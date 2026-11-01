@@ -86,7 +86,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
   const currentWaliKelas = useMemo(() => {
     return WALI_KELAS_ADMINISTRASI[selectedKelasId] || {
       kelas: currentKelasObj.nama,
-      waliKelas: currentKelasObj.waliKelas,
+      waliKelas: currentKelasObj.wali || currentKelasObj.waliKelas || "Wali Kelas",
       nip: "-",
       nuptk: "-",
       tempatLahir: "Bogor",
@@ -184,7 +184,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
               >
                 {DAFTAR_KELAS.map((k) => (
                   <option key={k.id} value={k.id} className="text-slate-900 font-bold">
-                    {k.nama} ({k.waliKelas.split(',')[0]})
+                    {k.nama} ({((k.wali || k.waliKelas || '')).split(',')[0]})
                   </option>
                 ))}
               </select>
@@ -603,7 +603,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
                 )}
               </div>
               <span className="text-[11px] font-bold text-slate-500">
-                Wali Kelas: {currentWaliKelas.waliKelas.split(',')[0]}
+                Wali Kelas: {((currentWaliKelas.waliKelas || '')).split(',')[0]}
               </span>
             </div>
 
