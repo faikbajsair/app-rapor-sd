@@ -12,7 +12,8 @@ import {
   FileText,
   Printer,
   ShieldCheck,
-  Check
+  Check,
+  FileSpreadsheet
 } from 'lucide-react';
 import { StatCard } from '../components/StatCard';
 import { ABSController } from '../../controllers/ABSController';
@@ -261,6 +262,22 @@ export function DashboardView({
             <h3 className="text-sm font-bold text-slate-800">Aksi Pintas Cepat</h3>
             
             <div className="space-y-2.5">
+              <button
+                onClick={() => onNavigate('administrasi')}
+                className="w-full flex items-center justify-between p-3 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-left transition-all group"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 rounded-xl bg-white text-indigo-800 shadow-2xs">
+                    <FileSpreadsheet className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-slate-800 group-hover:text-indigo-900">Administrasi Wali Kelas (Buku I & II)</div>
+                    <div className="text-[10px] text-slate-500">20 Siswa, Tata Tertib, Sarpras, Anekdot & Mapel</div>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-indigo-600" />
+              </button>
+
               <button
                 onClick={() => onNavigate('nilai')}
                 className="w-full flex items-center justify-between p-3 rounded-2xl bg-pastel-50 hover:bg-pastel-100 border border-pastel-200 text-left transition-all group"

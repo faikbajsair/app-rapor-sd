@@ -23,6 +23,7 @@ import { KholaqohView } from './views/pages/KholaqohView';
 import { GTKView } from './views/pages/GTKView';
 import { KalenderAkademikView } from './views/pages/KalenderAkademikView';
 import { JadwalPelajaranView } from './views/pages/JadwalPelajaranView';
+import { AdministrasiWaliKelasView } from './views/pages/AdministrasiWaliKelasView';
 
 export function App() {
   // App Model State from StorageAdapter
@@ -354,6 +355,15 @@ export function App() {
               currentUser={currentUser}
               currentRole={currentRole}
               settings={settings}
+            />
+          )}
+
+          {activeTab === 'administrasi' && (
+            <AdministrasiWaliKelasView
+              currentUser={currentUser}
+              currentRole={currentRole}
+              settings={settings}
+              onNavigate={(tab) => setActiveTab(tab)}
             />
           )}
 
