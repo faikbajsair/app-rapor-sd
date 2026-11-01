@@ -279,6 +279,10 @@ export function App() {
     }
   };
 
+  const handleQuickPrint = () => {
+    window.print();
+  };
+
   // If NOT Logged In: Show Modern Login Page
   if (!currentUser) {
     return (
