@@ -432,99 +432,131 @@ export const GOALS_PROGRAM_KELAS_2026_2027 = {
   goalsJangkaPanjang: "Anak-anak mampu membaca buku cerita sendiri min. 15 menit setiap hari. Anak-anak paham tentang konsep uang, membaca jarum jam, dan menyelesaikan soal cerita sederhana. Mampu menuliskan karangan cerita pendek min. 1 paragraf. Anak-anak bisa berani tampil di depan umum seperti saat puncak projek nanti. Anak-anak bisa memiliki ambisi saat dalam pembelajaran."
 };
 
-// JADWAL REGU PIKET HARIAN (20 SISWA KELAS 1 ABDULLAH IBNU UMAR)
+// JADWAL PIKET KEBERSIHAN & PEMBAGIAN KELOMPOK BELAJAR (SESUAI SHEET PIKET MASTER)
+export const JADWAL_PIKET_KEBERSIHAN = [
+  { no: 1, senin: "ADREENA ASHFAHANI OHIRA", selasa: "ANNASYA SHAHLIA", rabu: "EZRA ABDURRAHMAN TASLIM", kamis: "KHALID ATHAFARIZ HANASAN", jumat: "MUHAMMAD ZAIN HAMIZAN" },
+  { no: 2, senin: "AHMAD ZAYYAN ALTHAF", selasa: "ASIYAH AHMAD", rabu: "FATIH AFKAR ALHANAN", kamis: "KHANSA SHAFIYYAH", jumat: "NASYAMA RANIA KHADIJAH" },
+  { no: 3, senin: "ALISYA RIHANNA MANGKIALO", selasa: "DAVIN ALFARIZQY", rabu: "FREYA ANJANI HUMAIRA", kamis: "LABIQA SYAIRA IZZA DUANA", jumat: "PUTRI ARIEFIHI PRAJA" },
+  { no: 4, senin: "DANISH SALAHUDDIN A. F.", selasa: "ERKA DANURDARA", rabu: "IBRAHIM HANIF WIJAYA", kamis: "MUHAMMAD AL GHIFFARI", jumat: "QUEENZA ARSYIFA ZHADELA" }
+];
+
+export const PEMBAGIAN_KELOMPOK_BELAJAR = [
+  { kelompok: "Kelompok A", anggota: ["ADREENA ASHFAHANI OHIRA", "AHMAD ZAYYAN ALTHAF"] },
+  { kelompok: "Kelompok B", anggota: ["ALISYA RIHANNA MANGKIALO", "ANNASYA SHAHLIA"] },
+  { kelompok: "Kelompok C", anggota: ["ASIYAH AHMAD", "DANISH SALAHUDDIN A. F."] },
+  { kelompok: "Kelompok D", anggota: ["DAVIN ALFARIZQY", "ERKA DANURDARA"] },
+  { kelompok: "Kelompok E", anggota: ["EZRA ABDURRAHMAN TASLIM", "FATIH AFKAR ALHANAN"] },
+  { kelompok: "Kelompok F", anggota: ["FREYA ANJANI HUMAIRA", "IBRAHIM HANIF WIJAYA"] },
+  { kelompok: "Kelompok G", anggota: ["KHALID ATHAFARIZ HANASAN", "KHANSA SHAFIYYAH", "LABIQA SYAIRA IZZA DUANA"] },
+  { kelompok: "Kelompok H", anggota: ["MUHAMMAD AL GHIFFARI", "MUHAMMAD ZAIN HAMIZAN", "NASYAMA RANIA KHADIJAH", "QUEENZA ARSYIFA ZHADELA"] }
+];
+
 export const PIKET_KELAS_DEFAULT = [
-  {
-    hari: "SENIN",
-    koordinator: "Danish Salahuddin A. F.",
-    anggota: ["ADREENA ASHFAHANI OHIRA", "AHMAD ZAYYAN ALTHAF", "ALISYA RIHANNA MANGKIALO", "DANISH SALAHUDDIN ALHUSAIN FAHRIAL"]
-  },
-  {
-    hari: "SELASA",
-    koordinator: "Davin Alfarizqy",
-    anggota: ["ANNASYA SHAHLIA", "ASIYAH AHMAD", "DAVIN ALFARIZQY", "ERKA DANURDARA"]
-  },
-  {
-    hari: "RABU",
-    koordinator: "Ibrahim Hanif Wijaya",
-    anggota: ["EZRA ABDURRAHMAN TASLIM", "FATIH AFKAR ALHANAN", "FREYA ANJANI HUMAIRA", "IBRAHIM HANIF WIJAYA"]
-  },
-  {
-    hari: "KAMIS",
-    koordinator: "Muhammad Al Ghiffari",
-    anggota: ["KHALID ATHAFARIZ HANASAN", "KHANSA SHAFIYYAH", "LABIQA SYAIRA IZZA DUANA", "MUHAMMAD AL GHIFFARI"]
-  },
-  {
-    hari: "JUM'AT",
-    koordinator: "Muhammad Zain Hamizan",
-    anggota: ["MUHAMMAD ZAIN HAMIZAN", "NASYAMA RANIA KHADIJAH", "PUTRI ARIEFIHI PRAJA", "QUEENZA ARSYIFA ZHADELA"]
-  }
+  { hari: "SENIN", anggota: JADWAL_PIKET_KEBERSIHAN.map(p => p.senin) },
+  { hari: "SELASA", anggota: JADWAL_PIKET_KEBERSIHAN.map(p => p.selasa) },
+  { hari: "RABU", anggota: JADWAL_PIKET_KEBERSIHAN.map(p => p.rabu) },
+  { hari: "KAMIS", anggota: JADWAL_PIKET_KEBERSIHAN.map(p => p.kamis) },
+  { hari: "JUM'AT", anggota: JADWAL_PIKET_KEBERSIHAN.map(p => p.jumat) }
 ];
 
-// DATA INVENTARIS SARANA PRASARANA KELAS 1-A
-export const SARPRAS_KELAS_DEFAULT = [
-  { no: 1, namaBarang: "Meja Santri / Siswa", jumlah: 20, satuan: "Unit", kondisi: "Baik", keterangan: "Bahan kayu jati belanda" },
-  { no: 2, namaBarang: "Kursi Santri / Siswa", jumlah: 20, satuan: "Unit", kondisi: "Baik", keterangan: "Ergonomis standar SD" },
-  { no: 3, namaBarang: "Meja Guru / Wali Kelas", jumlah: 1, satuan: "Unit", kondisi: "Baik", keterangan: "Lengkap dengan laci berkunci" },
-  { no: 4, namaBarang: "Kursi Guru", jumlah: 1, satuan: "Unit", kondisi: "Baik", keterangan: "Kursi putar busa" },
-  { no: 5, namaBarang: "Papan Tulis Whiteboard", jumlah: 2, satuan: "Buah", kondisi: "Baik", keterangan: "Ukuran 120 x 240 cm" },
-  { no: 6, namaBarang: "Penghapus & Spidol Boardmarker", jumlah: 4, satuan: "Set", kondisi: "Baik", keterangan: "Warna hitam, biru, merah" },
-  { no: 7, namaBarang: "Loker / Lemari Siswa", jumlah: 20, satuan: "Pintu", kondisi: "Baik", keterangan: "Penyimpanan buku & tas" },
-  { no: 8, namaBarang: "Air Conditioner (AC) 2 PK", jumlah: 2, satuan: "Unit", kondisi: "Baik / Dingin", keterangan: "Servis rutin tiap 2 bulan" },
-  { no: 9, namaBarang: "Jam Dinding Analog", jumlah: 1, satuan: "Buah", kondisi: "Baik", keterangan: "Baterai aktif" },
-  { no: 10, namaBarang: "Kotak P3K Kelas", jumlah: 1, satuan: "Set", kondisi: "Lengkap", keterangan: "Betadine, plester, minyak kayu putih" },
-  { no: 11, namaBarang: "Tempat Sampah Tertutup", jumlah: 2, satuan: "Buah", kondisi: "Baik", keterangan: "Organik & Non-Organik" },
-  { no: 12, namaBarang: "Sapu & Pengki Kebersihan", jumlah: 2, satuan: "Set", kondisi: "Baik", keterangan: "Tersimpan di sudut belakang" }
+// DAFTAR RIWAYAT KESEHATAN SISWA (SESUAI SHEET R.KESEHATAN MASTER)
+export const RIWAYAT_KESEHATAN_DEFAULT = [
+  { no: 1, nama: "ADREENA ASHFAHANI OHIRA", jkl: "P", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 2, nama: "AHMAD ZAYYAN ALTHAF", jkl: "L", jenisPenyakit: "Alergi Debu", tanggal: "2025", dirawat: "Tidak", lamanya: "-", cacat: "-" },
+  { no: 3, nama: "ALISYA RIHANNA M", jkl: "P", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 4, nama: "ANNASYA SHAHLIA", jkl: "P", jenisPenyakit: "Alergi Seafood", tanggal: "2025", dirawat: "Tidak", lamanya: "-", cacat: "-" },
+  { no: 5, nama: "ASIYAH AHMAD", jkl: "P", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 6, nama: "ATHARRAZKA FAEYZA S", jkl: "L", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 7, nama: "DANISH SALAHUDDIN A", jkl: "L", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 8, nama: "DAVIN ALFARIZQY", jkl: "L", jenisPenyakit: "Rhinitis Alergi", tanggal: "2025", dirawat: "Tidak", lamanya: "-", cacat: "-" },
+  { no: 9, nama: "ERKA DANURDARA", jkl: "L", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 10, nama: "EZRA ABDURRAHMAN T", jkl: "L", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 11, nama: "FATIH AFKAR ALHANAN", jkl: "L", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 12, nama: "FREYA ANJANI HUMAIRA", jkl: "P", jenisPenyakit: "Alergi Kacang", tanggal: "2025", dirawat: "Tidak", lamanya: "-", cacat: "-" },
+  { no: 13, nama: "KHALID ATHAFARIZ H", jkl: "L", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 14, nama: "KHANSA SHAFIYYAH", jkl: "P", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 15, nama: "LABIQA SYAIRA IZZA D", jkl: "P", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 16, nama: "MIKHAEL ZYAN", jkl: "L", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 17, nama: "MUHAMMAD AL GHIFFARI", jkl: "L", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 18, nama: "MUHAMMAD ZAIN", jkl: "L", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 19, nama: "NASYAMA RANIA K", jkl: "P", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" },
+  { no: 20, nama: "QUEENZA ARSYIFA Z.", jkl: "P", jenisPenyakit: "-", tanggal: "-", dirawat: "-", lamanya: "-", cacat: "-" }
 ];
 
-// CATATAN ANEKDOT (OBSERVASI PERILAKU SISWA)
-export const CATATAN_ANEKDOT_DEFAULT = [
-  {
-    id: "AN_01",
-    tanggal: "2026-08-12",
-    namaSiswa: "AHMAD ZAYYAN ALTHAF",
-    peristiwa: "Menunjukkan empati tinggi dengan meminjamkan pensil cadangannya kepada teman sebangku yang pensilnya patah tanpa diminta.",
-    analisis: "Perkembangan adab ta'awun (tolong-menolong) dan kepekaan sosial sangat baik.",
-    tindakLanjut: "Memberikan pujian di depan kelas sebagai motivasi bagi teman-temannya.",
-    pencatat: "Siti Habzah Diniyanti, S.Sos"
-  },
-  {
-    id: "AN_02",
-    tanggal: "2026-08-26",
-    namaSiswa: "DANISH SALAHUDDIN ALHUSAIN FAHRIAL",
-    peristiwa: "Mengingatkan teman-temannya saat hendak minum agar duduk dan membaca basmalah terlebih dahulu.",
-    analisis: "Internalisasi adab sunnah nabawiyyah dalam kehidupan sehari-hari berjalan efektif.",
-    tindakLanjut: "Dijadikan teladan adab makan & minum pada sesi makan siang kelas.",
-    pencatat: "Siti Habzah Diniyanti, S.Sos"
-  },
-  {
-    id: "AN_03",
-    tanggal: "2026-09-09",
-    namaSiswa: "ADREENA ASHFAHANI OHIRA",
-    peristiwa: "Sangat antusias memimpin muraja'ah surat An-Naba' bersama kelompok akhwat dengan makhraj yang fasih.",
-    analisis: "Memiliki jiwa kepemimpinan positif dan kecintaan terhadap hafalan Al-Qur'an.",
-    tindakLanjut: "Diberi kesempatan menjadi koordinator muraja'ah halaqah pekanan.",
-    pencatat: "Siti Habzah Diniyanti, S.Sos"
-  }
+// DAFTAR INVENTARIS KELAS (SESUAI SHEET SARPRAS MASTER)
+export const INVENTARIS_KELAS_MASTER = [
+  { no: 1, namaBarang: "Papan display mading besar", jumlahAwal: 1, baik: 1, rusak: 0 },
+  { no: 2, namaBarang: "Papan display mading kecil", jumlahAwal: 1, baik: 1, rusak: 0 },
+  { no: 3, namaBarang: "Lemari loker siswa", jumlahAwal: 20, baik: 20, rusak: 0 },
+  { no: 4, namaBarang: "Lemari loker guru", jumlahAwal: 1, baik: 1, rusak: 0 },
+  { no: 5, namaBarang: "meja dan kursi siswa", jumlahAwal: 20, baik: 20, rusak: 0 },
+  { no: 6, namaBarang: "meja dan kursi guru", jumlahAwal: 1, baik: 1, rusak: 0 },
+  { no: 7, namaBarang: "Papan tulis", jumlahAwal: 1, baik: 1, rusak: 0 },
+  { no: 8, namaBarang: "Rak buku", jumlahAwal: 1, baik: 1, rusak: 0 },
+  { no: 9, namaBarang: "dispenser dan galon", jumlahAwal: 1, baik: 1, rusak: 0 },
+  { no: 10, namaBarang: "printer", jumlahAwal: 1, baik: 1, rusak: 0 },
+  { no: 11, namaBarang: "tempat sampah", jumlahAwal: 2, baik: 2, rusak: 0 },
+  { no: 12, namaBarang: "Sapu dan pel", jumlahAwal: 2, baik: 2, rusak: 0 },
+  { no: 13, namaBarang: "Kemoceng", jumlahAwal: 2, baik: 2, rusak: 0 },
+  { no: 14, namaBarang: "Rak Sendal", jumlahAwal: 1, baik: 1, rusak: 0 },
+  { no: 15, namaBarang: "Proyektor", jumlahAwal: 1, baik: 1, rusak: 0 },
+  { no: 16, namaBarang: "Jam dinding", jumlahAwal: 1, baik: 1, rusak: 0 }
 ];
+export const SARPRAS_KELAS_DEFAULT = INVENTARIS_KELAS_MASTER;
 
-// DAFTAR HADIR PARENTING & PENGAMBILAN RAPOR
-export const DAFTAR_PARENTING_DEFAULT = [
+// ANECDOTAL RECORD (SESUAI SHEET ANECDOT MASTER)
+export const ANECDOTAL_RECORD_DEFAULT = [
   {
-    pertemuan: "Parenting Session 1 - Sinergi Pendidikan Sunnah di Era Digital",
-    tanggal: "15 Agustus 2026",
-    tempat: "Aula SD Al-Imam Islamic School",
-    kehadiran: "19 dari 20 Wali Murid Hadir (95%)",
-    notulensi: "Sosialisasi target kurikulum tahfidz juz 30, pembatasan gadget di rumah, dan pembiasaan shalat 5 waktu di masjid untuk santri ikhwan."
+    no: 1,
+    dayDate: "Senin, 17 Agustus 2026",
+    teacherName: "Siti Habzah Diniyanti, S.Sos",
+    studentName: "AHMAD ZAYYAN ALTHAF",
+    cases: "Menunjukkan empati tinggi dengan meminjamkan pensil cadangannya kepada teman sebangku yang pensilnya patah tanpa diminta.",
+    treatmentAndFollowUp: "Diberikan pujian di depan kelas sebagai motivasi ta'awun bagi teman-teman."
   },
   {
-    pertemuan: "Pengambilan Rapor Tengah Semester Ganjil (PTS)",
-    tanggal: "10 Oktober 2026",
-    tempat: "Ruang Kelas 1 Abdullah Ibnu Umar",
-    kehadiran: "20 dari 20 Wali Murid Hadir (100%)",
-    notulensi: "Konsultasi tatap muka perkembangan membaca, menulis, berhitung, serta pencapaian hafalan surat Al-Balad s.d An-Nas."
+    no: 2,
+    dayDate: "Rabu, 02 September 2026",
+    teacherName: "Siti Habzah Diniyanti, S.Sos",
+    studentName: "DANISH SALAHUDDIN ALHUSAIN FAHRIAL",
+    cases: "Mengingatkan teman-temannya saat hendak minum agar duduk dan membaca basmalah terlebih dahulu.",
+    treatmentAndFollowUp: "Dijadikan teladan adab makan & minum pada sesi makan siang kelas."
+  },
+  {
+    no: 3,
+    dayDate: "Kamis, 17 September 2026",
+    teacherName: "Siti Habzah Diniyanti, S.Sos",
+    studentName: "ADREENA ASHFAHANI OHIRA",
+    cases: "Sangat antusias memimpin muraja'ah surat An-Naba' bersama kelompok akhwat dengan makhraj fasih.",
+    treatmentAndFollowUp: "Diberi kesempatan menjadi koordinator muraja'ah halaqah pekanan."
   }
 ];
+export const CATATAN_ANEKDOT_DEFAULT = ANECDOTAL_RECORD_DEFAULT;
+
+// DAFTAR HADIR PENGAMBILAN RAPOR PARENTING (SESUAI SHEET RAPOR MASTER)
+export const DAFTAR_HADIR_RAPOR_PARENTING_DEFAULT = [
+  { no: 1, nama: "ADREENA ASHFAHANI OHIRA", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 2, nama: "AHMAD ZAYYAN ALTHAF", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 3, nama: "ALISYA RIHANNA MANGKIALO", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 4, nama: "ANNASYA SHAHLIA", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 5, nama: "ASIYAH AHMAD", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 6, nama: "DANISH SALAHUDDIN ALHUSAIN FAHRIAL", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 7, nama: "DAVIN ALFARIZQY", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 8, nama: "ERKA DANURDARA", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 9, nama: "EZRA ABDURRAHMAN TASLIM", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 10, nama: "FATIH AFKAR ALHANAN", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 11, nama: "FREYA ANJANI HUMAIRA", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 12, nama: "IBRAHIM HANIF WIJAYA", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 13, nama: "KHALID ATHAFARIZ HANASAN", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 14, nama: "KHANSA SHAFIYYAH", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 15, nama: "LABIQA SYAIRA IZZA DUANA", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 16, nama: "MUHAMMAD AL GHIFFARI", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 17, nama: "MUHAMMAD ZAIN HAMIZAN", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 18, nama: "NASYAMA RANIA KHADIJAH", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 19, nama: "PUTRI ARIEFIHI PRAJA", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false },
+  { no: 20, nama: "QUEENZA ARSYIFA ZHADELA", pts1: true, pas1: true, parenting1: true, pts2: false, pas2: false, parenting2: false }
+];
+export const DAFTAR_PARENTING_DEFAULT = DAFTAR_HADIR_RAPOR_PARENTING_DEFAULT;
 
 // DAFTAR 14 MATA PELAJARAN ADMINISTRASI WALI KELAS (SESUAI TABEL HOME SPREADSHEET)
 export const MAPEL_ADMINISTRASI = [

@@ -43,21 +43,39 @@ export const DEFAULT_SETTINGS = {
   gasApiUrl: "https://script.google.com/macros/s/AKfycbwuHHPCXAw_pj3LcMNnxOm2EiELo5VR92OPwUnhvFtKoKfUR4yR26QlheSf75HykCXw/exec"
 };
 
+import {
+  SISWA_KELAS_1_ABBAS,
+  NILAI_KELAS_1_ABBAS,
+  PRESENSI_KELAS_1_ABBAS,
+  SIKAP_KELAS_1_ABBAS
+} from './data1Abbas';
+import {
+  SISWA_KELAS_1_UMAR_FORMATTED,
+  NILAI_KELAS_1_UMAR,
+  PRESENSI_KELAS_1_UMAR,
+  SIKAP_KELAS_1_UMAR
+} from './data1Umar';
+
 export const DEFAULT_MAPEL = [
-  { id: "PAI", kode: "PAI", nama: "Pendidikan Agama Islam & Budi Pekerti", kelompok: "Wajib", kkm: 78, guru: "Muhamad Rizky Kusumah, S.Pd / Indah Wulandari, S.Pd" },
   { id: "PP", kode: "PP", nama: "Pendidikan Pancasila", kelompok: "Wajib", kkm: 75, guru: "Guru Wali Kelas" },
   { id: "BIN", kode: "BIN", nama: "Bahasa Indonesia", kelompok: "Wajib", kkm: 75, guru: "Guru Wali Kelas" },
-  { id: "MAT", kode: "MAT", nama: "Matematika", kelompok: "Wajib", kkm: 72, guru: "Feby Dwitri Putri, S.Pd / Wiji Atikasari, S.Pd., Gr" },
+  { id: "MAT", kode: "MAT", nama: "Matematika", kelompok: "Wajib", kkm: 75, guru: "Wiji Atikasari, S.Pd / Feby Dwitri, S.Pd" },
   { id: "IPAS", kode: "IPAS", nama: "Ilmu Pengetahuan Alam & Sosial (IPAS)", kelompok: "Wajib", kkm: 75, guru: "Guru Wali Kelas" },
-  { id: "INF", kode: "INF", nama: "Informatika & Komputer", kelompok: "Wajib", kkm: 75, guru: "Laila Paizrujah, S.Pd" },
-  { id: "PJOK", kode: "PJOK", nama: "Pendidikan Jasmani, Olahraga & Kesehatan", kelompok: "Wajib", kkm: 75, guru: "Muhammad Raihan Rahmanto, S.Pd" },
   { id: "SB", kode: "SB", nama: "Seni Rupa & Keterampilan", kelompok: "Pilihan", kkm: 75, guru: "Guru Wali Kelas" },
-  { id: "BIG", kode: "BIG", nama: "Bahasa Inggris", kelompok: "Muatan Lokal", kkm: 75, guru: "Susan Eka Pratiwi, S.Pd" },
-  { id: "BAR", kode: "BAR", nama: "Bahasa Arab", kelompok: "Kekhasan", kkm: 78, guru: "Heru Firdaus, S.Hum" },
-  { id: "TFZ", kode: "TFZ", nama: "Tahfidz & Tahsin Al-Qur'an", kelompok: "Kekhasan", kkm: 80, guru: "Ust. Anwaruddin, M.Pd & Tim Guru Al-Qur'an" }
+  { id: "PJOK", kode: "PJOK", nama: "Pendidikan Jasmani, Olahraga & Kesehatan", kelompok: "Wajib", kkm: 75, guru: "Muhammad Raihan Rahmanto, S.Pd" },
+  { id: "BS", kode: "BS", nama: "Bahasa Sunda", kelompok: "Muatan Lokal", kkm: 75, guru: "Guru Bahasa Daerah" },
+  { id: "BAR", kode: "BAR", nama: "Bahasa Arab", kelompok: "Kekhasan", kkm: 75, guru: "Heru Firdaus, S.Hum" },
+  { id: "AKD", kode: "AKD", nama: "Akidah Akhlak", kelompok: "Pendidikan Agama Islam", kkm: 80, guru: "Muhamad Rizky Kusumah, S.Pd" },
+  { id: "FQH", kode: "FQH", nama: "Fikih Ibadah", kelompok: "Pendidikan Agama Islam", kkm: 80, guru: "Muhamad Rizky Kusumah, S.Pd" },
+  { id: "ADB", kode: "ADB", nama: "Adab Akhlak", kelompok: "Pendidikan Agama Islam", kkm: 80, guru: "Wali Kelas" },
+  { id: "SKI", kode: "SKI", nama: "Sejarah Kebudayaan Islam (SKI)", kelompok: "Pendidikan Agama Islam", kkm: 75, guru: "Muhamad Rizky Kusumah, S.Pd" },
+  { id: "BIG", kode: "BIG", nama: "Bahasa Inggris", kelompok: "Muatan Lokal", kkm: 80, guru: "Susan Eka Pratiwi, S.Pd" },
+  { id: "INF", kode: "INF", nama: "Informatika & Komputer", kelompok: "Wajib", kkm: 75, guru: "Laila Paizrujah, S.Pd" },
+  { id: "TFZ", kode: "TFZ", nama: "Tahfidz & Tahsin Al-Qur'an", kelompok: "Kekhasan", kkm: 80, guru: "Ust. Anwaruddin, M.Pd & Tim Guru Al-Qur'an" },
+  { id: "PAI", kode: "PAI", nama: "Pendidikan Agama Islam Terpadu", kelompok: "Wajib", kkm: 78, guru: "Muhamad Rizky Kusumah, S.Pd" }
 ];
 
-export const DEFAULT_SISWA = [
+const MOCK_SISWA_LEGACY = [
   {
     id: "S01",
     nisn: "0134567891",
@@ -276,7 +294,13 @@ export const DEFAULT_SISWA = [
   }
 ];
 
-export const DEFAULT_NILAI = [
+export const DEFAULT_SISWA = [
+  ...SISWA_KELAS_1_ABBAS,
+  ...SISWA_KELAS_1_UMAR_FORMATTED,
+  ...MOCK_SISWA_LEGACY
+];
+
+const MOCK_NILAI_LEGACY = [
   {
     id: "N_S01_PAI",
     siswaId: "S01",
@@ -380,6 +404,12 @@ export const DEFAULT_NILAI = [
   }
 ];
 
+export const DEFAULT_NILAI = [
+  ...NILAI_KELAS_1_ABBAS,
+  ...NILAI_KELAS_1_UMAR,
+  ...MOCK_NILAI_LEGACY
+];
+
 export const DEFAULT_ABS = [
   {
     id: "ABS_MAT_01",
@@ -438,7 +468,7 @@ export const DEFAULT_ABS = [
   }
 ];
 
-export const DEFAULT_SIKAP = [
+const MOCK_SIKAP_LEGACY = [
   {
     id: "SIKAP_S01",
     siswaId: "S01",
@@ -465,7 +495,13 @@ export const DEFAULT_SIKAP = [
   }
 ];
 
-export const DEFAULT_PRESENSI = [
+export const DEFAULT_SIKAP = [
+  ...SIKAP_KELAS_1_ABBAS,
+  ...SIKAP_KELAS_1_UMAR,
+  ...MOCK_SIKAP_LEGACY
+];
+
+const MOCK_PRESENSI_LEGACY = [
   {
     id: "PRES_S01",
     siswaId: "S01",
@@ -498,4 +534,10 @@ export const DEFAULT_PRESENSI = [
       { nama: "Juara 1 Lomba Cerdas Cermat PAI Tingkat Kota", tahun: "2025" }
     ]
   }
+];
+
+export const DEFAULT_PRESENSI = [
+  ...PRESENSI_KELAS_1_ABBAS,
+  ...PRESENSI_KELAS_1_UMAR,
+  ...MOCK_PRESENSI_LEGACY
 ];

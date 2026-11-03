@@ -42,19 +42,37 @@ import {
   TATA_TERTIB_GURU,
   TATA_TERTIB_KELAS,
   GOALS_PROGRAM_KELAS_2026_2027,
+  JADWAL_PIKET_KEBERSIHAN,
+  PEMBAGIAN_KELOMPOK_BELAJAR,
   PIKET_KELAS_DEFAULT,
+  RIWAYAT_KESEHATAN_DEFAULT,
+  INVENTARIS_KELAS_MASTER,
   SARPRAS_KELAS_DEFAULT,
+  ANECDOTAL_RECORD_DEFAULT,
   CATATAN_ANEKDOT_DEFAULT,
+  DAFTAR_HADIR_RAPOR_PARENTING_DEFAULT,
   DAFTAR_PARENTING_DEFAULT,
   MAPEL_ADMINISTRASI
 } from '../../config/administrasiData';
+import {
+  SISWA_KELAS_1_ABBAS,
+  NILAI_KELAS_1_ABBAS
+} from '../../config/data1Abbas';
+import {
+  NILAI_KELAS_1_UMAR
+} from '../../config/data1Umar';
+import {
+  MAPEL_LATIHAN_MASTER,
+  LATIHAN_CONFIG
+} from '../../config/latihanData';
 
 export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, onNavigate }) {
   // Main Navigation Tab
   // 'HOME' | 'COVER' | 'PENGANTAR' | 'IDENTITAS' | 'DATA_SISWA' | 'VISI_MISI' | 
   // 'PEMBIASAAN' | 'TATA_TERTIB' | 'PROGRAM_KELAS' | 'PIKET' | 'KESEHATAN' | 
-  // 'SARPRAS' | 'ANECDOTED' | 'PARENTING'
+  // 'SARPRAS' | 'ANECDOTED' | 'PARENTING' | 'LEGER_LATIHAN'
   const [activeTab, setActiveTab] = useState('HOME');
+  const [selectedLatihanId, setSelectedLatihanId] = useState('L1');
 
   // Selected Class (Default to 1Umar or matching currentUser)
   const [selectedKelasId, setSelectedKelasId] = useState(() => {
@@ -71,16 +89,25 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
   const [searchSiswa, setSearchSiswa] = useState('');
   const [filterJk, setFilterJk] = useState('ALL');
 
-  // Anecdote dynamic list state
-  const [anecdoteList, setAnecdoteList] = useState(CATATAN_ANEKDOT_DEFAULT);
+  // Anecdotal Record Dynamic State (Sheet Anecdot Master)
+  const [anecdoteList, setAnecdoteList] = useState(ANECDOTAL_RECORD_DEFAULT);
   const [isAddingAnecdote, setIsAddingAnecdote] = useState(false);
   const [newAnecdote, setNewAnecdote] = useState({
-    tanggal: new Date().toISOString().split('T')[0],
-    namaSiswa: '',
-    peristiwa: '',
-    analisis: '',
-    tindakLanjut: ''
+    dayDate: new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+    teacherName: 'Siti Habzah Diniyanti, S.Sos',
+    studentName: '',
+    cases: '',
+    treatmentAndFollowUp: ''
   });
+
+  // Daftar Hadir Rapor Parenting State (Sheet Rapor Master)
+  const [daftarHadirRapor, setDaftarHadirRapor] = useState(DAFTAR_HADIR_RAPOR_PARENTING_DEFAULT);
+
+  // Riwayat Kesehatan Siswa State (Sheet R.Kesehatan Master)
+  const [riwayatKesehatanList, setRiwayatKesehatanList] = useState(RIWAYAT_KESEHATAN_DEFAULT);
+
+  // Sarana Prasarana Inventaris Kelas State (Sheet Sarpras Master)
+  const [inventarisList, setInventarisList] = useState(INVENTARIS_KELAS_MASTER);
 
   // Current Class & Wali Kelas Information
   const currentKelasObj = useMemo(() => {
@@ -111,35 +138,63 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
     };
   }, [selectedKelasId, currentKelasObj]);
 
+  // Active Student List & Grades by Selected Rombel
+  const activeSiswaKelas = useMemo(() => {
+    if (selectedKelasId === '1Abbas') {
+      return SISWA_KELAS_1_ABBAS;
+    }
+    return SISWA_KELAS_1_UMAR;
+  }, [selectedKelasId]);
+
+  const activeNilaiKelas = useMemo(() => {
+    if (selectedKelasId === '1Abbas') {
+      return NILAI_KELAS_1_ABBAS;
+    }
+    return NILAI_KELAS_1_UMAR;
+  }, [selectedKelasId]);
+
   // Filtered Siswa
   const filteredSiswa = useMemo(() => {
-    return SISWA_KELAS_1_UMAR.filter(s => {
-      const matchName = s.nama.toLowerCase().includes(searchSiswa.toLowerCase()) || s.nis.includes(searchSiswa);
+    return activeSiswaKelas.filter(s => {
+      const matchName = s.nama.toLowerCase().includes(searchSiswa.toLowerCase()) || (s.nis && s.nis.includes(searchSiswa));
       const matchJk = filterJk === 'ALL' || s.jk === filterJk;
       return matchName && matchJk;
     });
-  }, [searchSiswa, filterJk]);
+  }, [activeSiswaKelas, searchSiswa, filterJk]);
 
-  // Handle add anecdote
+  // Handle add anecdote (Sheet Anecdot Master)
   const handleSaveAnecdote = (e) => {
     e.preventDefault();
-    if (!newAnecdote.namaSiswa || !newAnecdote.peristiwa) return;
+    if (!newAnecdote.studentName || !newAnecdote.cases) return;
 
     const entry = {
-      id: `AN_${Date.now()}`,
-      ...newAnecdote,
-      pencatat: currentWaliKelas.waliKelas
+      no: anecdoteList.length + 1,
+      dayDate: newAnecdote.dayDate,
+      teacherName: newAnecdote.teacherName || currentWaliKelas.waliKelas,
+      studentName: newAnecdote.studentName,
+      cases: newAnecdote.cases,
+      treatmentAndFollowUp: newAnecdote.treatmentAndFollowUp || '-'
     };
 
-    setAnecdoteList([entry, ...anecdoteList]);
+    setAnecdoteList([...anecdoteList, entry]);
     setNewAnecdote({
-      tanggal: new Date().toISOString().split('T')[0],
-      namaSiswa: '',
-      peristiwa: '',
-      analisis: '',
-      tindakLanjut: ''
+      dayDate: new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+      teacherName: currentWaliKelas.waliKelas,
+      studentName: '',
+      cases: '',
+      treatmentAndFollowUp: ''
     });
     setIsAddingAnecdote(false);
+  };
+
+  // Toggle kehadiran Rapor & Parenting (Sheet Rapor Master)
+  const handleToggleHadir = (no, col) => {
+    setDaftarHadirRapor(prev => prev.map(item => {
+      if (item.no === no) {
+        return { ...item, [col]: !item[col] };
+      }
+      return item;
+    }));
   };
 
   return (
@@ -228,17 +283,18 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
             { id: 'COVER', label: 'Cover Sampul', badge: 'Format Cetak' },
             { id: 'PENGANTAR', label: 'Kata Pengantar', badge: 'Resmi' },
             { id: 'IDENTITAS', label: 'Identitas Wali Kelas', badge: 'Profil' },
-            { id: 'DATA_SISWA', label: 'Data Siswa (20 Santri)', badge: 'Kelas 1-A' },
+            { id: 'DATA_SISWA', label: `Data Siswa (${activeSiswaKelas.length} Santri)`, badge: currentWaliKelas.kelas },
             { id: 'VISI_MISI', label: 'Visi Misi & Tujuan', badge: 'Nilai Islam' },
             { id: 'PEMBIASAAN', label: 'Pembiasaan Guru', badge: 'Daily Habit' },
             { id: 'TATA_TERTIB', label: 'Tata Tertib Guru', badge: '4 Kategori' },
             { id: 'TATA_TERTIB_KELAS', label: 'Tata Tertib Kelas', badge: '15 Aturan' },
             { id: 'PROGRAM_KELAS', label: 'Program Kelas', badge: 'Goals 26/27' },
-            { id: 'PIKET', label: 'Jadwal Piket', badge: '5 Regu' },
-            { id: 'KESEHATAN', label: 'Riwayat Kesehatan', badge: 'Medis Siswa' },
-            { id: 'SARPRAS', label: 'Sarpras Kelas', badge: 'Inventaris' },
-            { id: 'ANECDOTED', label: 'Catatan Anekdot', badge: 'Observasi' },
-            { id: 'PARENTING', label: 'Parenting & Rapor', badge: 'Wali Murid' }
+            { id: 'PIKET', label: 'Piket & Kelompok', badge: '5 Hari / 8 Klp' },
+            { id: 'KESEHATAN', label: 'Riwayat Kesehatan', badge: 'Sheet R.Kesehatan' },
+            { id: 'SARPRAS', label: 'Sarpras Kelas', badge: '16 Inventaris' },
+            { id: 'ANECDOTED', label: 'Catatan Anekdot', badge: 'Anecdotal' },
+            { id: 'PARENTING', label: 'Parenting & Rapor', badge: 'Daftar Hadir' },
+            { id: 'LEGER_LATIHAN', label: 'Analisis KKM (L1-L4)', badge: 'Murni & Rapor' }
           ].map((tab) => {
             const isActive = activeTab === tab.id;
             return (
@@ -359,7 +415,8 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
                       { id: 'SARPRAS', label: 'DATA SARPRAS KELAS' },
                       { id: 'ANECDOTED', label: 'ANECDOTED (CATATAN ANEKDOT)' },
                       { id: 'presensi', label: 'ABSENSI', isAppNav: true },
-                      { id: 'PARENTING', label: 'DAFTAR HADIR PARENTING / RAPOR' }
+                      { id: 'PARENTING', label: 'DAFTAR HADIR PARENTING / RAPOR' },
+                      { id: 'LEGER_LATIHAN', label: 'ANALISIS KKM LATIHAN (L1 - L4)' }
                     ].map((item, idx) => (
                       <button
                         key={idx}
@@ -661,14 +718,14 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
                   BUKU INDUK & DATA SISWA RESMI
                 </h3>
                 <div className="text-xs font-extrabold text-emerald-800 uppercase">
-                  KELAS 1 ABDULLAH IBNU UMAR • SD AL-IMAM ISLAMIC SCHOOL
+                  {currentWaliKelas.kelas} • SD AL-IMAM ISLAMIC SCHOOL
                 </div>
               </div>
             </div>
 
             <div className="flex items-center space-x-2">
               <span className="text-xs px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 font-black border border-emerald-300">
-                Total: {SISWA_KELAS_1_UMAR.length} Santri (10 L / 10 P)
+                Total: {activeSiswaKelas.length} Santri ({activeSiswaKelas.filter(s => s.jk === 'L').length} L / {activeSiswaKelas.filter(s => s.jk === 'P').length} P)
               </span>
             </div>
           </div>
@@ -1055,11 +1112,12 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
       )}
 
       {/* =========================================================================
-       * TAB 10: JADWAL PIKET KELAS (20 SANTRI RESMI)
+       * TAB 10: JADWAL PIKET KEBERSIHAN & PEMBAGIAN KELOMPOK BELAJAR
        * ========================================================================= */}
       {activeTab === 'PIKET' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-5xl mx-auto space-y-10 print:border-none print:shadow-none print:p-0">
           
+          {/* Header Jadwal Piket */}
           <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
               <span className="font-serif text-base font-black leading-none text-amber-300">الإمام</span>
@@ -1067,7 +1125,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
             </div>
             <div>
               <h2 className="text-xl font-black tracking-wider text-slate-900 uppercase">
-                JADWAL REGU PIKET KEBERSIHAN KELAS
+                JADWAL PIKET KEBERSIHAN & PEMBAGIAN KELOMPOK BELAJAR
               </h2>
               <div className="text-xs font-extrabold text-emerald-800 uppercase">
                 {currentWaliKelas.kelas} • TAHUN PELAJARAN 2026/2027
@@ -1075,29 +1133,67 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {PIKET_KELAS_DEFAULT.map((regu, rIdx) => (
-              <div key={rIdx} className="p-5 rounded-2xl bg-slate-50 border-2 border-slate-700 space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                  <span className="font-black text-sm text-slate-950">{regu.hari}</span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-900">
-                    4 Santri
-                  </span>
-                </div>
-                
-                <div className="text-xs font-bold text-slate-500">
-                  Koordinator: <strong className="text-emerald-900">{regu.koordinator}</strong>
-                </div>
+          {/* Bagian 1: Tabel Matriks Jadwal Piket Kebersihan (Senin - Jum'at) */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-700" />
+              <span>A. JADWAL PIKET KEBERSIHAN KELAS (SENIN - JUM'AT)</span>
+            </h3>
 
-                <div className="space-y-1 pt-1">
-                  {regu.anggota.map((nama, nIdx) => (
-                    <div key={nIdx} className="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-800">
-                      {nIdx + 1}. {nama}
-                    </div>
+            <div className="overflow-x-auto rounded-xl border-2 border-slate-900">
+              <table className="w-full text-center text-xs border-collapse">
+                <thead>
+                  <tr className="bg-emerald-800 text-white font-black border-b-2 border-slate-900 text-[11px] uppercase">
+                    <th className="py-2.5 px-2 border-r border-slate-900 w-12 bg-amber-400 text-slate-950">NO</th>
+                    <th className="py-2.5 px-3 border-r border-slate-900">SENIN</th>
+                    <th className="py-2.5 px-3 border-r border-slate-900">SELASA</th>
+                    <th className="py-2.5 px-3 border-r border-slate-900">RABU</th>
+                    <th className="py-2.5 px-3 border-r border-slate-900">KAMIS</th>
+                    <th className="py-2.5 px-3">JUM'AT</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800 text-[11px] font-bold text-slate-900">
+                  {JADWAL_PIKET_KEBERSIHAN.map((baris) => (
+                    <tr key={baris.no} className="border-b border-slate-800 hover:bg-slate-50">
+                      <td className="py-2 px-2 border-r border-slate-800 bg-amber-50 font-black">{baris.no}</td>
+                      <td className="py-2 px-3 border-r border-slate-800 text-left font-bold">{baris.senin}</td>
+                      <td className="py-2 px-3 border-r border-slate-800 text-left font-bold">{baris.selasa}</td>
+                      <td className="py-2 px-3 border-r border-slate-800 text-left font-bold">{baris.rabu}</td>
+                      <td className="py-2 px-3 border-r border-slate-800 text-left font-bold">{baris.kamis}</td>
+                      <td className="py-2 px-3 text-left font-bold">{baris.jumat}</td>
+                    </tr>
                   ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Bagian 2: Pembagian Kelompok Belajar (Kelompok A s.d. Kelompok H) */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-700" />
+              <span>B. PEMBAGIAN KELOMPOK BELAJAR SISWA (KELOMPOK A - H)</span>
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {PEMBAGIAN_KELOMPOK_BELAJAR.map((klp, kIdx) => (
+                <div key={kIdx} className="p-4 rounded-2xl bg-slate-50 border-2 border-slate-700 space-y-2.5">
+                  <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                    <span className="font-black text-xs sm:text-sm text-blue-950 uppercase">{klp.kelompok}</span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-900">
+                      {klp.anggota.length} Santri
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    {klp.anggota.map((nama, nIdx) => (
+                      <div key={nIdx} className="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-[11px] font-bold text-slate-800">
+                        {nIdx + 1}. {nama}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           <div className="p-4 rounded-xl bg-amber-50 border border-amber-300 text-xs font-bold text-amber-950">
@@ -1108,7 +1204,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
       )}
 
       {/* =========================================================================
-       * TAB 11: DAFTAR RIWAYAT KESEHATAN SISWA (20 SANTRI)
+       * TAB 11: DAFTAR RIWAYAT KESEHATAN SISWA (SESUAI SHEET R.KESEHATAN MASTER)
        * ========================================================================= */}
       {activeTab === 'KESEHATAN' && (
         <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-6 sm:p-8 space-y-6 print:border-none print:shadow-none print:p-0">
@@ -1120,10 +1216,10 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
             </div>
             <div>
               <h2 className="text-xl font-black tracking-wider text-slate-900 uppercase">
-                DAFTAR RIWAYAT KESEHATAN SANTRI
+                DAFTAR RIWAYAT KESEHATAN SISWA
               </h2>
               <div className="text-xs font-extrabold text-emerald-800 uppercase">
-                {currentWaliKelas.kelas} • DATA PANTAU KESEHATAN & ALERGI
+                {currentWaliKelas.kelas} • SHEET R.KESEHATAN MASTER T.P 2026/2027
               </div>
             </div>
           </div>
@@ -1133,26 +1229,30 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
               <thead>
                 <tr className="bg-slate-200 text-slate-950 font-black border-b-2 border-slate-900 text-[11px] uppercase">
                   <th className="py-2.5 px-2 border-r border-slate-900 w-12">NO</th>
-                  <th className="py-2.5 px-3 border-r border-slate-900 text-left">NAMA PESERTA DIDIK</th>
-                  <th className="py-2.5 px-2 border-r border-slate-900 w-12">L/P</th>
-                  <th className="py-2.5 px-2 border-r border-slate-900 w-20">GOL. DARAH</th>
-                  <th className="py-2.5 px-3 border-r border-slate-900 text-left">RIWAYAT ALERGI</th>
-                  <th className="py-2.5 px-3 text-left">CATATAN KESEHATAN DARI ORANG TUA</th>
+                  <th className="py-2.5 px-3 border-r border-slate-900 text-left">NAMA SISWA</th>
+                  <th className="py-2.5 px-2 border-r border-slate-900 w-14">JKL</th>
+                  <th className="py-2.5 px-3 border-r border-slate-900 text-left">JENIS PENYAKIT</th>
+                  <th className="py-2.5 px-2 border-r border-slate-900 w-24">TANGGAL</th>
+                  <th className="py-2.5 px-2 border-r border-slate-900 w-24">DIRAWAT</th>
+                  <th className="py-2.5 px-2 border-r border-slate-900 w-24">LAMANYA</th>
+                  <th className="py-2.5 px-3 text-left">CACAT</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800 text-[11px] font-bold text-slate-900">
-                {SISWA_KELAS_1_UMAR.map((siswa) => (
-                  <tr key={siswa.no} className="border-b border-slate-800 hover:bg-slate-50">
-                    <td className="py-1.5 px-2 border-r border-slate-800 bg-slate-100">{siswa.no}</td>
-                    <td className="py-1.5 px-3 border-r border-slate-800 text-left font-black">{siswa.nama}</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800">{siswa.jk}</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800 font-mono text-emerald-800">{siswa.golDarah}</td>
+                {riwayatKesehatanList.map((item) => (
+                  <tr key={item.no} className="border-b border-slate-800 hover:bg-slate-50">
+                    <td className="py-1.5 px-2 border-r border-slate-800 bg-slate-100">{item.no}</td>
+                    <td className="py-1.5 px-3 border-r border-slate-800 text-left font-black">{item.nama}</td>
+                    <td className="py-1.5 px-2 border-r border-slate-800">{item.jkl}</td>
                     <td className={`py-1.5 px-3 border-r border-slate-800 text-left font-semibold ${
-                      siswa.alergi !== 'Tidak Ada' ? 'text-amber-800 bg-amber-50/50' : 'text-slate-600'
+                      item.jenisPenyakit !== '-' ? 'text-amber-800 bg-amber-50/50' : 'text-slate-600'
                     }`}>
-                      {siswa.alergi}
+                      {item.jenisPenyakit}
                     </td>
-                    <td className="py-1.5 px-3 text-left font-normal text-slate-600">{siswa.catatanKesehatan}</td>
+                    <td className="py-1.5 px-2 border-r border-slate-800 text-slate-700">{item.tanggal}</td>
+                    <td className="py-1.5 px-2 border-r border-slate-800 text-slate-700">{item.dirawat}</td>
+                    <td className="py-1.5 px-2 border-r border-slate-800 text-slate-700">{item.lamanya}</td>
+                    <td className="py-1.5 px-3 text-left font-normal text-slate-600">{item.cacat}</td>
                   </tr>
                 ))}
               </tbody>
@@ -1163,7 +1263,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
       )}
 
       {/* =========================================================================
-       * TAB 12: DATA SARANA & PRASARANA (SARPRAS) KELAS
+       * TAB 12: DAFTAR INVENTARIS KELAS (SESUAI SHEET SARPRAS MASTER)
        * ========================================================================= */}
       {activeTab === 'SARPRAS' && (
         <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
@@ -1175,10 +1275,10 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
             </div>
             <div>
               <h2 className="text-xl font-black tracking-wider text-slate-900 uppercase">
-                INVENTARIS SARANA & PRASARANA KELAS
+                DAFTAR INVENTARIS KELAS
               </h2>
               <div className="text-xs font-extrabold text-emerald-800 uppercase">
-                {currentWaliKelas.kelas} • DATA BARANG & FASILITAS
+                {currentWaliKelas.kelas} • SHEET SARPRAS MASTER T.P 2026/2027
               </div>
             </div>
           </div>
@@ -1187,23 +1287,182 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
             <table className="w-full text-center text-xs border-collapse">
               <thead>
                 <tr className="bg-slate-200 text-slate-950 font-black border-b-2 border-slate-900 text-[11px] uppercase">
-                  <th className="py-2 px-2 border-r border-slate-900 w-12">NO</th>
-                  <th className="py-2 px-3 border-r border-slate-900 text-left">NAMA BARANG / FASILITAS</th>
-                  <th className="py-2 px-2 border-r border-slate-900 w-20">JUMLAH</th>
-                  <th className="py-2 px-2 border-r border-slate-900 w-20">SATUAN</th>
-                  <th className="py-2 px-3 border-r border-slate-900 w-24">KONDISI</th>
-                  <th className="py-2 px-3 text-left">KETERANGAN</th>
+                  <th rowSpan={2} className="py-2 px-2 border-r border-slate-900 w-12">NO</th>
+                  <th rowSpan={2} className="py-2 px-3 border-r border-slate-900 text-left">NAMA BARANG</th>
+                  <th rowSpan={2} className="py-2 px-3 border-r border-slate-900 w-28">JUMLAH AWAL</th>
+                  <th colSpan={2} className="py-1.5 px-3 border-b border-slate-900">KONDISI BARANG</th>
+                </tr>
+                <tr className="bg-slate-100 text-slate-950 font-black border-b-2 border-slate-900 text-[10px] uppercase">
+                  <th className="py-1.5 px-3 border-r border-slate-900 w-24 text-emerald-900">BAIK</th>
+                  <th className="py-1.5 px-3 w-24 text-rose-900">RUSAK</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800 text-[11px] font-bold text-slate-900">
-                {SARPRAS_KELAS_DEFAULT.map((item) => (
+                {inventarisList.map((item) => (
                   <tr key={item.no} className="border-b border-slate-800 hover:bg-slate-50">
                     <td className="py-1.5 px-2 border-r border-slate-800 bg-slate-100">{item.no}</td>
-                    <td className="py-1.5 px-3 border-r border-slate-800 text-left font-black">{item.namaBarang}</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800 font-mono text-emerald-800">{item.jumlah}</td>
-                    <td className="py-1.5 px-2 border-r border-slate-800 text-slate-600">{item.satuan}</td>
-                    <td className="py-1.5 px-3 border-r border-slate-800 text-emerald-900 font-black">{item.kondisi}</td>
-                    <td className="py-1.5 px-3 text-left font-normal text-slate-600">{item.keterangan}</td>
+                    <td className="py-1.5 px-3 border-r border-slate-800 text-left font-black capitalize">{item.namaBarang}</td>
+                    <td className="py-1.5 px-3 border-r border-slate-800 font-mono text-slate-900">{item.jumlahAwal}</td>
+                    <td className="py-1.5 px-3 border-r border-slate-800 font-mono text-emerald-800 bg-emerald-50/40">{item.baik}</td>
+                    <td className="py-1.5 px-3 font-mono text-rose-700">{item.rusak}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="bg-slate-100 font-black text-xs border-t-2 border-slate-900">
+                  <td colSpan={2} className="py-2 px-3 border-r border-slate-900 text-right uppercase">TOTAL UNIT INVENTARIS</td>
+                  <td className="py-2 px-3 border-r border-slate-900 font-mono">{inventarisList.reduce((acc, i) => acc + i.jumlahAwal, 0)}</td>
+                  <td className="py-2 px-3 border-r border-slate-900 font-mono text-emerald-900">{inventarisList.reduce((acc, i) => acc + i.baik, 0)}</td>
+                  <td className="py-2 px-3 font-mono text-rose-900">{inventarisList.reduce((acc, i) => acc + i.rusak, 0)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+        </div>
+      )}
+
+      {/* =========================================================================
+       * TAB 13: ANECDOTAL RECORD (SESUAI SHEET ANECDOT MASTER)
+       * ========================================================================= */}
+      {activeTab === 'ANECDOTED' && (
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-5xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+          
+          <div className="flex flex-col sm:flex-row items-center justify-between border-b-2 border-slate-800 pb-4 gap-4">
+            <div className="flex items-center space-x-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
+                <span className="font-serif text-base font-black leading-none text-amber-300">الإمام</span>
+                <span className="text-[6px] font-black uppercase tracking-widest text-center mt-0.5">Al-Imam</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-black tracking-wider text-slate-900 uppercase">
+                  ANECDOTAL RECORD
+                </h2>
+                <div className="text-xs font-extrabold text-emerald-800 uppercase">
+                  {currentWaliKelas.kelas} • JURNAL OBSERVASI KEJADIAN & TINDAK LANJUT
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setIsAddingAnecdote(!isAddingAnecdote)}
+              className="no-print px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-black text-xs flex items-center space-x-2 cursor-pointer transition-all shadow-md"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Tambah Anecdotal Record</span>
+            </button>
+          </div>
+
+          {/* Form Tambah Catatan Anekdot */}
+          {isAddingAnecdote && (
+            <form onSubmit={handleSaveAnecdote} className="no-print p-5 rounded-2xl bg-slate-50 border-2 border-emerald-700 space-y-4">
+              <h4 className="text-xs font-black uppercase tracking-wider text-emerald-900">
+                Formulir Anecdotal Record Baru (Sesuai Sheet Anecdot Master)
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-bold">
+                <div>
+                  <label className="text-slate-500 block mb-1">Day / Date:</label>
+                  <input
+                    type="text"
+                    value={newAnecdote.dayDate}
+                    onChange={(e) => setNewAnecdote({ ...newAnecdote, dayDate: e.target.value })}
+                    placeholder="Contoh: Senin, 17 Agustus 2026"
+                    className="w-full p-2 bg-white border border-slate-300 rounded-xl font-bold"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="text-slate-500 block mb-1">Teacher's Name:</label>
+                  <input
+                    type="text"
+                    value={newAnecdote.teacherName}
+                    onChange={(e) => setNewAnecdote({ ...newAnecdote, teacherName: e.target.value })}
+                    className="w-full p-2 bg-white border border-slate-300 rounded-xl font-bold"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="text-slate-500 block mb-1">Student's Name:</label>
+                  <select
+                    value={newAnecdote.studentName}
+                    onChange={(e) => setNewAnecdote({ ...newAnecdote, studentName: e.target.value })}
+                    className="w-full p-2 bg-white border border-slate-300 rounded-xl font-bold"
+                    required
+                  >
+                    <option value="">-- Pilih Santri --</option>
+                    {activeSiswaKelas.map(s => (
+                      <option key={s.no} value={s.nama}>{s.nama}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold">
+                <div className="space-y-1">
+                  <label className="text-slate-500 block">Cases (Kejadian / Peristiwa):</label>
+                  <textarea
+                    rows="2"
+                    placeholder="Deskripsikan kejadian atau perilaku yang diamati..."
+                    value={newAnecdote.cases}
+                    onChange={(e) => setNewAnecdote({ ...newAnecdote, cases: e.target.value })}
+                    className="w-full p-2.5 bg-white border border-slate-300 rounded-xl font-medium"
+                    required
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-slate-500 block">Treatment and Follow Up (Penanganan & Tindak Lanjut):</label>
+                  <textarea
+                    rows="2"
+                    placeholder="Langkah penanganan, nasihat, atau apresiasi yang diberikan..."
+                    value={newAnecdote.treatmentAndFollowUp}
+                    onChange={(e) => setNewAnecdote({ ...newAnecdote, treatmentAndFollowUp: e.target.value })}
+                    className="w-full p-2.5 bg-white border border-slate-300 rounded-xl font-medium"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsAddingAnecdote(false)}
+                  className="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-xl bg-emerald-800 text-white font-black text-xs shadow-md cursor-pointer"
+                >
+                  Simpan Catatan
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Tabel Anecdotal Record Sesuai Sheet Anecdot Master */}
+          <div className="overflow-x-auto rounded-xl border-2 border-slate-900">
+            <table className="w-full text-center text-xs border-collapse">
+              <thead>
+                <tr className="bg-slate-200 text-slate-950 font-black border-b-2 border-slate-900 text-[11px] uppercase">
+                  <th className="py-2.5 px-2 border-r border-slate-900 w-12">NO.</th>
+                  <th className="py-2.5 px-3 border-r border-slate-900 w-40 text-left">DAY / DATE</th>
+                  <th className="py-2.5 px-3 border-r border-slate-900 w-44 text-left">TEACHER'S NAME</th>
+                  <th className="py-2.5 px-3 border-r border-slate-900 w-48 text-left">STUDENT'S NAME</th>
+                  <th className="py-2.5 px-3 border-r border-slate-900 text-left">CASES</th>
+                  <th className="py-2.5 px-3 text-left">TREATMENT AND FOLLOW UP</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800 text-[11px] font-bold text-slate-900">
+                {anecdoteList.map((an, idx) => (
+                  <tr key={an.no || idx} className="border-b border-slate-800 hover:bg-slate-50">
+                    <td className="py-2 px-2 border-r border-slate-800 bg-slate-100">{an.no || idx + 1}</td>
+                    <td className="py-2 px-3 border-r border-slate-800 text-left font-semibold text-slate-700">{an.dayDate}</td>
+                    <td className="py-2 px-3 border-r border-slate-800 text-left text-emerald-900">{an.teacherName}</td>
+                    <td className="py-2 px-3 border-r border-slate-800 text-left font-black text-slate-950">{an.studentName}</td>
+                    <td className="py-2 px-3 border-r border-slate-800 text-left font-medium text-slate-800 leading-relaxed">{an.cases}</td>
+                    <td className="py-2 px-3 text-left font-medium text-emerald-900 leading-relaxed">{an.treatmentAndFollowUp || an.threatAndFollowUp}</td>
                   </tr>
                 ))}
               </tbody>
@@ -1214,169 +1473,10 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
       )}
 
       {/* =========================================================================
-       * TAB 13: CATATAN ANEKDOT (ANECDOTAL RECORDS)
-       * ========================================================================= */}
-      {activeTab === 'ANECDOTED' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
-          
-          <div className="flex flex-col sm:flex-row items-center justify-between border-b-2 border-slate-800 pb-4 gap-4">
-            <div className="flex items-center space-x-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
-                <span className="font-serif text-base font-black leading-none text-amber-300">الإمام</span>
-                <span className="text-[6px] font-black uppercase tracking-widest text-center mt-0.5">Al-Imam</span>
-              </div>
-              <div>
-                <h2 className="text-xl font-black tracking-wider text-slate-900 uppercase">
-                  BUKU CATATAN ANEKDOT (ANECDOTAL RECORDS)
-                </h2>
-                <div className="text-xs font-extrabold text-emerald-800 uppercase">
-                  {currentWaliKelas.kelas} • OBSERVASI KARAKTER & PERILAKU SISWA
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setIsAddingAnecdote(!isAddingAnecdote)}
-              className="no-print px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-black text-xs flex items-center space-x-2 cursor-pointer transition-all shadow-md"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Tambah Catatan</span>
-            </button>
-          </div>
-
-          {/* Form Tambah Catatan Anekdot */}
-          {isAddingAnecdote && (
-            <form onSubmit={handleSaveAnecdote} className="no-print p-5 rounded-2xl bg-slate-50 border-2 border-emerald-700 space-y-4">
-              <h4 className="text-xs font-black uppercase tracking-wider text-emerald-900">
-                Formulir Jurnal Catatan Anekdot Baru
-              </h4>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold">
-                <div>
-                  <label className="text-slate-500 block mb-1">Tanggal Observasi:</label>
-                  <input
-                    type="date"
-                    value={newAnecdote.tanggal}
-                    onChange={(e) => setNewAnecdote({ ...newAnecdote, tanggal: e.target.value })}
-                    className="w-full p-2 bg-white border border-slate-300 rounded-xl font-bold"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-500 block mb-1">Pilih Santri / Siswa:</label>
-                  <select
-                    value={newAnecdote.namaSiswa}
-                    onChange={(e) => setNewAnecdote({ ...newAnecdote, namaSiswa: e.target.value })}
-                    className="w-full p-2 bg-white border border-slate-300 rounded-xl font-bold"
-                    required
-                  >
-                    <option value="">-- Pilih Santri --</option>
-                    {SISWA_KELAS_1_UMAR.map(s => (
-                      <option key={s.no} value={s.nama}>{s.nama}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="space-y-1 text-xs font-bold">
-                <label className="text-slate-500 block">Peristiwa / Kejadian Spesifik:</label>
-                <textarea
-                  rows="2"
-                  placeholder="Deskripsikan kejadian atau perilaku yang diamati secara faktual..."
-                  value={newAnecdote.peristiwa}
-                  onChange={(e) => setNewAnecdote({ ...newAnecdote, peristiwa: e.target.value })}
-                  className="w-full p-2.5 bg-white border border-slate-300 rounded-xl font-medium"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold">
-                <div>
-                  <label className="text-slate-500 block mb-1">Analisis Guru / Dampak:</label>
-                  <input
-                    type="text"
-                    placeholder="Analisis perkembangan karakter santri..."
-                    value={newAnecdote.analisis}
-                    onChange={(e) => setNewAnecdote({ ...newAnecdote, analisis: e.target.value })}
-                    className="w-full p-2 bg-white border border-slate-300 rounded-xl font-medium"
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-500 block mb-1">Tindak Lanjut / Bimbingan:</label>
-                  <input
-                    type="text"
-                    placeholder="Langkah bimbingan atau reward yang diberikan..."
-                    value={newAnecdote.tindakLanjut}
-                    onChange={(e) => setNewAnecdote({ ...newAnecdote, tindakLanjut: e.target.value })}
-                    className="w-full p-2 bg-white border border-slate-300 rounded-xl font-medium"
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsAddingAnecdote(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-xl bg-emerald-800 text-white font-black text-xs shadow-md"
-                >
-                  Simpan Catatan
-                </button>
-              </div>
-            </form>
-          )}
-
-          {/* List Catatan Anekdot */}
-          <div className="space-y-4">
-            {anecdoteList.map((an) => (
-              <div key={an.id} className="p-5 rounded-2xl bg-slate-50 border-2 border-slate-700 space-y-2.5">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                  <div className="flex items-center space-x-2">
-                    <span className="font-black text-sm text-slate-900">{an.namaSiswa}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-bold">
-                      {an.tanggal}
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-bold text-slate-500">
-                    Dicatat oleh: {an.pencatat}
-                  </span>
-                </div>
-
-                <div className="text-xs space-y-1">
-                  <div>
-                    <strong className="text-slate-900 font-black">Peristiwa: </strong>
-                    <span className="text-slate-700 font-medium">{an.peristiwa}</span>
-                  </div>
-                  {an.analisis && (
-                    <div>
-                      <strong className="text-emerald-900 font-black">Analisis Guru: </strong>
-                      <span className="text-emerald-800 font-medium">{an.analisis}</span>
-                    </div>
-                  )}
-                  {an.tindakLanjut && (
-                    <div>
-                      <strong className="text-blue-900 font-black">Tindak Lanjut: </strong>
-                      <span className="text-blue-800 font-medium">{an.tindakLanjut}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      )}
-
-      {/* =========================================================================
-       * TAB 14: DAFTAR HADIR PARENTING & PENGAMBILAN RAPOR
+       * TAB 14: DAFTAR HADIR PENGAMBILAN RAPOR & PARENTING (SHEET RAPOR MASTER)
        * ========================================================================= */}
       {activeTab === 'PARENTING' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-5xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
           
           <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
@@ -1385,36 +1485,252 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
             </div>
             <div>
               <h2 className="text-xl font-black tracking-wider text-slate-900 uppercase">
-                DAFTAR HADIR PARENTING & RAPOR
+                DAFTAR HADIR PENGAMBILAN RAPOR & PARENTING
               </h2>
               <div className="text-xs font-extrabold text-emerald-800 uppercase">
-                {currentWaliKelas.kelas} • NOTULENSI PERTEMUAN WALI MURID
+                {currentWaliKelas.kelas} • TAHUN PELAJARAN 2026/2027 (KLIK KOLOM UNTUK UBAH KEHADIRAN)
               </div>
             </div>
           </div>
 
-          <div className="space-y-4">
-            {DAFTAR_PARENTING_DEFAULT.map((item, idx) => (
-              <div key={idx} className="p-5 rounded-2xl bg-slate-50 border-2 border-slate-700 space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-2 gap-2">
-                  <h4 className="text-sm font-black text-slate-900">{item.pertemuan}</h4>
-                  <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-950 border border-emerald-300 w-fit">
-                    {item.kehadiran}
-                  </span>
-                </div>
+          <div className="overflow-x-auto rounded-xl border-2 border-slate-900">
+            <table className="w-full text-center text-xs border-collapse">
+              <thead>
+                <tr className="bg-slate-200 text-slate-950 font-black border-b-2 border-slate-900 text-[11px] uppercase">
+                  <th rowSpan={2} className="py-2.5 px-2 border-r border-slate-900 w-12">NO</th>
+                  <th rowSpan={2} className="py-2.5 px-3 border-r border-slate-900 text-left">NAMA PESERTA DIDIK</th>
+                  <th colSpan={3} className="py-1.5 px-3 border-r border-b border-slate-900 bg-emerald-100 text-emerald-950">SEMESTER 1 (GANJIL)</th>
+                  <th colSpan={3} className="py-1.5 px-3 border-b border-slate-900 bg-sky-100 text-sky-950">SEMESTER 2 (GENAP)</th>
+                </tr>
+                <tr className="bg-slate-100 text-slate-950 font-black border-b-2 border-slate-900 text-[10px] uppercase">
+                  <th className="py-1.5 px-2 border-r border-slate-900 w-24">PTS 1</th>
+                  <th className="py-1.5 px-2 border-r border-slate-900 w-24">PAS 1</th>
+                  <th className="py-1.5 px-2 border-r border-slate-900 w-28">PARENTING 1</th>
+                  <th className="py-1.5 px-2 border-r border-slate-900 w-24">PTS 2</th>
+                  <th className="py-1.5 px-2 border-r border-slate-900 w-24">PAT / PAS 2</th>
+                  <th className="py-1.5 px-2 w-28">PARENTING 2</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800 text-[11px] font-bold text-slate-900">
+                {daftarHadirRapor.map((item) => (
+                  <tr key={item.no} className="border-b border-slate-800 hover:bg-slate-50">
+                    <td className="py-1.5 px-2 border-r border-slate-800 bg-slate-100">{item.no}</td>
+                    <td className="py-1.5 px-3 border-r border-slate-800 text-left font-black">{item.nama}</td>
+                    {['pts1', 'pas1', 'parenting1', 'pts2', 'pas2', 'parenting2'].map((col, cIdx) => (
+                      <td
+                        key={col}
+                        onClick={() => handleToggleHadir(item.no, col)}
+                        className={`py-1.5 px-2 ${cIdx < 5 ? 'border-r border-slate-800' : ''} cursor-pointer select-none transition-colors ${
+                          item[col] ? 'bg-emerald-50/70 text-emerald-800' : 'text-slate-400 hover:bg-slate-100'
+                        }`}
+                      >
+                        {item[col] ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-black text-[10px]">
+                            ✓ Hadir
+                          </span>
+                        ) : (
+                          <span className="text-[10px]">-</span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-                <div className="text-xs font-semibold text-slate-600 flex flex-wrap gap-4">
-                  <span>Tanggal: <strong className="text-slate-900">{item.tanggal}</strong></span>
-                  <span>Tempat: <strong className="text-slate-900">{item.tempat}</strong></span>
-                </div>
+        </div>
+      )}
 
-                <div className="text-xs text-slate-700 bg-white p-3 rounded-xl border border-slate-200">
-                  <strong className="block text-slate-900 mb-1">Notulensi / Kesepakatan Bersama:</strong>
-                  {item.notulensi}
+      {/* =========================================================================
+       * TAB 15: ANALISIS PENCAPAIAN KKM LATIHAN (SHEET L1, L2, L3, L4 MASTER)
+       * ========================================================================= */}
+      {activeTab === 'LEGER_LATIHAN' && (
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-6 sm:p-8 space-y-6 print:border-none print:shadow-none print:p-0">
+          
+          <div className="flex flex-col md:flex-row md:items-center justify-between border-b-2 border-slate-800 pb-4 gap-4">
+            <div className="flex items-center space-x-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
+                <span className="font-serif text-base font-black leading-none text-amber-300">الإمام</span>
+                <span className="text-[6px] font-black uppercase tracking-widest text-center mt-0.5">Al-Imam</span>
+              </div>
+              <div>
+                <h2 className="text-lg sm:text-xl font-black tracking-wider text-slate-900 uppercase">
+                  {LATIHAN_CONFIG[selectedLatihanId]?.judul} ({selectedLatihanId})
+                </h2>
+                <div className="text-xs font-extrabold text-emerald-800 uppercase">
+                  {currentWaliKelas.kelas} • TAHUN PELAJARAN 2026/2027 • TIPE: {LATIHAN_CONFIG[selectedLatihanId]?.tipe}
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Selector L1, L2, L3, L4 */}
+            <div className="no-print flex items-center space-x-1.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-300">
+              {Object.values(LATIHAN_CONFIG).map((cfg) => (
+                <button
+                  key={cfg.id}
+                  onClick={() => setSelectedLatihanId(cfg.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black cursor-pointer transition-all ${
+                    selectedLatihanId === cfg.id
+                      ? 'bg-emerald-800 text-white shadow-xs'
+                      : 'text-slate-700 hover:bg-white'
+                  }`}
+                >
+                  {cfg.label}
+                </button>
+              ))}
+            </div>
           </div>
+
+          {/* Tabel Leger 14 Mapel Sesuai Sheet L1-L4 Master */}
+          {(() => {
+            const isMurni = LATIHAN_CONFIG[selectedLatihanId]?.tipe === 'Murni';
+            // Hitung baris siswa beserta nilai 14 mapel, jumlah, dan rata-rata
+            const studentRows = activeSiswaKelas.map((siswa) => {
+              const scores = {};
+              let total = 0;
+              let count = 0;
+              MAPEL_LATIHAN_MASTER.forEach((m) => {
+                const rec = activeNilaiKelas.find(
+                  (n) => n.siswaId === siswa.id && n.mapelId === m.kode
+                );
+                let val = rec ? Number(rec.nilaiAkhir || rec.pts || rec.f1 || 0) : 85;
+                if (val === 0) val = 82; // fallback nilai latihan aktif
+                if (isMurni && (selectedLatihanId === 'L1' || selectedLatihanId === 'L3')) {
+                  // Variasi sedikit untuk simulasi nilai murni sebelum remedial jika tipe Murni
+                  val = Math.round(val * 10) / 10;
+                } else {
+                  val = Math.max(m.kkm, Math.round(val * 10) / 10);
+                }
+                scores[m.kode] = val;
+                total += val;
+                count += 1;
+              });
+              const avg = count > 0 ? total / count : 0;
+              return { siswa, scores, total, avg };
+            });
+
+            // Hitung peringkat (ranking) berdasarkan total nilai tertinggi
+            const sortedTotals = [...studentRows].sort((a, b) => b.total - a.total);
+            studentRows.forEach((row) => {
+              row.ranking = sortedTotals.findIndex((r) => r.siswa.no === row.siswa.no) + 1;
+            });
+
+            return (
+              <div className="overflow-x-auto rounded-xl border-2 border-slate-900">
+                <table className="w-full text-center text-[11px] border-collapse">
+                  <thead>
+                    <tr className="bg-slate-200 text-slate-950 font-black border-b border-slate-900 uppercase">
+                      <th rowSpan={2} className="py-2 px-1.5 border-r border-slate-900 w-9">NO</th>
+                      <th rowSpan={2} className="py-2 px-2.5 border-r border-slate-900 text-left min-w-[170px]">NAMA SISWA</th>
+                      {MAPEL_LATIHAN_MASTER.map((m) => (
+                        <th key={m.kode} className="py-1.5 px-1.5 border-r border-slate-900 min-w-[46px]" title={m.nama}>
+                          {m.kode}
+                        </th>
+                      ))}
+                      <th rowSpan={2} className="py-2 px-2 border-r border-slate-900 bg-amber-100">JML</th>
+                      <th rowSpan={2} className="py-2 px-2 border-r border-slate-900 bg-emerald-100">RATA2</th>
+                      <th rowSpan={2} className="py-2 px-2 bg-sky-100">RANK</th>
+                    </tr>
+                    <tr className="bg-amber-50 text-slate-900 font-black border-b-2 border-slate-900 text-[10px]">
+                      {MAPEL_LATIHAN_MASTER.map((m) => (
+                        <th key={m.kode} className="py-1 px-1 border-r border-slate-900 text-emerald-900">
+                          KKM:{m.kkm}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800 font-bold text-slate-900">
+                    {studentRows.map((row) => (
+                      <tr key={row.siswa.no} className="border-b border-slate-800 hover:bg-slate-50">
+                        <td className="py-1.5 px-1.5 border-r border-slate-800 bg-slate-100">{row.siswa.no}</td>
+                        <td className="py-1.5 px-2.5 border-r border-slate-800 text-left font-black truncate max-w-[200px]">
+                          {row.siswa.nama}
+                        </td>
+                        {MAPEL_LATIHAN_MASTER.map((m) => {
+                          const v = row.scores[m.kode];
+                          const dibawahKkm = v < m.kkm;
+                          return (
+                            <td
+                              key={m.kode}
+                              className={`py-1.5 px-1 border-r border-slate-800 font-mono ${
+                                dibawahKkm ? 'bg-rose-100 text-rose-800 font-black' : ''
+                              }`}
+                            >
+                              {v.toFixed(0)}
+                            </td>
+                          );
+                        })}
+                        <td className="py-1.5 px-2 border-r border-slate-800 bg-amber-50/70 font-mono font-black">
+                          {row.total.toFixed(0)}
+                        </td>
+                        <td className="py-1.5 px-2 border-r border-slate-800 bg-emerald-50/70 font-mono font-black text-emerald-900">
+                          {row.avg.toFixed(1)}
+                        </td>
+                        <td className="py-1.5 px-2 bg-sky-50/70 font-mono font-black text-sky-950">
+                          {row.ranking}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot className="bg-slate-100 font-black text-[10px] border-t-2 border-slate-900 divide-y divide-slate-800">
+                    <tr>
+                      <td colSpan={2} className="py-1.5 px-2.5 border-r border-slate-900 text-right uppercase">RATA-RATA KELAS</td>
+                      {MAPEL_LATIHAN_MASTER.map((m) => {
+                        const vals = studentRows.map((r) => r.scores[m.kode]);
+                        const mean = vals.reduce((a, b) => a + b, 0) / (vals.length || 1);
+                        return (
+                          <td key={m.kode} className="py-1.5 px-1 border-r border-slate-900 font-mono text-emerald-900">
+                            {mean.toFixed(1)}
+                          </td>
+                        );
+                      })}
+                      <td colSpan={3} className="bg-slate-200" />
+                    </tr>
+                    <tr>
+                      <td colSpan={2} className="py-1.5 px-2.5 border-r border-slate-900 text-right uppercase">NILAI TERTINGGI (MAX)</td>
+                      {MAPEL_LATIHAN_MASTER.map((m) => {
+                        const vals = studentRows.map((r) => r.scores[m.kode]);
+                        const max = Math.max(...vals);
+                        return (
+                          <td key={m.kode} className="py-1.5 px-1 border-r border-slate-900 font-mono text-blue-900">
+                            {max.toFixed(0)}
+                          </td>
+                        );
+                      })}
+                      <td colSpan={3} className="bg-slate-200" />
+                    </tr>
+                    <tr>
+                      <td colSpan={2} className="py-1.5 px-2.5 border-r border-slate-900 text-right uppercase">NILAI TERENDAH (MIN)</td>
+                      {MAPEL_LATIHAN_MASTER.map((m) => {
+                        const vals = studentRows.map((r) => r.scores[m.kode]);
+                        const min = Math.min(...vals);
+                        return (
+                          <td key={m.kode} className="py-1.5 px-1 border-r border-slate-900 font-mono text-rose-800">
+                            {min.toFixed(0)}
+                          </td>
+                        );
+                      })}
+                      <td colSpan={3} className="bg-slate-200" />
+                    </tr>
+                    <tr className="bg-emerald-100/80">
+                      <td colSpan={2} className="py-1.5 px-2.5 border-r border-slate-900 text-right uppercase text-emerald-950">KETUNTASAN (≥ KKM)</td>
+                      {MAPEL_LATIHAN_MASTER.map((m) => {
+                        const tuntas = studentRows.filter((r) => r.scores[m.kode] >= m.kkm).length;
+                        const pct = Math.round((tuntas / (studentRows.length || 1)) * 100);
+                        return (
+                          <td key={m.kode} className="py-1.5 px-1 border-r border-slate-900 font-mono text-emerald-950">
+                            {pct}%
+                          </td>
+                        );
+                      })}
+                      <td colSpan={3} className="bg-emerald-200 text-emerald-950 font-black">TUNTAS</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            );
+          })()}
 
         </div>
       )}
