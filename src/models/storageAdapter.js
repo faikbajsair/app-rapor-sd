@@ -78,6 +78,18 @@ class StorageAdapter {
     if (!data.gasApiUrl && DEFAULT_SETTINGS.gasApiUrl) {
       data.gasApiUrl = DEFAULT_SETTINGS.gasApiUrl;
     }
+    // Migrasi otomatis dari data dummy lama (4-A Ibnu Katsir / 2025/2026) ke data resmi 2026/2027
+    if (data.rombel === '4-A (Ibnu Katsir)' || data.tahunAjaran === '2025/2026') {
+      data.kelas = DEFAULT_SETTINGS.kelas;
+      data.rombel = DEFAULT_SETTINGS.rombel;
+      data.fase = DEFAULT_SETTINGS.fase;
+      data.tahunAjaran = DEFAULT_SETTINGS.tahunAjaran;
+      data.kepalaSekolah = DEFAULT_SETTINGS.kepalaSekolah;
+      data.waliKelas = DEFAULT_SETTINGS.waliKelas;
+      data.npsn = DEFAULT_SETTINGS.npsn;
+      data.alamat = DEFAULT_SETTINGS.alamat;
+      data.tempatRapor = DEFAULT_SETTINGS.tempatRapor;
+    }
     return data;
   }
 

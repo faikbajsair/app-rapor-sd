@@ -65,6 +65,7 @@ import {
   MAPEL_LATIHAN_MASTER,
   LATIHAN_CONFIG
 } from '../../config/latihanData';
+import { KalenderAkademikView } from './KalenderAkademikView';
 
 export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, onNavigate }) {
   // Main Navigation Tab
@@ -288,6 +289,8 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
             { id: 'PEMBIASAAN', label: 'Pembiasaan Guru', badge: 'Daily Habit' },
             { id: 'TATA_TERTIB', label: 'Tata Tertib Guru', badge: '4 Kategori' },
             { id: 'TATA_TERTIB_KELAS', label: 'Tata Tertib Kelas', badge: '15 Aturan' },
+            { id: 'KALDIK', label: 'Kalender Akademik', badge: 'Kaldik 26/27' },
+            { id: 'PROGRAM_SEKOLAH', label: 'Kegiatan Sekolah', badge: 'Terprogram' },
             { id: 'PROGRAM_KELAS', label: 'Program Kelas', badge: 'Goals 26/27' },
             { id: 'PIKET', label: 'Piket & Kelompok', badge: '5 Hari / 8 Klp' },
             { id: 'KESEHATAN', label: 'Riwayat Kesehatan', badge: 'Sheet R.Kesehatan' },
@@ -406,8 +409,8 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
                 <div className="p-4 space-y-1.5 flex-1 flex flex-col justify-between">
                   <div className="space-y-1.5 max-h-[380px] overflow-y-auto pr-1">
                     {[
-                      { id: 'kaldik', label: 'KALDIK', isAppNav: true },
-                      { id: 'PROGRAM_KELAS', label: 'PROGRAM KEGIATAN SEKOLAH' },
+                      { id: 'KALDIK', label: 'KALDIK' },
+                      { id: 'PROGRAM_SEKOLAH', label: 'PROGRAM KEGIATAN SEKOLAH' },
                       { id: 'jadwal', label: 'JADWAL PELAJARAN', isAppNav: true },
                       { id: 'PROGRAM_KELAS', label: 'PROGRAM KELAS' },
                       { id: 'PIKET', label: 'PIKET KELAS' },
@@ -485,7 +488,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
        * TAB 2: COVER SAMPUL RESMI (PERSIS TAMPILAN IMAGE 1)
        * ========================================================================= */}
       {activeTab === 'COVER' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-14 max-w-4xl mx-auto space-y-10 text-center print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-6 sm:p-10 lg:p-14 w-full space-y-10 text-center print:border-none print:shadow-none print:p-0">
           
           {/* Logo Al-Imam Besar */}
           <div className="flex justify-center pt-8">
@@ -545,7 +548,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
        * TAB 3: KATA PENGANTAR RESMI (PERSIS TAMPILAN IMAGE 2)
        * ========================================================================= */}
       {activeTab === 'PENGANTAR' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-5 sm:p-8 lg:p-10 w-full space-y-8 print:border-none print:shadow-none print:p-0">
           
           {/* Header Kop */}
           <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
@@ -596,7 +599,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
        * TAB 4: IDENTITAS WALI KELAS (PERSIS TAMPILAN IMAGE 4)
        * ========================================================================= */}
       {activeTab === 'IDENTITAS' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-5 sm:p-8 lg:p-10 w-full space-y-8 print:border-none print:shadow-none print:p-0">
           
           {/* Header Identitas */}
           <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
@@ -825,7 +828,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
        * TAB 6: VISI, MISI, & TUJUAN SEKOLAH
        * ========================================================================= */}
       {activeTab === 'VISI_MISI' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-5 sm:p-8 lg:p-10 w-full space-y-8 print:border-none print:shadow-none print:p-0">
           
           <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
@@ -894,7 +897,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
        * TAB 7: DAILY & TEACHER’S HABITUATION (PEMBIASAAN GURU)
        * ========================================================================= */}
       {activeTab === 'PEMBIASAAN' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-5 sm:p-8 lg:p-10 w-full space-y-8 print:border-none print:shadow-none print:p-0">
           
           <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
@@ -948,7 +951,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
        * TAB 8: TATA TERTIB GURU SD AL IMAM ISLAMIC SCHOOL
        * ========================================================================= */}
       {activeTab === 'TATA_TERTIB' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-5 sm:p-8 lg:p-10 w-full space-y-8 print:border-none print:shadow-none print:p-0">
           
           <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
@@ -995,7 +998,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
        * TAB 8B: TATA TERTIB KELAS
        * ========================================================================= */}
       {activeTab === 'TATA_TERTIB_KELAS' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-5 sm:p-8 lg:p-10 w-full space-y-8 print:border-none print:shadow-none print:p-0">
           
           <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
@@ -1032,7 +1035,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
        * TAB 9: PROGRAM KELAS / GOALS 2026-2027
        * ========================================================================= */}
       {activeTab === 'PROGRAM_KELAS' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-5 sm:p-8 lg:p-10 w-full space-y-8 print:border-none print:shadow-none print:p-0">
           
           <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
@@ -1115,7 +1118,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
        * TAB 10: JADWAL PIKET KEBERSIHAN & PEMBAGIAN KELOMPOK BELAJAR
        * ========================================================================= */}
       {activeTab === 'PIKET' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-5xl mx-auto space-y-10 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-5 sm:p-8 lg:p-10 w-full space-y-10 print:border-none print:shadow-none print:p-0">
           
           {/* Header Jadwal Piket */}
           <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
@@ -1266,7 +1269,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
        * TAB 12: DAFTAR INVENTARIS KELAS (SESUAI SHEET SARPRAS MASTER)
        * ========================================================================= */}
       {activeTab === 'SARPRAS' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-4xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-5 sm:p-8 lg:p-10 w-full space-y-8 print:border-none print:shadow-none print:p-0">
           
           <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
@@ -1326,7 +1329,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
        * TAB 13: ANECDOTAL RECORD (SESUAI SHEET ANECDOT MASTER)
        * ========================================================================= */}
       {activeTab === 'ANECDOTED' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-5xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-5 sm:p-8 lg:p-10 w-full space-y-8 print:border-none print:shadow-none print:p-0">
           
           <div className="flex flex-col sm:flex-row items-center justify-between border-b-2 border-slate-800 pb-4 gap-4">
             <div className="flex items-center space-x-3.5">
@@ -1476,7 +1479,7 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
        * TAB 14: DAFTAR HADIR PENGAMBILAN RAPOR & PARENTING (SHEET RAPOR MASTER)
        * ========================================================================= */}
       {activeTab === 'PARENTING' && (
-        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-8 sm:p-12 max-w-5xl mx-auto space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white rounded-3xl border-2 border-slate-800 shadow-xl p-5 sm:p-8 lg:p-10 w-full space-y-8 print:border-none print:shadow-none print:p-0">
           
           <div className="flex items-center space-x-3.5 border-b-2 border-slate-800 pb-4">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-teal-800 to-emerald-950 p-1.5 text-white flex flex-col items-center justify-center shadow-md border border-emerald-950 shrink-0">
@@ -1733,6 +1736,26 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
           })()}
 
         </div>
+      )}
+
+      {/* =========================================================================
+       * TAB 16: KALDIK (KALENDER AKADEMIK TERINTEGRASI BUKU KERJA II)
+       * ========================================================================= */}
+      {activeTab === 'KALDIK' && (
+        <KalenderAkademikView
+          settings={settings}
+          defaultSheetTab="gabungan"
+        />
+      )}
+
+      {/* =========================================================================
+       * TAB 17: PROGRAM KEGIATAN SEKOLAH (0. KEGIATAN TERPROGRAM)
+       * ========================================================================= */}
+      {activeTab === 'PROGRAM_SEKOLAH' && (
+        <KalenderAkademikView
+          settings={settings}
+          defaultSheetTab="program"
+        />
       )}
 
     </div>

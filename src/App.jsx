@@ -53,6 +53,7 @@ export function App() {
     return session.role === ROLES.WALI_MURID ? 'portal_ortu' : 'dashboard';
   });
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Cloud GAS Sync State
   const [isSyncing, setIsSyncing] = useState(false);
@@ -314,21 +315,27 @@ export function App() {
         onChangeTahunAjaran={handleChangeTahunAjaran}
         onChangeSemester={handleChangeSemester}
         onLogout={handleLogout}
+        isMobileMenuOpen={isMobileMenuOpen}
+        onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
       />
 
-      {/* Main Workspace with Sidebar & View Container */}
-      <div className="flex-1 flex max-w-7xl w-full mx-auto">
+      {/* Main Workspace with Sidebar & View Container (Full-width responsive) */}
+      <div className="flex-1 flex w-full">
         
-        {/* Sidebar */}
+        {/* Sidebar (Desktop Sticky + Mobile Slide-over Drawer + Mobile Bottom Dock) */}
         <Sidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           currentRole={currentRole}
+          currentUser={currentUser}
           settings={settings}
+          isMobileMenuOpen={isMobileMenuOpen}
+          onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
+          onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
         />
 
         {/* Dynamic View Panel */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 min-w-0 overflow-y-auto">
+        <main className="flex-1 p-3 sm:p-5 lg:p-7 pb-24 lg:pb-10 min-w-0 overflow-y-auto">
           {activeTab === 'dashboard' && (
             <DashboardView
               siswaList={siswaList}
@@ -336,15 +343,17 @@ export function App() {
               nilaiList={nilaiList}
               absList={absList}
               presensiList={presensiList}
+              sikapList={sikapList}
               settings={settings}
               currentRole={currentRole}
+              currentUser={currentUser}
               onNavigate={(tab) => setActiveTab(tab)}
               approval={approval}
               onUpdateApproval={handleUpdateApproval}
             />
           )}
 
-          {activeTab === 'kalender' && (
+          {(activeTab === 'kalender' || activeTab === 'kaldik') && (
             <KalenderAkademikView
               settings={settings}
             />

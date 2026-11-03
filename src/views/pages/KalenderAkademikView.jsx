@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Calendar as CalendarIcon, 
   Printer, 
@@ -33,9 +33,15 @@ import {
   DAFTAR_KEGIATAN_TERPROGRAM
 } from '../../config/kaldikData';
 
-export function KalenderAkademikView({ settings }) {
+export function KalenderAkademikView({ settings, defaultSheetTab = 'gabungan' }) {
   // 4 Spreadsheet Tabs: 'gabungan' | 'kelas_1_5' | 'kelas_6' | 'program'
-  const [activeSheetTab, setActiveSheetTab] = useState('gabungan');
+  const [activeSheetTab, setActiveSheetTab] = useState(defaultSheetTab);
+
+  useEffect(() => {
+    if (defaultSheetTab) {
+      setActiveSheetTab(defaultSheetTab);
+    }
+  }, [defaultSheetTab]);
   
   // Semester Filter: 'ALL' | 'SEM_1' | 'SEM_2'
   const [selectedSemester, setSelectedSemester] = useState('ALL');

@@ -52,6 +52,7 @@ export function NilaiView({
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddMapelModal, setShowAddMapelModal] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
+  const [viewLayout, setViewLayout] = useState('AUTO'); // 'AUTO' | 'TABLE' | 'CARDS'
   
   // New Mapel State
   const [newMapelKode, setNewMapelKode] = useState('');
@@ -151,8 +152,13 @@ export function NilaiView({
 
   // Filter Siswa berdasarkan Kelas yang diampu & Pencarian
   const filteredSiswa = siswaList.filter(s => {
-    const matchKelas = selectedKelas === 'SEMUA' || s.kelas === selectedKelas || (!s.kelas && selectedKelas === 'SEMUA');
+    const matchKelas = selectedKelas === 'SEMUA' || 
+      s.kelas === selectedKelas || 
+      (s.kelas && s.kelas.toLowerCase().includes(selectedKelas.toLowerCase())) ||
+      (s.rombel && s.rombel.toLowerCase().includes(selectedKelas.toLowerCase())) ||
+      (!s.kelas && selectedKelas === 'SEMUA');
     const matchSearch = s.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        (s.nis && s.nis.includes(searchQuery)) ||
                         (s.nisn && s.nisn.includes(searchQuery));
     return matchKelas && matchSearch;
   });
@@ -286,25 +292,16 @@ export function NilaiView({
           <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
             {/* Class Filter */}
             <div className="flex items-center space-x-2">
-              <span className="text-xs font-bold text-slate-600 shrink-0">Filter Kelas:</span>
+              <span className="text-xs font-bold text-slate-600 shrink-0">Filter Rombel:</span>
               <select
                 value={selectedKelas}
                 onChange={(e) => setSelectedKelas(e.target.value)}
-                className="px-3 py-1.5 rounded-xl text-xs font-bold border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-pastel-400"
+                className="px-3 py-1.5 rounded-xl text-xs font-bold border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
-                <option value="SEMUA">Semua Kelas</option>
-                <option value="Kelas 1-A">Kelas 1-A</option>
-                <option value="Kelas 1-B">Kelas 1-B</option>
-                <option value="Kelas 2-A">Kelas 2-A</option>
-                <option value="Kelas 2-B">Kelas 2-B</option>
-                <option value="Kelas 3-A">Kelas 3-A</option>
-                <option value="Kelas 3-B">Kelas 3-B</option>
-                <option value="Kelas 4-A">Kelas 4-A</option>
-                <option value="Kelas 4-B">Kelas 4-B</option>
-                <option value="Kelas 5-A">Kelas 5-A</option>
-                <option value="Kelas 5-B">Kelas 5-B</option>
-                <option value="Kelas 6-A">Kelas 6-A</option>
-                <option value="Kelas 6-B">Kelas 6-B</option>
+                <option value="SEMUA">Semua Rombel ({siswaList.length} Siswa)</option>
+                <option value="1 Abdullah Ibnu Abbas">1 Abdullah Ibnu Abbas (21 Santri)</option>
+                <option value="1 Abdullah Ibnu Umar">1 Abdullah Ibnu Umar (20 Santri)</option>
+                <option value="Kelas 4">Kelas 4 (Data Simulasi)</option>
               </select>
             </div>
 
@@ -313,21 +310,130 @@ export function NilaiView({
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2" />
               <input
                 type="text"
-                placeholder="Cari nama siswa atau NISN..."
+                placeholder="Cari nama santri atau NIS..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-1.5 rounded-xl text-xs border border-slate-200 bg-white focus:outline-none focus:border-pastel-400"
+                className="w-full pl-9 pr-4 py-1.5 rounded-xl text-xs font-semibold border border-slate-200 bg-white focus:outline-none focus:border-emerald-500"
               />
+            </div>
+
+            {/* View Layout Switcher (Tabel vs Kartu Input Cepat) */}
+            <div className="inline-flex rounded-xl p-1 bg-slate-200/70 text-[11px] font-bold">
+              <button
+                type="button"
+                onClick={() => setViewLayout('TABLE')}
+                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
+                  viewLayout === 'TABLE' ? 'bg-white text-emerald-900 shadow-2xs' : 'text-slate-600'
+                }`}
+              >
+                Tabel
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewLayout('CARDS')}
+                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
+                  viewLayout === 'CARDS' ? 'bg-white text-emerald-900 shadow-2xs' : 'text-slate-600'
+                }`}
+              >
+                Kartu Mobile
+              </button>
             </div>
           </div>
 
           <div className="text-xs text-slate-500 font-medium">
-            Menampilkan <span className="font-bold text-slate-800">{filteredSiswa.length}</span> Siswa {selectedKelas !== 'SEMUA' && `(${selectedKelas})`}
+            Menampilkan <span className="font-bold text-slate-800">{filteredSiswa.length}</span> Santri {selectedKelas !== 'SEMUA' && `(${selectedKelas})`}
           </div>
         </div>
 
+        {/* MOBILE / CARD INPUT MODE */}
+        {viewLayout === 'CARDS' && (
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50/50">
+            {filteredSiswa.map((siswa, idx) => {
+              const rec = getRecord(siswa.id);
+              const rataF = NilaiController.hitungRataFormatif(rec.f1, rec.f2, rec.f3, rec.f4);
+              const na = NilaiController.hitungNilaiAkhir(rec, settings);
+              const pred = NilaiController.getPredikat(na, currentMapel?.kkm || 75);
+              return (
+                <div key={siswa.id} className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                    <div>
+                      <span className="text-[10px] font-bold text-slate-400">#{idx + 1} • NIS: {siswa.nis || siswa.nisn}</span>
+                      <h4 className="text-xs sm:text-sm font-black text-slate-900">{siswa.nama}</h4>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-base font-black text-emerald-900">{na > 0 ? na : '-'}</span>
+                      <span className={`ml-1.5 px-2 py-0.5 rounded text-[10px] font-bold border ${pred.color}`}>
+                        {pred.label}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Quick Grid Inputs */}
+                  <div className="grid grid-cols-4 gap-2 text-center text-[10px] font-bold">
+                    {['f1', 'f2', 'f3', 'f4'].map((fField, fIdx) => (
+                      <div key={fField}>
+                        <label className="text-slate-500 block mb-0.5">F{fIdx + 1}</label>
+                        <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={rec[fField] ?? ''}
+                          onChange={(e) => handleInputChange(siswa.id, fField, e.target.value)}
+                          className="w-full py-1.5 text-center rounded-lg border border-slate-200 bg-slate-50 font-extrabold text-xs text-slate-900 focus:bg-white focus:border-emerald-500 focus:outline-hidden"
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="grid grid-cols-4 gap-2 text-center text-[10px] font-bold pt-1">
+                    <div>
+                      <label className="text-slate-400 block mb-0.5">Rata F</label>
+                      <div className="py-1.5 rounded-lg bg-slate-100 text-slate-700 font-extrabold text-xs">
+                        {rataF > 0 ? rataF : '-'}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-teal-700 block mb-0.5">Sumatif</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={rec.sumatifLingkup ?? ''}
+                        onChange={(e) => handleInputChange(siswa.id, 'sumatifLingkup', e.target.value)}
+                        className="w-full py-1.5 text-center rounded-lg border border-teal-200 bg-teal-50/40 font-extrabold text-xs text-slate-900 focus:bg-white focus:border-teal-500 focus:outline-hidden"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-teal-700 block mb-0.5">PTS</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={rec.pts ?? ''}
+                        onChange={(e) => handleInputChange(siswa.id, 'pts', e.target.value)}
+                        className="w-full py-1.5 text-center rounded-lg border border-teal-200 bg-teal-50/40 font-extrabold text-xs text-slate-900 focus:bg-white focus:border-teal-500 focus:outline-hidden"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-teal-700 block mb-0.5">PAS</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={rec.pas ?? ''}
+                        onChange={(e) => handleInputChange(siswa.id, 'pas', e.target.value)}
+                        className="w-full py-1.5 text-center rounded-lg border border-teal-200 bg-teal-50/40 font-extrabold text-xs text-slate-900 focus:bg-white focus:border-teal-500 focus:outline-hidden"
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* Table Data */}
-        <div className="overflow-x-auto">
+        <div className={`${viewLayout === 'CARDS' ? 'hidden' : 'block'} overflow-x-auto`}>
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-pastel-100/70 border-b border-pastel-200 text-slate-800">
