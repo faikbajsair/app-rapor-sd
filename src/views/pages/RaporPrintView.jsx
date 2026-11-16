@@ -1,18 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Printer, 
-  FileText, 
-  CheckCircle, 
-  QrCode, 
-  Sparkles, 
-  ChevronRight,
-  BookOpen,
-  Calendar,
-  Award
+  School
 } from 'lucide-react';
 import { NilaiController } from '../../controllers/NilaiController';
 import { SikapController } from '../../controllers/SikapController';
 import { QRCodeSVG } from 'qrcode.react';
+
+const MUATAN_WAJIB_RAPOR = [
+  { no: 1, id: 'PP', nama: 'Pendidikan Pancasila' },
+  { no: 2, id: 'BIN', nama: 'Bahasa Indonesia' },
+  { no: 3, id: 'SB', nama: 'Seni Rupa' },
+  { no: 4, id: 'PJOK', nama: 'Pendidikan Jasmani Olahraga dan Kesehatan' },
+  { no: 5, id: 'MAT', nama: 'Mathematics' }
+];
+
+const MUATAN_LOKAL_RAPOR = [
+  { no: 6, id: 'AKD', nama: 'Akidah Ahlak' },
+  { no: 7, id: 'FQH', nama: 'Fiqih Ibadah' },
+  { no: 8, id: 'ADB', nama: 'Adab Ahlak' },
+  { no: 9, id: 'BAR', nama: 'Bahasa Arab' },
+  { no: 10, id: 'BIG', nama: 'Bahasa Inggris' },
+  { no: 11, id: 'INF', nama: 'Informatika' }
+];
+
+const BUKU_INDUK_MAPEL_ROWS = [
+  { no: 1, id: 'PP', nama: 'Pendidikan Pancasila', active: true },
+  { no: 2, id: 'BIN', nama: 'Bahasa Indonesia', active: true },
+  { no: 3, id: 'IPAS', nama: 'Ilmu Pengetahuan Alam dan Sosial', active: false },
+  { no: 4, id: 'SB', nama: 'Seni Rupa', active: true },
+  { no: 5, id: 'PJOK', nama: 'Pendidikan Jasmani Olahraga dan Kesehatan', active: true },
+  { no: 6, id: 'MAT', nama: 'Mathematics', active: true },
+  { no: 7, id: 'BS', nama: 'Bahasa Sunda', active: false },
+  { no: 8, id: 'AKD', nama: 'Akidah Ahlak', active: true },
+  { no: 9, id: 'FQH', nama: 'Fiqih Ibadah', active: true },
+  { no: 10, id: 'SKI', nama: 'Sejarah Islam', active: false },
+  { no: 11, id: 'ADB', nama: 'Adab Ahlak', active: true },
+  { no: 12, id: 'BAR', nama: 'Bahasa Arab', active: true },
+  { no: 13, id: 'BIG', nama: 'Bahasa Inggris', active: true },
+  { no: 14, id: 'INF', nama: 'Informatika', active: true },
+  { no: 15, id: 'EXTRA_EMPTY', nama: '', active: false }
+];
 
 export function RaporPrintView({ 
   siswaList, 
@@ -28,15 +56,24 @@ export function RaporPrintView({
   const isParent = currentRole === 'wali_murid';
   const parentChildId = currentUser?.siswaId || siswaList[0]?.id;
 
-  const [selectedSiswaId, setSelectedSiswaId] = useState(isParent ? parentChildId : (siswaList[0]?.id || 'S01'));
-  const [documentType, setDocumentType] = useState(settings?.semester?.toLowerCase().includes('tengah') ? 'rapor_pts' : 'rapor_akhir');
+  const [selectedRombel, setSelectedRombel] = useState('1 Abdullah Ibnu Abbas');
+  const [selectedSiswaId, setSelectedSiswaId] = useState(isParent ? parentChildId : (siswaList[0]?.id || 'S_1ABBAS_01'));
+  const [documentType, setDocumentType] = useState('rapor_pts'); // 'rapor_pts' | 'buku_induk' | 'rapor_akhir' | 'cover'
   const [isBulkPrint, setIsBulkPrint] = useState(false);
+
+  const filteredSiswaByRombel = useMemo(() => {
+    if (selectedRombel === 'SEMUA') return siswaList;
+    return siswaList.filter(s => 
+      (s.kelas && s.kelas.toLowerCase().includes(selectedRombel.toLowerCase())) ||
+      (s.rombel && s.rombel.toLowerCase().includes(selectedRombel.toLowerCase()))
+    );
+  }, [siswaList, selectedRombel]);
 
   const activeSiswa = isParent 
     ? (siswaList.find(s => s.id === parentChildId) || siswaList[0])
-    : (siswaList.find(s => s.id === selectedSiswaId) || siswaList[0]);
+    : (filteredSiswaByRombel.find(s => s.id === selectedSiswaId) || filteredSiswaByRombel[0] || siswaList[0]);
 
-  const studentsToRender = (isBulkPrint && !isParent) ? siswaList : [activeSiswa];
+  const studentsToRender = (isBulkPrint && !isParent) ? filteredSiswaByRombel : [activeSiswa];
 
   const handlePrint = () => {
     window.print();
@@ -46,41 +83,60 @@ export function RaporPrintView({
     <div className="space-y-6">
       
       {/* Control Panel (Hidden during Print) */}
-      <div className="no-print p-6 rounded-3xl bg-white border border-pastel-200 shadow-2xs space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="p-2 rounded-xl bg-pastel-200 text-pastel-800">
-                <Printer className="w-5 h-5" />
-              </span>
-              <div>
-                <h2 className="text-xl font-extrabold text-slate-800">Cetak Rapor & Lembar Buku Induk A4</h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Standar Rapor Kurikulum Merdeka • TTD Digital & QR Code • Margin A4 Presisi
-                </p>
-              </div>
+      <div className="no-print p-5 sm:p-6 rounded-3xl bg-white border border-slate-200 shadow-2xs space-y-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="p-2.5 rounded-2xl bg-emerald-800 text-amber-300">
+              <Printer className="w-5 h-5" />
+            </span>
+            <div>
+              <h2 className="text-lg sm:text-xl font-black text-slate-900">
+                Cetak Rapor Resmi & Lembar Buku Induk A4
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Sesuai Sheet <strong className="text-slate-700">RAPOR</strong> & <strong className="text-slate-700">INDUK</strong> Yayasan Sekolah Anak Pintar "SAPIN" Darussalam • SD Al-Imam Islamic School
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2.5">
+          <div className="flex flex-wrap items-center gap-2">
+            {!isParent && (
+              <div className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
+                <School className="w-4 h-4 text-emerald-700" />
+                <select
+                  value={selectedRombel}
+                  onChange={(e) => {
+                    setSelectedRombel(e.target.value);
+                    const first = siswaList.find(s => s.kelas && s.kelas.toLowerCase().includes(e.target.value.toLowerCase()));
+                    if (first) setSelectedSiswaId(first.id);
+                  }}
+                  className="bg-transparent text-xs font-extrabold text-slate-800 focus:outline-hidden cursor-pointer"
+                >
+                  <option value="1 Abdullah Ibnu Abbas">1 Abdullah Ibnu Abbas (21 Santri)</option>
+                  <option value="1 Abdullah Ibnu Umar">1 Abdullah Ibnu Umar (20 Santri)</option>
+                  <option value="SEMUA">Semua Rombel</option>
+                </select>
+              </div>
+            )}
+
             {!isParent && (
               <button
                 onClick={() => setIsBulkPrint(!isBulkPrint)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold border transition-all ${
+                className={`px-3.5 py-2 rounded-xl text-xs font-extrabold border transition-all cursor-pointer ${
                   isBulkPrint 
-                    ? 'bg-pastel-300 text-pastel-950 border-pastel-400 shadow-2xs' 
-                    : 'bg-pastel-50 text-slate-700 border-pastel-200 hover:bg-pastel-100'
+                    ? 'bg-amber-400 text-slate-950 border-amber-500 shadow-2xs' 
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                {isBulkPrint ? '✓ Mode Cetak Massal (Semua Siswa)' : 'Cetak Siswa Terpilih'}
+                {isBulkPrint ? `✓ Mode Cetak Massal (${filteredSiswaByRombel.length} Siswa)` : 'Cetak Siswa Terpilih'}
               </button>
             )}
 
             <button
               onClick={handlePrint}
-              className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs flex items-center space-x-1.5"
+              className="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-extrabold transition-all shadow-xs flex items-center space-x-1.5 cursor-pointer"
             >
-              <Printer className="w-4 h-4 text-emerald-200" />
+              <Printer className="w-4 h-4 text-amber-300" />
               <span>Cetak / Ekspor PDF Sekarang</span>
             </button>
           </div>
@@ -90,63 +146,65 @@ export function RaporPrintView({
         <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
           
           {/* Format Document Selector */}
-          <div className="flex items-center space-x-2">
-            <span className="font-semibold text-slate-500">Pilih Format Dokumen:</span>
-            <div className="inline-flex rounded-xl p-1 bg-pastel-50 border border-pastel-200">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-bold text-slate-500">Pilih Lembar Cetak:</span>
+            <div className="inline-flex flex-wrap rounded-xl p-1 bg-slate-100 border border-slate-200 gap-1">
+              <button
+                onClick={() => setDocumentType('rapor_pts')}
+                className={`px-3 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${
+                  documentType === 'rapor_pts' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Sheet RAPOR (PTS Al-Imam)
+              </button>
+              <button
+                onClick={() => setDocumentType('buku_induk')}
+                className={`px-3 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${
+                  documentType === 'buku_induk' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Sheet INDUK (Buku Induk)
+              </button>
               <button
                 onClick={() => setDocumentType('rapor_akhir')}
-                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                  documentType === 'rapor_akhir' ? 'bg-white text-pastel-900 shadow-2xs' : 'text-slate-600'
+                className={`px-3 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${
+                  documentType === 'rapor_akhir' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 Rapor Akhir Semester (PAS)
               </button>
               <button
-                onClick={() => setDocumentType('rapor_pts')}
-                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                  documentType === 'rapor_pts' ? 'bg-white text-pastel-900 shadow-2xs' : 'text-slate-600'
-                }`}
-              >
-                Rapor Tengah Semester (PTS)
-              </button>
-              <button
                 onClick={() => setDocumentType('cover')}
-                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                  documentType === 'cover' ? 'bg-white text-pastel-900 shadow-2xs' : 'text-slate-600'
+                className={`px-3 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${
+                  documentType === 'cover' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 Sampul / Cover Rapor
               </button>
-              <button
-                onClick={() => setDocumentType('buku_induk')}
-                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                  documentType === 'buku_induk' ? 'bg-white text-pastel-900 shadow-2xs' : 'text-slate-600'
-                }`}
-              >
-                Lembar Buku Induk
-              </button>
             </div>
           </div>
 
-          {/* Student Picker (Locked for parent, selectable for staff) */}
+          {/* Student Picker */}
           {isParent ? (
             <div className="flex items-center space-x-2">
               <span className="font-semibold text-slate-500">Data Rapor Ananda:</span>
               <span className="px-3 py-1 rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-200 font-extrabold">
-                {activeSiswa.nama} ({activeSiswa.nisn})
+                {activeSiswa?.nama} ({activeSiswa?.nis})
               </span>
             </div>
           ) : (
             !isBulkPrint && (
               <div className="flex items-center space-x-2">
-                <span className="font-semibold text-slate-500">Pilih Siswa:</span>
+                <span className="font-bold text-slate-500">Pilih Siswa:</span>
                 <select
-                  value={selectedSiswaId}
+                  value={activeSiswa?.id}
                   onChange={(e) => setSelectedSiswaId(e.target.value)}
-                  className="py-1.5 px-3 rounded-xl border border-slate-200 font-bold text-slate-800 bg-pastel-50/60"
+                  className="py-1.5 px-3 rounded-xl border border-slate-300 font-extrabold text-slate-900 bg-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
                 >
-                  {siswaList.map(s => (
-                    <option key={s.id} value={s.id}>{s.nama} ({s.nisn})</option>
+                  {filteredSiswaByRombel.map((s, idx) => (
+                    <option key={s.id} value={s.id}>
+                      {s.no || idx + 1}. {s.nama} ({s.nis})
+                    </option>
                   ))}
                 </select>
               </div>
@@ -159,8 +217,7 @@ export function RaporPrintView({
       {/* Printable Paper Canvas Area (A4 Width Preview) */}
       <div className="print-container max-w-4xl mx-auto space-y-8">
         {studentsToRender.map((siswa, studentIdx) => {
-          
-          // Siswa Specific Data
+          if (!siswa) return null;
           const studentNilai = nilaiList.filter(n => n.siswaId === siswa.id);
           const studentSikap = sikapList.find(s => s.siswaId === siswa.id) || {
             berimanBertakwa: 'Sangat Baik',
@@ -168,32 +225,435 @@ export function RaporPrintView({
             gotongRoyong: 'Sangat Baik',
             mandiri: 'Baik',
             bernalarKritis: 'Baik',
-            kreatif: 'Sangat Baik'
+            kreatif: 'Sangat Baik',
+            spiritual: 'Alhamdulillah ananda sangat baik dalam bersyukur, berdoa, taat beribadah, toleransi',
+            sosial: 'Alhamdulillah ananda baik dalam tanggung jawab, jujur, peduli, disiplin, percaya diri, kerjasama, santun'
           };
           const studentPresensi = presensiList.find(p => p.siswaId === siswa.id) || {
             sakit: 0, izin: 0, alpa: 0, terlambat: 0,
-            catatanWaliKelas: 'Pertahankan prestasi belajar dan kedisiplinan beribadah.',
+            catatanWaliKelas: 'Alhamdulilah Ananda sudah baik dalam mengikuti pembelajaran selama 3 bulan, teruslah berusaha lebih giat dalam belajar jangan mudah menyerah.',
             ekstrakurikuler: [],
             prestasi: []
           };
 
           const narasiSikap = SikapController.generateNarasiSikap(siswa.nama, studentSikap);
+          const isKelasUmar = (siswa.kelas || '').toLowerCase().includes('umar');
+          const waliKelasNama = isKelasUmar ? 'Siti Habzah Diniyanti, S.Sos' : 'Putri Hidayah, S.Pd';
 
           return (
             <div 
               key={siswa.id} 
-              className={`bg-white p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-elevated font-sans text-slate-800 ${
+              className={`bg-white p-6 sm:p-10 rounded-3xl border border-slate-300 shadow-xl font-serif text-slate-950 ${
                 studentIdx > 0 ? 'page-break' : ''
               }`}
             >
               
               {/* =========================================================================
-               * COVER PAGE (SAMPUL RAPOR SD)
+               * 1. SHEET RAPOR (PERSIS GAMBAR 2: YAYASAN SEKOLAH ANAK PINTAR "SAPIN" DARUSSALAM)
+               * ========================================================================= */}
+              {documentType === 'rapor_pts' && (
+                <div className="space-y-4 text-[11.5px] leading-snug">
+                  
+                  {/* Top Title & Yellow Student Number Badge */}
+                  <div className="relative border-b-2 border-slate-900 pb-2 text-center">
+                    <div className="font-bold text-xs sm:text-sm uppercase">
+                      YAYASAN SEKOLAH ANAK PINTAR &ldquo;SAPIN&rdquo; DARUSSALAM
+                    </div>
+                    <div className="font-black text-sm sm:text-base uppercase">
+                      SD AL-IMAM ISLAMIC SCHOOL
+                    </div>
+                    <div className="pt-2 font-bold text-xs uppercase underline">
+                      LAPORAN PERKEMBANGAN AKADEMIK SISWA
+                    </div>
+                    <div className="font-bold text-xs uppercase">
+                      TAHUN PELAJARAN {settings.tahunAjaran || '2026/2027'}
+                    </div>
+
+                    {/* Nomor Urut Kuning di Pojok Kanan Atas Persis Gambar 2 */}
+                    <div className="no-print absolute right-0 top-0 bg-yellow-300 border border-slate-900 px-2.5 py-0.5 font-sans font-black text-xs">
+                      {siswa.no || studentIdx + 1}
+                    </div>
+                  </div>
+
+                  {/* Identitas Siswa 2 Kolom Persis Gambar 2 */}
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-y-1 text-[11px] py-1">
+                    <div className="sm:col-span-7 space-y-0.5">
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-4">Nama Peserta Didik</span>
+                        <span className="col-span-8 font-bold">: {siswa.nama}</span>
+                      </div>
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-4">NISN</span>
+                        <span className="col-span-8">: {siswa.nisn && siswa.nisn !== '-' ? siswa.nisn : siswa.nis}</span>
+                      </div>
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-4">Sekolah</span>
+                        <span className="col-span-8">: SD AL-IMAM ISLAMIC SCHOOL</span>
+                      </div>
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-4">Alamat</span>
+                        <span className="col-span-8">: Limus Pratama Regency Jl. Blitar</span>
+                      </div>
+                    </div>
+
+                    <div className="sm:col-span-5 space-y-0.5">
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-5">Kelas</span>
+                        <span className="col-span-7">: I (Satu)</span>
+                      </div>
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-5">Fase</span>
+                        <span className="col-span-7">: A</span>
+                      </div>
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-5">Semester</span>
+                        <span className="col-span-7">: I (Satu)</span>
+                      </div>
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-5">Tahun Pelajaran</span>
+                        <span className="col-span-7">: 2026-2027</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* A. Sikap Profil Pelajar Pancasila */}
+                  <div className="space-y-1">
+                    <div className="font-bold text-xs">A. Sikap Profil Pelajar Pancasila</div>
+                    <table className="w-full border border-slate-900 border-collapse text-[11px]">
+                      <thead>
+                        <tr className="border-b border-slate-900 text-center font-bold bg-slate-50">
+                          <th colSpan={2} className="py-1 px-2">Deskripsi</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-slate-900">
+                          <td className="py-1.5 px-2.5 border-r border-slate-900 w-2/5 align-top">
+                            Sikap beriman, bertaqwa kepada Allah dan berakhlak mulia
+                          </td>
+                          <td className="py-1.5 px-2.5 align-top">
+                            {studentSikap.spiritual || 'Alhamdulillah ananda sangat baik dalam bersyukur, berdoa, taat beribadah, toleransi'}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="py-1.5 px-2.5 border-r border-slate-900 align-top">
+                            Sikap berkebinekaan global, gotong royong, mandiri, bernalar kritis, kreatif
+                          </td>
+                          <td className="py-1.5 px-2.5 align-top">
+                            {studentSikap.sosial || 'Alhamdulillah ananda baik dalam tanggung jawab, jujur, peduli, disiplin, percaya diri, kerjasama, santun'}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* B. Capaian Kompetensi */}
+                  <div className="space-y-1">
+                    <div className="font-bold text-xs">B. Capaian Kompetensi</div>
+                    <table className="w-full border border-slate-900 border-collapse text-[11px]">
+                      <thead>
+                        <tr className="border-b border-slate-900 text-center font-bold bg-slate-50">
+                          <th className="py-1 px-2 border-r border-slate-900 w-10">No</th>
+                          <th className="py-1 px-2.5 border-r border-slate-900 text-left">Muatan Pelajaran</th>
+                          <th className="py-1 px-2 border-r border-slate-900 w-16">Nilai</th>
+                          <th className="py-1 px-2 border-r border-slate-900 w-20">Predikat</th>
+                          <th className="py-1 px-2.5 w-32">Deskripsi</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {/* Kelompok A: Muatan Wajib */}
+                        <tr className="border-b border-slate-900 font-bold bg-slate-50/60">
+                          <td className="py-1 px-2 border-r border-slate-900 text-center">A</td>
+                          <td colSpan={4} className="py-1 px-2.5">Muatan Wajib</td>
+                        </tr>
+                        {MUATAN_WAJIB_RAPOR.map((m) => {
+                          const rec = studentNilai.find(n => n.mapelId === m.id);
+                          const val = rec ? Math.round(Number(rec.nilaiAkhir || 0)) : 90;
+                          const pred = val >= 90 ? 'A' : val >= 80 ? 'B' : 'C';
+                          const desc = val >= 90 ? 'Sangat Baik' : val >= 80 ? 'Baik' : 'Cukup';
+                          return (
+                            <tr key={m.id} className="border-b border-slate-900">
+                              <td className="py-1 px-2 border-r border-slate-900 text-center">{m.no}</td>
+                              <td className="py-1 px-2.5 border-r border-slate-900">{m.nama}</td>
+                              <td className="py-1 px-2 border-r border-slate-900 text-center font-bold">{val}</td>
+                              <td className="py-1 px-2 border-r border-slate-900 text-center">{pred}</td>
+                              <td className="py-1 px-2.5 text-center">{desc}</td>
+                            </tr>
+                          );
+                        })}
+
+                        {/* Kelompok B: Muatan Lokal */}
+                        <tr className="border-b border-slate-900 font-bold bg-slate-50/60">
+                          <td className="py-1 px-2 border-r border-slate-900 text-center">B</td>
+                          <td colSpan={4} className="py-1 px-2.5">Muatan Lokal</td>
+                        </tr>
+                        {MUATAN_LOKAL_RAPOR.map((m) => {
+                          const rec = studentNilai.find(n => n.mapelId === m.id);
+                          const val = rec ? Math.round(Number(rec.nilaiAkhir || 0)) : 90;
+                          const pred = val >= 90 ? 'A' : val >= 80 ? 'B' : 'C';
+                          const desc = val >= 90 ? 'Sangat Baik' : val >= 80 ? 'Baik' : 'Cukup';
+                          return (
+                            <tr key={m.id} className="border-b border-slate-900">
+                              <td className="py-1 px-2 border-r border-slate-900 text-center">{m.no}</td>
+                              <td className="py-1 px-2.5 border-r border-slate-900">{m.nama}</td>
+                              <td className="py-1 px-2 border-r border-slate-900 text-center font-bold">{val}</td>
+                              <td className="py-1 px-2 border-r border-slate-900 text-center">{pred}</td>
+                              <td className="py-1 px-2.5 text-center">{desc}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* C. Ekstrakulikuler */}
+                  <div className="space-y-1">
+                    <div className="font-bold text-xs">C. Ekstrakulikuler</div>
+                    <table className="w-full border border-slate-900 border-collapse text-[11px]">
+                      <thead>
+                        <tr className="border-b border-slate-900 text-center font-bold bg-slate-50">
+                          <th className="py-1 px-2 border-r border-slate-900 w-10">No</th>
+                          <th className="py-1 px-2.5 border-r border-slate-900">Kegiatan Ekstrakulikuler</th>
+                          <th className="py-1 px-2.5 w-1/2">Keterangan</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[0, 1, 2].map((idx) => {
+                          const eks = (studentPresensi.ekstrakurikuler || [])[idx];
+                          return (
+                            <tr key={idx} className="border-b border-slate-900">
+                              <td className="py-1 px-2 border-r border-slate-900 text-center">{idx + 1}</td>
+                              <td className="py-1 px-2.5 border-r border-slate-900">{eks?.nama || ''}</td>
+                              <td className="py-1 px-2.5">{eks?.keterangan || ''}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* D. Saran */}
+                  <div className="space-y-1">
+                    <div className="font-bold text-xs">D. Saran</div>
+                    <div className="border border-slate-900 p-2.5 min-h-[48px] text-[11px]">
+                      {studentPresensi.catatanWaliKelas}
+                    </div>
+                  </div>
+
+                  {/* E. Kehadiran */}
+                  <div className="space-y-1 max-w-xs">
+                    <div className="font-bold text-xs">E. Kehadiran</div>
+                    <table className="w-full border border-slate-900 border-collapse text-[11px]">
+                      <tbody>
+                        <tr className="border-b border-slate-900">
+                          <td className="py-1 px-2.5 border-r border-slate-900">Sakit</td>
+                          <td className="py-1 px-2.5 text-center w-24">{studentPresensi.sakit || 0} Hari</td>
+                        </tr>
+                        <tr className="border-b border-slate-900">
+                          <td className="py-1 px-2.5 border-r border-slate-900">Izin</td>
+                          <td className="py-1 px-2.5 text-center">{studentPresensi.izin || 0} Hari</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-2.5 border-r border-slate-900">Tanpa Keterangan</td>
+                          <td className="py-1 px-2.5 text-center">{studentPresensi.alpa || 0} Hari</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Tanda Tangan Persis Gambar 2 */}
+                  <div className="pt-4 text-[11px] space-y-2">
+                    <div className="grid grid-cols-2 gap-8">
+                      <div className="space-y-14">
+                        <div>
+                          <div className="invisible">Cileungsi</div>
+                          <div>Orang Tua,</div>
+                        </div>
+                        <div className="tracking-widest">...........................................</div>
+                      </div>
+
+                      <div className="space-y-14 pl-8">
+                        <div>
+                          <div>Cileungsi, {settings.tanggalRapor || '09 Oktober 2026'}</div>
+                          <div>Guru Kelas</div>
+                        </div>
+                        <div>
+                          <div className="font-bold underline">{waliKelasNama}</div>
+                          <div>NIP. -</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-center justify-center text-center pt-2 space-y-1">
+                      <div>Mengetahui,</div>
+                      <div>Kepala Sekolah</div>
+                      <div className="py-1">
+                        <QRCodeSVG 
+                          value={`https://app-rapor-sd.vercel.app/verify?siswa=${siswa.id}`}
+                          size={60}
+                          level="M"
+                        />
+                      </div>
+                      <div className="font-bold underline">Kholid Hasan, S.Pd</div>
+                      <div>NIP.</div>
+                    </div>
+                  </div>
+
+                </div>
+              )}
+
+              {/* =========================================================================
+               * 2. SHEET INDUK (BUKU INDUK PERSIS GAMBAR 3)
+               * ========================================================================= */}
+              {documentType === 'buku_induk' && (
+                <div className="space-y-5 text-xs font-serif">
+                  <div className="relative text-center pb-2">
+                    <h2 className="text-base sm:text-lg font-bold uppercase tracking-wide">
+                      BUKU INDUK
+                    </h2>
+                    <div className="no-print absolute right-0 top-0 bg-yellow-300 border border-slate-900 px-3 py-0.5 font-sans font-black text-xs">
+                      {siswa.no || studentIdx + 1}
+                    </div>
+                  </div>
+
+                  {/* Biodata Buku Induk */}
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-y-1 text-[11.5px]">
+                    <div className="sm:col-span-7 space-y-0.5">
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-4">Nama Peserta Didik</span>
+                        <span className="col-span-8 font-bold">: {siswa.nama}</span>
+                      </div>
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-4">NIS / NISN</span>
+                        <span className="col-span-8">: {siswa.nis} / {siswa.nisn !== '-' ? siswa.nisn : ''}</span>
+                      </div>
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-4">Sekolah</span>
+                        <span className="col-span-8">: SD AL IMAM ISLAMIC SCHOOL</span>
+                      </div>
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-4">Alamat</span>
+                        <span className="col-span-8">: {siswa.alamat || ''}</span>
+                      </div>
+                    </div>
+
+                    <div className="sm:col-span-5 space-y-0.5">
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-5">Kelas</span>
+                        <span className="col-span-7">: I (satu)</span>
+                      </div>
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-5">Fase</span>
+                        <span className="col-span-7">: A</span>
+                      </div>
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-5">Semester</span>
+                        <span className="col-span-7">: I (Satu)</span>
+                      </div>
+                      <div className="grid grid-cols-12">
+                        <span className="col-span-5">Tahun Pelajaran</span>
+                        <span className="col-span-7">: 2026-2027</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tabel 1: Muatan Pelajaran 1-15 dengan Nilai Desimal */}
+                  <div className="max-w-lg">
+                    <table className="w-full border border-slate-900 border-collapse text-xs">
+                      <thead>
+                        <tr className="border-b border-slate-900 text-center font-bold">
+                          <th className="py-1.5 px-2 border-r border-slate-900 w-10">No</th>
+                          <th className="py-1.5 px-3 border-r border-slate-900 text-center">Muatan Pelajaran</th>
+                          <th className="py-1.5 px-3 w-20 text-center">Nilai</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {BUKU_INDUK_MAPEL_ROWS.map((row) => {
+                          const rec = studentNilai.find(n => n.mapelId === row.id);
+                          const rawVal = rec ? Number(rec.nilaiInduk !== undefined ? rec.nilaiInduk : (rec.nilaiAkhir || 0)) : 0;
+                          const formattedVal = (row.active && rawVal > 0)
+                            ? rawVal.toFixed(1).replace('.', ',')
+                            : '';
+                          return (
+                            <tr key={row.no} className="border-b border-slate-900">
+                              <td className="py-1 px-2 border-r border-slate-900 text-center font-bold">{row.no}</td>
+                              <td className="py-1 px-3 border-r border-slate-900">{row.nama}</td>
+                              <td className="py-1 px-3 text-center font-medium">{formattedVal}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Tabel 2: EKSTRAKURIKULER (1-5) */}
+                  <div className="max-w-lg pt-2">
+                    <table className="w-full border border-slate-900 border-collapse text-xs">
+                      <thead>
+                        <tr className="border-b border-slate-900 text-center font-bold uppercase text-[11px]">
+                          <th className="py-1.5 px-2 border-r border-slate-900 w-10">No</th>
+                          <th className="py-1.5 px-3 border-r border-slate-900 w-44">EKSTRAKURIKULER</th>
+                          <th className="py-1.5 px-3">KETERANGAN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[0, 1, 2, 3, 4].map((idx) => {
+                          const eks = (studentPresensi.ekstrakurikuler || [])[idx];
+                          return (
+                            <tr key={idx} className="border-b border-slate-900">
+                              <td className="py-2 px-2 border-r border-slate-900 text-center font-bold">{idx + 1}</td>
+                              <td className="py-2 px-3 border-r border-slate-900">{eks?.nama || ''}</td>
+                              <td className="py-2 px-3">{eks?.keterangan || ''}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Tabel 3: KETIDAKHADIRAN (1-3) */}
+                  <div className="max-w-xs pt-2">
+                    <table className="w-full border border-slate-900 border-collapse text-xs">
+                      <thead>
+                        <tr className="border-b border-slate-900 text-center font-bold uppercase text-[11px]">
+                          <th colSpan={4} className="py-1 px-2">KETIDAKHADIRAN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-slate-900">
+                          <td className="py-1 px-2 border-r border-slate-900 text-center w-8">1</td>
+                          <td className="py-1 px-2.5 border-r border-slate-900">Sakit</td>
+                          <td className="py-1 px-2 border-r border-slate-900 text-center w-12">
+                            {studentPresensi.sakit > 0 ? studentPresensi.sakit : ''}
+                          </td>
+                          <td className="py-1 px-2 w-12">hari</td>
+                        </tr>
+                        <tr className="border-b border-slate-900">
+                          <td className="py-1 px-2 border-r border-slate-900 text-center">2</td>
+                          <td className="py-1 px-2.5 border-r border-slate-900">Izin</td>
+                          <td className="py-1 px-2 border-r border-slate-900 text-center">
+                            {studentPresensi.izin > 0 ? studentPresensi.izin : ''}
+                          </td>
+                          <td className="py-1 px-2">hari</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 px-2 border-r border-slate-900 text-center">3</td>
+                          <td className="py-1 px-2.5 border-r border-slate-900">Tanpa Keterangan</td>
+                          <td className="py-1 px-2 border-r border-slate-900 text-center">
+                            {studentPresensi.alpa > 0 ? studentPresensi.alpa : ''}
+                          </td>
+                          <td className="py-1 px-2">hari</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* =========================================================================
+               * 3. COVER PAGE (SAMPUL RAPOR SD)
                * ========================================================================= */}
               {documentType === 'cover' && (
-                <div className="min-h-[920px] flex flex-col justify-between items-center text-center p-6 border-8 border-double border-pastel-700/80 rounded-2xl bg-gradient-to-b from-white via-pastel-50/20 to-white">
-                  
-                  {/* Top Branding */}
+                <div className="min-h-[920px] flex flex-col justify-between items-center text-center p-6 border-8 border-double border-emerald-800/80 rounded-2xl bg-gradient-to-b from-white via-emerald-50/20 to-white font-sans">
                   <div className="space-y-4 pt-8">
                     <img 
                       src={settings.logoUrl} 
@@ -204,18 +664,17 @@ export function RaporPrintView({
                       <h1 className="text-xl sm:text-2xl font-serif font-black tracking-wider text-slate-900 uppercase">
                         RAPOR PESERTA DIDIK
                       </h1>
-                      <h2 className="text-lg font-serif font-bold text-pastel-900 uppercase tracking-widest">
-                        SEKOLAH DASAR (SD)
+                      <h2 className="text-lg font-serif font-bold text-emerald-900 uppercase tracking-widest">
+                        SD AL-IMAM ISLAMIC SCHOOL
                       </h2>
                       <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mt-1">
-                        KURIKULUM MERDEKA • {settings.fase}
+                        YAYASAN SEKOLAH ANAK PINTAR &ldquo;SAPIN&rdquo; DARUSSALAM
                       </p>
                     </div>
                   </div>
 
-                  {/* Middle: Student Box */}
-                  <div className="w-full max-w-md my-12 p-6 rounded-2xl border-2 border-dashed border-pastel-500 bg-pastel-50/50 space-y-4">
-                    <div className="text-xs font-bold text-pastel-900 uppercase tracking-wider">
+                  <div className="w-full max-w-md my-12 p-6 rounded-2xl border-2 border-dashed border-emerald-600 bg-emerald-50/40 space-y-4">
+                    <div className="text-xs font-bold text-emerald-900 uppercase tracking-wider">
                       Nama Peserta Didik:
                     </div>
                     <div className="text-xl font-extrabold text-slate-900 uppercase font-serif py-1 border-b-2 border-slate-300">
@@ -227,7 +686,6 @@ export function RaporPrintView({
                     </div>
                   </div>
 
-                  {/* Bottom: School Details */}
                   <div className="space-y-2 pb-8">
                     <h3 className="text-base font-extrabold text-slate-900 uppercase">
                       {settings.schoolName}
@@ -235,79 +693,34 @@ export function RaporPrintView({
                     <p className="text-xs text-slate-600 font-medium max-w-sm mx-auto">
                       NPSN: {settings.npsn} • {settings.alamat}
                     </p>
-                    <p className="text-xs text-slate-500">
-                      Kota {settings.tempatRapor}
-                    </p>
                   </div>
                 </div>
               )}
 
               {/* =========================================================================
-               * RAPOR AKHIR (PAS) / RAPOR TENGAH (PTS)
+               * 4. RAPOR AKHIR SEMESTER (PAS)
                * ========================================================================= */}
-              {(documentType === 'rapor_akhir' || documentType === 'rapor_pts') && (
-                <div className="space-y-6">
-                  
-                  {/* Kop Surat & Rapor Header */}
+              {documentType === 'rapor_akhir' && (
+                <div className="space-y-6 font-sans">
                   <div className="flex items-center justify-between pb-4 border-b-2 border-slate-900">
                     <div className="flex items-center space-x-4">
-                      <img 
-                        src={settings.logoUrl} 
-                        alt="Logo Sekolah" 
-                        className="w-16 h-16 object-contain"
-                      />
+                      <img src={settings.logoUrl} alt="Logo Sekolah" className="w-16 h-16 object-contain" />
                       <div>
                         <h2 className="text-base font-black text-slate-900 uppercase tracking-tight">
                           {settings.schoolName}
                         </h2>
                         <p className="text-[11px] text-slate-600">
-                          {settings.alamat} • NPSN: {settings.npsn} • Telp: {settings.telepon}
-                        </p>
-                        <p className="text-[11px] text-slate-500">
-                          Website: {settings.website} • Email: {settings.email}
+                          {settings.alamat} • NPSN: {settings.npsn}
                         </p>
                       </div>
                     </div>
-
                     <div className="text-right">
-                      <div className="text-xs font-extrabold px-3 py-1 rounded bg-pastel-200 text-pastel-950 inline-block uppercase border border-pastel-300">
-                        {documentType === 'rapor_akhir' ? 'Laporan Hasil Belajar (Akhir)' : 'Laporan Penilaian Tengah Semester'}
-                      </div>
-                      <div className="text-[11px] text-slate-500 mt-1">
-                        Kurikulum Merdeka • {settings.fase}
+                      <div className="text-xs font-extrabold px-3 py-1 rounded bg-emerald-100 text-emerald-950 inline-block uppercase border border-emerald-300">
+                        Laporan Hasil Belajar Akhir Semester
                       </div>
                     </div>
                   </div>
 
-                  {/* Biodata Ringkas Siswa Grid */}
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-1.5 text-xs py-2 bg-pastel-50/50 p-3 rounded-xl border border-pastel-200">
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Nama Peserta Didik:</span>
-                      <span className="font-bold text-slate-900">{siswa.nama}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Kelas / Rombel:</span>
-                      <span className="font-bold text-slate-900">{settings.rombel}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">NISN / NIS:</span>
-                      <span className="font-bold text-slate-900">{siswa.nisn} / {siswa.nis}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Fase / Semester:</span>
-                      <span className="font-bold text-slate-900">{settings.fase} / {settings.semester}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Nama Sekolah:</span>
-                      <span className="font-bold text-slate-900">{settings.schoolName}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Tahun Ajaran:</span>
-                      <span className="font-bold text-slate-900">{settings.tahunAjaran}</span>
-                    </div>
-                  </div>
-
-                  {/* Tabel Capaian Nilai Akademik */}
                   <div className="space-y-2">
                     <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                       A. Nilai Capaian Kompetensi & Hasil Belajar
@@ -318,9 +731,7 @@ export function RaporPrintView({
                           <th className="py-2 px-2.5 font-bold w-8 text-center border-r border-slate-300">No</th>
                           <th className="py-2 px-3 font-bold min-w-[160px] border-r border-slate-300">Mata Pelajaran</th>
                           <th className="py-2 px-2 font-bold text-center w-12 border-r border-slate-300">KKM</th>
-                          <th className="py-2 px-2 font-bold text-center w-14 border-r border-slate-300">
-                            {documentType === 'rapor_akhir' ? 'Nilai Akhir' : 'Nilai PTS'}
-                          </th>
+                          <th className="py-2 px-2 font-bold text-center w-14 border-r border-slate-300">Nilai Akhir</th>
                           <th className="py-2 px-2 font-bold text-center w-12 border-r border-slate-300">Predikat</th>
                           <th className="py-2 px-3 font-bold">Capaian Kompetensi Pembelajaran</th>
                         </tr>
@@ -328,28 +739,19 @@ export function RaporPrintView({
                       <tbody className="divide-y divide-slate-200">
                         {mapelList.map((mapel, mIdx) => {
                           const nRecord = studentNilai.find(n => n.mapelId === mapel.id);
-                          const na = nRecord ? NilaiController.hitungNilaiAkhir(nRecord, settings) : 80;
-                          const ptsVal = nRecord?.pts || 80;
-                          const displayedScore = documentType === 'rapor_akhir' ? (na || 80) : ptsVal;
-                          const pred = NilaiController.getPredikat(displayedScore, mapel.kkm);
-                          const deskripsi = nRecord?.deskripsiCapaian || NilaiController.generateDeskripsi(siswa.nama, mapel.nama, displayedScore, mapel.kkm);
+                          const na = nRecord ? Number(nRecord.nilaiAkhir || NilaiController.hitungNilaiAkhir(nRecord, settings) || 0) : 0;
+                          if (na === 0) return null;
+                          const pred = NilaiController.getPredikat(na, mapel.kkm);
+                          const deskripsi = nRecord?.deskripsiCapaian || NilaiController.generateDeskripsi(siswa.nama, mapel.nama, na, mapel.kkm);
 
                           return (
                             <tr key={mapel.id} className="border-b border-slate-200">
                               <td className="py-2 px-2 text-center text-slate-600 border-r border-slate-300">{mIdx + 1}</td>
-                              <td className="py-2 px-3 font-semibold text-slate-900 border-r border-slate-300">
-                                {mapel.nama}
-                              </td>
+                              <td className="py-2 px-3 font-semibold text-slate-900 border-r border-slate-300">{mapel.nama}</td>
                               <td className="py-2 px-2 text-center text-slate-600 border-r border-slate-300">{mapel.kkm}</td>
-                              <td className="py-2 px-2 text-center font-bold text-slate-900 border-r border-slate-300 bg-slate-50/50">
-                                {displayedScore}
-                              </td>
-                              <td className="py-2 px-2 text-center font-bold border-r border-slate-300">
-                                {pred.label}
-                              </td>
-                              <td className="py-2 px-3 text-[11px] text-slate-700 leading-relaxed">
-                                {deskripsi}
-                              </td>
+                              <td className="py-2 px-2 text-center font-bold text-slate-900 border-r border-slate-300">{Math.round(na)}</td>
+                              <td className="py-2 px-2 text-center font-bold border-r border-slate-300">{pred.label}</td>
+                              <td className="py-2 px-3 text-[11px] text-slate-700 leading-relaxed">{deskripsi}</td>
                             </tr>
                           );
                         })}
@@ -357,216 +759,12 @@ export function RaporPrintView({
                     </table>
                   </div>
 
-                  {/* Section B: Sikap & Profil Pelajar Pancasila (Untuk Rapor Akhir) */}
-                  {documentType === 'rapor_akhir' && (
-                    <div className="space-y-2 pt-2">
-                      <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                        B. Perkembangan Karakter & Profil Pelajar Pancasila
-                      </h3>
-                      <div className="p-3.5 rounded-xl border border-slate-300 bg-slate-50/30 text-xs text-slate-800 leading-relaxed font-serif italic">
-                        "{narasiSikap}"
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Section C: Ekstrakurikuler, Prestasi & Presensi */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    
-                    {/* Ekstrakurikuler */}
-                    <div className="space-y-1.5">
-                      <h4 className="text-xs font-bold text-slate-900 uppercase">
-                        C. Ekstrakurikuler
-                      </h4>
-                      <table className="w-full text-left text-xs border border-slate-300 border-collapse">
-                        <thead>
-                          <tr className="bg-slate-100 border-b border-slate-300">
-                            <th className="py-1.5 px-2 font-bold border-r border-slate-300">Kegiatan</th>
-                            <th className="py-1.5 px-2 font-bold text-center w-14 border-r border-slate-300">Predikat</th>
-                            <th className="py-1.5 px-2 font-bold">Keterangan</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-200">
-                          {(studentPresensi.ekstrakurikuler || []).length > 0 ? (
-                            studentPresensi.ekstrakurikuler.map((ekstra, eIdx) => (
-                              <tr key={eIdx}>
-                                <td className="py-1.5 px-2 font-semibold border-r border-slate-300">{ekstra.nama}</td>
-                                <td className="py-1.5 px-2 text-center font-bold border-r border-slate-300">{ekstra.predikat}</td>
-                                <td className="py-1.5 px-2 text-[10px] text-slate-600">{ekstra.keterangan}</td>
-                              </tr>
-                            ))
-                          ) : (
-                            <tr>
-                              <td colSpan="3" className="py-2 text-center text-slate-400 text-xs">Pramuka Siaga (Predikat A - Aktif)</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    {/* Ketidakhadiran */}
-                    <div className="space-y-1.5">
-                      <h4 className="text-xs font-bold text-slate-900 uppercase">
-                        D. Ketidakhadiran
-                      </h4>
-                      <table className="w-full text-left text-xs border border-slate-300 border-collapse">
-                        <tbody className="divide-y divide-slate-200">
-                          <tr>
-                            <td className="py-1.5 px-3 border-r border-slate-300">Sakit</td>
-                            <td className="py-1.5 px-3 font-bold text-center w-20">{studentPresensi.sakit} hari</td>
-                          </tr>
-                          <tr>
-                            <td className="py-1.5 px-3 border-r border-slate-300">Izin</td>
-                            <td className="py-1.5 px-3 font-bold text-center w-20">{studentPresensi.izin} hari</td>
-                          </tr>
-                          <tr>
-                            <td className="py-1.5 px-3 border-r border-slate-300">Tanpa Keterangan</td>
-                            <td className="py-1.5 px-3 font-bold text-center w-20">{studentPresensi.alpa} hari</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-
-                  </div>
-
-                  {/* Catatan Wali Kelas */}
-                  <div className="space-y-1.5 pt-1">
-                    <h4 className="text-xs font-bold text-slate-900 uppercase">
-                      E. Catatan & Saran Wali Kelas
-                    </h4>
-                    <div className="p-3 rounded-xl border border-slate-300 bg-slate-50/20 text-xs text-slate-800 italic">
-                      "{studentPresensi.catatanWaliKelas || 'Tingkatkan terus semangat belajar dan hafalan Al-Qur\'an.'}"
-                    </div>
-                  </div>
-
-                  {/* Digital Signature & QR Code Area */}
-                  <div className="pt-6 border-t border-slate-200">
-                    <div className="text-right text-xs text-slate-600 mb-4">
-                      {settings.tempatRapor}, {settings.tanggalRapor}
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-4 text-center text-xs">
-                      
-                      {/* Orang Tua */}
-                      <div className="flex flex-col justify-between h-36">
-                        <div>Mengetahui, <br /><strong>Orang Tua / Wali Murid</strong></div>
-                        <div className="border-b border-slate-400 mx-6 pb-1 font-semibold">
-                          ( ......................................... )
-                        </div>
-                      </div>
-
-                      {/* QR Code Validation Center */}
-                      <div className="flex flex-col items-center justify-center space-y-1">
-                        <div className="p-1.5 bg-white border border-slate-300 rounded-lg shadow-2xs">
-                          <QRCodeSVG 
-                            value={`https://alimamischool.com/verify?token=${approval?.qrToken || 'RAPOR-VERIFIED'}&nisn=${siswa.nisn}`}
-                            size={72}
-                            level="M"
-                          />
-                        </div>
-                        <div className="text-[9px] font-bold text-emerald-800 uppercase">
-                          TTD Terverifikasi Digital
-                        </div>
-                        <div className="text-[8px] font-mono text-slate-400">
-                          {approval?.qrToken ? approval.qrToken.slice(0, 20) + '...' : 'VERIFIED-SD-ALIMAM'}
-                        </div>
-                      </div>
-
-                      {/* Wali Kelas */}
-                      <div className="flex flex-col justify-between h-36">
-                        <div>
-                          Wali Kelas, <br />
-                          <span className="font-semibold text-slate-700">{settings.rombel}</span>
-                        </div>
-                        <div>
-                          <div className="font-bold text-slate-900 underline">
-                            {settings.waliKelas}
-                          </div>
-                          <div className="text-[10px] text-slate-500">
-                            NIP. {settings.nipWaliKelas}
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-
-                    {/* Mengetahui Kepala Sekolah */}
-                    <div className="mt-4 text-center text-xs space-y-1">
-                      <div>Mengetahui,</div>
-                      <div className="font-bold text-slate-800">Kepala Sekolah {settings.schoolName}</div>
-                      <div className="h-10"></div>
-                      <div className="font-bold text-slate-900 underline">
-                        {settings.kepalaSekolah}
-                      </div>
-                      <div className="text-[10px] text-slate-500">
-                        NIP. {settings.nipKepalaSekolah}
-                      </div>
-                    </div>
-
-                  </div>
-
-                </div>
-              )}
-
-              {/* =========================================================================
-               * LEMBAR BUKU INDUK SISWA PRINT
-               * ========================================================================= */}
-              {documentType === 'buku_induk' && (
-                <div className="space-y-6">
-                  <div className="text-center pb-4 border-b-2 border-slate-900 space-y-1">
-                    <h2 className="text-base font-extrabold text-slate-900 uppercase tracking-widest">
-                      LEMBAR BUKU INDUK PESERTA DIDIK
-                    </h2>
-                    <h3 className="text-xs font-bold text-pastel-900 uppercase">
-                      {settings.schoolName} • KOTA {settings.tempatRapor}
+                  <div className="space-y-2 pt-2">
+                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                      B. Perkembangan Karakter & Profil Pelajar Pancasila
                     </h3>
-                  </div>
-
-                  <div className="flex items-start justify-between py-2">
-                    <div className="space-y-1 text-xs">
-                      <div>Nomor Urut Buku Induk: <strong>{siswa.id}</strong></div>
-                      <div>Nomor Induk Siswa (NIS): <strong>{siswa.nis}</strong></div>
-                      <div>Nomor Induk Siswa Nasional (NISN): <strong>{siswa.nisn}</strong></div>
-                    </div>
-                    <img 
-                      src={siswa.foto} 
-                      alt={siswa.nama} 
-                      className="w-20 h-24 object-cover border-2 border-slate-400 p-0.5 rounded shadow-xs"
-                    />
-                  </div>
-
-                  <div className="space-y-3 text-xs">
-                    <h4 className="font-bold text-slate-900 uppercase border-b border-slate-200 pb-1">
-                      A. Keterangan Tentang Diri Peserta Didik
-                    </h4>
-                    <table className="w-full text-left border-collapse">
-                      <tbody className="divide-y divide-slate-100">
-                        <tr><td className="py-1 text-slate-500 w-48">1. Nama Lengkap</td><td className="font-bold text-slate-800">: {siswa.nama}</td></tr>
-                        <tr><td className="py-1 text-slate-500">2. Jenis Kelamin</td><td className="text-slate-800">: {siswa.jenisKelamin === 'L' ? 'Laki-laki' : 'Perempuan'}</td></tr>
-                        <tr><td className="py-1 text-slate-500">3. Tempat & Tanggal Lahir</td><td className="text-slate-800">: {siswa.tempatLahir}, {siswa.tanggalLahir}</td></tr>
-                        <tr><td className="py-1 text-slate-500">4. Agama</td><td className="text-slate-800">: {siswa.agama}</td></tr>
-                        <tr><td className="py-1 text-slate-500">5. Alamat Tempat Tinggal</td><td className="text-slate-800">: {siswa.alamat}</td></tr>
-                      </tbody>
-                    </table>
-
-                    <h4 className="font-bold text-slate-900 uppercase border-b border-slate-200 pb-1 pt-3">
-                      B. Keterangan Orang Tua / Wali
-                    </h4>
-                    <table className="w-full text-left border-collapse">
-                      <tbody className="divide-y divide-slate-100">
-                        <tr><td className="py-1 text-slate-500 w-48">1. Nama Ayah Kandung</td><td className="font-bold text-slate-800">: {siswa.namaAyah}</td></tr>
-                        <tr><td className="py-1 text-slate-500">2. Nama Ibu Kandung</td><td className="font-bold text-slate-800">: {siswa.namaIbu}</td></tr>
-                        <tr><td className="py-1 text-slate-500">3. Pekerjaan Orang Tua</td><td className="text-slate-800">: {siswa.pekerjaanOrtu}</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div className="pt-8 flex justify-end text-right text-xs">
-                    <div>
-                      <div>{settings.tempatRapor}, {settings.tanggalRapor}</div>
-                      <div>Kepala Sekolah,</div>
-                      <div className="h-14"></div>
-                      <div className="font-bold text-slate-900 underline">{settings.kepalaSekolah}</div>
-                      <div className="text-[10px] text-slate-500">NIP. {settings.nipKepalaSekolah}</div>
+                    <div className="p-3.5 rounded-xl border border-slate-300 bg-slate-50/30 text-xs text-slate-800 leading-relaxed font-serif italic">
+                      "{narasiSikap}"
                     </div>
                   </div>
                 </div>

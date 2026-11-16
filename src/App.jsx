@@ -199,12 +199,27 @@ export function App() {
           { key: 'semester', value: settings.semester },
           { key: 'tahunAjaran', value: settings.tahunAjaran }
         ],
-        siswa: siswaList,
+        siswa: siswaList.map(s => ({
+          ...s,
+          nisn: (!s.nisn || s.nisn === '-') ? (s.nis || s.id) : s.nisn
+        })),
         mapel: mapelList,
-        nilai: nilaiList,
+        nilai: nilaiList.map(n => ({
+          ...n,
+          formatif1: n.f1 ?? n.formatif1 ?? '',
+          formatif2: n.f2 ?? n.formatif2 ?? '',
+          formatif3: n.f3 ?? n.formatif3 ?? '',
+          formatif4: n.f4 ?? n.formatif4 ?? ''
+        })),
         abs: absList,
         sikap: sikapList,
-        presensi: presensiList
+        presensi: presensiList.map(p => ({
+          ...p,
+          bulanan: typeof p.bulanan === 'object' ? JSON.stringify(p.bulanan) : (p.bulanan || '')
+        })),
+        gtk: gtkList,
+        kholaqoh: kholaqohList,
+        kholaqohNilai: kholaqohNilaiList
       };
 
       const res = await gasApi.syncAll(settings.gasApiUrl, payload);

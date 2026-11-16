@@ -31,6 +31,7 @@ import { ABSController } from '../../controllers/ABSController';
 import { NilaiController } from '../../controllers/NilaiController';
 import { ROLES } from '../../config/roles';
 import { QRCodeSVG } from 'qrcode.react';
+import { LEGGER_MURNI_SUMMARY_ABBAS } from '../../config/data1Abbas';
 
 export function DashboardView({ 
   siswaList, 
@@ -652,6 +653,216 @@ export function DashboardView({
           </div>
         </div>
 
+      </div>
+
+      {/* =========================================================================
+       * 4B. SHEET DASHBOARD SPREADSHEET MASTER (PERSIS GAMBAR 4 BARU)
+       * Keterangan Skor & Predikat, MAX/MIN Rapor vs Murni, 2 Grafik Daya Serap, & Kesukaran Soal
+       * ========================================================================= */}
+      <div className="bg-[#d9e1f2] rounded-3xl p-4 sm:p-6 border-2 border-slate-800 shadow-xl space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-400 pb-3">
+          <div>
+            <h3 className="text-sm sm:text-base font-black text-slate-900 uppercase tracking-wide">
+              ANALISIS DAYA SERAP (MURNI vs RAPOR) & KESUKARAN SOAL (SHEET DASHBOARD)
+            </h3>
+            <p className="text-xs text-slate-700 font-semibold">
+              Rekapitulasi Rentang Skor MAX/MIN, Grafik Daya Serap 14 Mapel, dan Indeks Kesukaran Soal Kelas 1 Abdullah Ibnu Abbas
+            </p>
+          </div>
+          <button
+            onClick={() => onNavigate('nilai')}
+            className="px-3.5 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-extrabold cursor-pointer w-fit"
+          >
+            Buka Sheet NA & LEGGER
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
+          
+          {/* Kolom Kiri (4 cols): Keterangan Skor & Predikat + Tabel MAX/MIN Rapor vs Murni */}
+          <div className="xl:col-span-4 space-y-4">
+            {/* Tabel 1: Rentang Predikat A-D */}
+            <div className="bg-white border-2 border-slate-900 rounded-xl overflow-hidden text-xs">
+              <div className="bg-[#9bc2e6] py-1.5 px-3 font-black text-center border-b-2 border-slate-900 text-slate-950">
+                Keterangan Skor dan Predikat:
+              </div>
+              <table className="w-full text-[11px] border-collapse font-bold text-slate-900">
+                <tbody>
+                  {[
+                    { range: '90 - 100', pred: 'A', label: 'Sangat Baik' },
+                    { range: '80 - 89', pred: 'B', label: 'Baik' },
+                    { range: '70 - 79', pred: 'C', label: 'Cukup' },
+                    { range: '< 70', pred: 'D', label: 'Kurang' }
+                  ].map((r) => (
+                    <tr key={r.pred} className="border-b border-slate-800 last:border-b-0">
+                      <td className="py-1 px-2.5 border-r border-slate-800 w-24">{r.range}</td>
+                      <td className="py-1 px-2 border-r border-slate-800 text-center w-10">{r.pred}</td>
+                      <td className="py-1 px-2.5">{r.label}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Tabel 2: MAX/MIN RAPOR vs MURNI 14 Mapel */}
+            <div className="bg-white border-2 border-slate-900 rounded-xl overflow-hidden text-[11px]">
+              <div className="bg-[#9bc2e6] py-1.5 px-3 font-black text-center border-b border-slate-900 text-slate-950">
+                Keterangan Skor dan Predikat:
+              </div>
+              <table className="w-full border-collapse text-slate-950 font-semibold">
+                <thead>
+                  <tr className="bg-[#9bc2e6] font-black text-center border-b border-slate-900 text-[10px]">
+                    <th rowSpan={2} className="py-1.5 px-2 border-r border-slate-900 text-left">MAPEL</th>
+                    <th colSpan={2} className="py-1 px-2 border-r border-b border-slate-900">RAPOR</th>
+                    <th colSpan={2} className="py-1 px-2 border-b border-slate-900">MURNI</th>
+                  </tr>
+                  <tr className="bg-[#bdd7ee] font-black text-center border-b-2 border-slate-900 text-[10px]">
+                    <th className="py-1 px-1.5 border-r border-slate-900 w-12">MAX</th>
+                    <th className="py-1 px-1.5 border-r border-slate-900 w-12">MIN</th>
+                    <th className="py-1 px-1.5 border-r border-slate-900 w-12">MAX</th>
+                    <th className="py-1 px-1.5 w-12">MIN</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-700">
+                  {LEGGER_MURNI_SUMMARY_ABBAS.map((m) => (
+                    <tr key={m.id} className="hover:bg-slate-50">
+                      <td className="py-1 px-2 border-r border-slate-800 truncate max-w-[140px]">{m.nama}</td>
+                      <td className="py-1 px-1.5 border-r border-slate-800 text-right font-mono">{m.raporMax}</td>
+                      <td className="py-1 px-1.5 border-r border-slate-800 text-right font-mono">{m.raporMin}</td>
+                      <td className="py-1 px-1.5 border-r border-slate-800 text-right font-mono">{m.max}</td>
+                      <td className="py-1 px-1.5 text-right font-mono">{m.min}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Kolom Tengah (4 cols): 2 Grafik Garis Daya Serap Nilai Murni & Nilai Rapor */}
+          <div className="xl:col-span-4 space-y-4">
+            {[
+              {
+                title: 'Daya Serap Nilai Murni',
+                values: LEGGER_MURNI_SUMMARY_ABBAS.map(m => m.dayaSerap)
+              },
+              {
+                title: 'Daya Serap Nilai Rapor',
+                values: LEGGER_MURNI_SUMMARY_ABBAS.map(m => m.active ? 100 : 0)
+              }
+            ].map((chart, cIdx) => {
+              const pts = chart.values.map((v, idx) => {
+                const x = 35 + idx * 24;
+                const y = 135 - (v / 125) * 110;
+                return `${x},${y}`;
+              }).join(' ');
+
+              return (
+                <div key={cIdx} className="bg-white border border-slate-400 rounded-xl p-4 shadow-2xs">
+                  <div className="text-center text-xs font-bold text-slate-600 mb-2">
+                    {chart.title}
+                  </div>
+                  <svg viewBox="0 0 375 185" className="w-full h-auto overflow-visible">
+                    {/* Grid Lines */}
+                    {[0, 25, 50, 75, 100, 125].map((tick) => {
+                      const y = 135 - (tick / 125) * 110;
+                      return (
+                        <g key={tick}>
+                          <line x1="30" y1={y} x2="360" y2={y} stroke="#e2e8f0" strokeWidth="1" />
+                          <text x="24" y={y + 3} textAnchor="end" fontSize="8" fill="#64748b">
+                            {tick}
+                          </text>
+                        </g>
+                      );
+                    })}
+                    {/* Line Path */}
+                    <polyline
+                      fill="none"
+                      stroke="#5b9bd5"
+                      strokeWidth="2.2"
+                      points={pts}
+                    />
+                    {/* Data Points & X Labels */}
+                    {chart.values.map((v, idx) => {
+                      const x = 35 + idx * 24;
+                      const y = 135 - (v / 125) * 110;
+                      const label = LEGGER_MURNI_SUMMARY_ABBAS[idx].nama.slice(0, 10);
+                      return (
+                        <g key={idx}>
+                          <circle cx={x} cy={y} r="3" fill="#5b9bd5" />
+                          <text
+                            x={x}
+                            y={145}
+                            fontSize="6.5"
+                            fill="#475569"
+                            textAnchor="end"
+                            transform={`rotate(-45, ${x}, 145)`}
+                          >
+                            {label}
+                          </text>
+                        </g>
+                      );
+                    })}
+                  </svg>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Kolom Kanan (4 cols): Tabel Kesukaran Soal 14 Mapel + Kategori Kesukaran */}
+          <div className="xl:col-span-4 space-y-4">
+            <div className="bg-white border-2 border-slate-900 rounded-xl overflow-hidden text-[11px]">
+              <div className="bg-[#9bc2e6] py-1.5 px-3 font-black text-center border-b border-slate-900 text-slate-950">
+                Kesukaran Soal
+              </div>
+              <table className="w-full border-collapse text-slate-950 font-semibold">
+                <thead>
+                  <tr className="bg-[#bdd7ee] font-black text-center border-b-2 border-slate-900 text-[10px]">
+                    <th className="py-1 px-2 border-r border-slate-900 text-left">MAPEL</th>
+                    <th colSpan={2} className="py-1 px-2">Nomor Soal</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-700">
+                  {LEGGER_MURNI_SUMMARY_ABBAS.map((m) => (
+                    <tr
+                      key={m.id}
+                      className={m.active ? 'hover:bg-slate-50' : 'bg-yellow-300 font-bold'}
+                    >
+                      <td className="py-1 px-2 border-r border-slate-800">{m.nama}</td>
+                      <td className="py-1 px-2 border-r border-slate-800 text-right font-mono w-14">
+                        {m.kesukaranPct}
+                      </td>
+                      <td className="py-1 px-2 w-24">{m.kesukaranLabel}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Tabel Kategori Kesukaran Soal */}
+            <div className="bg-white border-2 border-slate-900 rounded-xl overflow-hidden text-xs">
+              <div className="bg-[#9bc2e6] py-1.5 px-3 font-black text-center border-b-2 border-slate-900 text-slate-950">
+                Kesukaran Soal
+              </div>
+              <table className="w-full text-[11px] border-collapse font-bold text-slate-900">
+                <tbody>
+                  {[
+                    { kat: 'Sangat sulit', range: '0% - 15%' },
+                    { kat: 'Sulit', range: '16% - 30%' },
+                    { kat: 'Sedang', range: '31% - 70%' },
+                    { kat: 'Mudah', range: '71% - 85%' },
+                    { kat: 'sangat mudah', range: '86% - 100%' }
+                  ].map((k) => (
+                    <tr key={k.kat} className="border-b border-slate-800 last:border-b-0">
+                      <td className="py-1 px-2.5 border-r border-slate-800">{k.kat}</td>
+                      <td className="py-1 px-2.5 w-28">{k.range}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
       </div>
 
       {/* =========================================================================

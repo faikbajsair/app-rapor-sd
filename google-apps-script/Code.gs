@@ -105,7 +105,7 @@ function doPost(e) {
     
     if (action === 'syncAll') {
       if (payload.settings) saveBatchToSheet(ss.getSheetByName(SHEETS.SETTINGS), payload.settings, 'key');
-      if (payload.siswa) saveBatchToSheet(ss.getSheetByName(SHEETS.SISWA), payload.siswa, 'nisn');
+      if (payload.siswa) saveBatchToSheet(ss.getSheetByName(SHEETS.SISWA), payload.siswa, 'id');
       if (payload.mapel) saveBatchToSheet(ss.getSheetByName(SHEETS.MAPEL), payload.mapel, 'id');
       if (payload.nilai) saveBatchToSheet(ss.getSheetByName(SHEETS.NILAI), payload.nilai, 'id');
       if (payload.abs) saveBatchToSheet(ss.getSheetByName(SHEETS.ABS), payload.abs, 'id');
@@ -166,7 +166,7 @@ function ensureSheetsInitialized(ss) {
     },
     {
       name: SHEETS.NILAI,
-      headers: ['id', 'siswaId', 'nisn', 'mapelId', 'semester', 'tahunAjaran', 'formatif1', 'formatif2', 'formatif3', 'formatif4', 'rataFormatif', 'sumatifLingkup', 'sumatifTengah', 'sumatifAkhir', 'nilaiAkhir', 'predikat', 'deskripsiCapaian', 'updatedAt']
+      headers: ['id', 'siswaId', 'nisn', 'mapelId', 'semester', 'tahunAjaran', 'formatif1', 'formatif2', 'formatif3', 'formatif4', 'rataFormatif', 'sumatifLingkup', 'sumatifTengah', 'sumatifAkhir', 'nilaiMurni', 'nilaiInduk', 'nilaiAkhir', 'predikat', 'deskripsiCapaian', 'updatedAt']
     },
     {
       name: SHEETS.ABS,
@@ -174,11 +174,11 @@ function ensureSheetsInitialized(ss) {
     },
     {
       name: SHEETS.SIKAP,
-      headers: ['id', 'siswaId', 'semester', 'tahunAjaran', 'berimanBertakwa', 'berkebinekaan', 'gotongRoyong', 'mandiri', 'bernalarKritis', 'kreatif', 'spiritual', 'sosial', 'deskripsiNaratif', 'updatedAt']
+      headers: ['id', 'siswaId', 'namaSiswa', 'semester', 'tahunAjaran', 'bersyukur', 'berdoa', 'taatBeribadah', 'toleransi', 'predikatSpiritual', 'spiritual', 'tanggungJawab', 'jujur', 'peduli', 'disiplin', 'percayaDiri', 'kerjasama', 'santun', 'predikatSosial', 'sosial', 'berimanBertakwa', 'berkebinekaan', 'gotongRoyong', 'mandiri', 'bernalarKritis', 'kreatif', 'deskripsiNaratif', 'updatedAt']
     },
     {
       name: SHEETS.PRESENSI,
-      headers: ['id', 'siswaId', 'semester', 'tahunAjaran', 'sakit', 'izin', 'alpa', 'terlambat', 'catatanWaliKelas', 'updatedAt']
+      headers: ['id', 'siswaId', 'namaSiswa', 'semester', 'tahunAjaran', 'sakit', 'izin', 'alpa', 'terlambat', 'hariEfektif', 'jumlahHadir', 'persentaseHadir', 'bulanan', 'catatanWaliKelas', 'updatedAt']
     },
     {
       name: SHEETS.GTK,
@@ -268,9 +268,41 @@ function saveSingleRecord(sheet, record, keyField) {
 }
 
 function saveBatchToSheet(sheet, records, keyField) {
-  if (!records || !records.length) return;
-  for (var i = 0; i < records.length; i++) {
-    saveSingleRecord(sheet, records[i], keyField);
+  if (!sheet || !records || !records.length) return;
+  var data = sheet.getDataRange().getValues();
+  var headers = data[0];
+  var keyColIndex = headers.indexOf(keyField);
+  if (keyColIndex === -1) keyColIndex = 0;
+
+  // Map existing rows by key for O(1) lookup
+  var rows = data.slice(1);
+  var keyToIndex = {};
+  for (var i = 0; i < rows.length; i++) {
+    var k = String(rows[i][keyColIndex]);
+    if (k) keyToIndex[k] = i;
+  }
+
+  for (var r = 0; r < records.length; r++) {
+    var record = records[r];
+    var rowValues = headers.map(function(h) {
+      var val = record[h];
+      if (typeof val === 'object' && val !== null) {
+        return JSON.stringify(val);
+      }
+      return val !== undefined ? val : '';
+    });
+
+    var recKey = String(record[keyField]);
+    if (keyToIndex[recKey] !== undefined) {
+      rows[keyToIndex[recKey]] = rowValues;
+    } else {
+      keyToIndex[recKey] = rows.length;
+      rows.push(rowValues);
+    }
+  }
+
+  if (rows.length > 0) {
+    sheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
   }
 }
 
