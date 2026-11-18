@@ -16,7 +16,21 @@ export const AuthController = {
   getSession() {
     try {
       const data = localStorage.getItem(SESSION_KEY);
-      return data ? JSON.parse(data) : null;
+      if (!data) return null;
+      const parsed = JSON.parse(data);
+      // Normalisasi sesi lama jika Putri Hidayah masih menyimpan "Semua Kelas" atau "Kelas 1-A"
+      if (parsed && parsed.role === ROLES.WALI_KELAS) {
+        const namaLower = (parsed.nama || '').toLowerCase();
+        const k0 = (parsed.kelasDiampu?.[0] || '').toLowerCase();
+        if (namaLower.includes('putri hidayah') && (!k0 || k0 === 'semua kelas' || k0 === 'kelas 1-a')) {
+          parsed.kelasDiampu = ['1 Abdullah Ibnu Abbas'];
+        } else if (namaLower.includes('siti habzah') && (!k0 || k0 === 'semua kelas' || k0 === 'kelas 1-b')) {
+          parsed.kelasDiampu = ['1 Abdullah Ibnu Umar'];
+        } else if (namaLower.includes('zahra aulia') && (!k0 || k0 === 'semua kelas' || k0 === 'kelas 4-a')) {
+          parsed.kelasDiampu = ['4 Ali Bin Abi Thalib'];
+        }
+      }
+      return parsed;
     } catch (e) {
       return null;
     }
@@ -109,9 +123,9 @@ export const AuthController = {
             roleLabel: cfg.label,
             avatar: cfg.avatar,
             badge: cfg.badge,
-            kelasDiampu: ["Semua Kelas"],
-            mapelDiampu: ["Semua Mapel"],
-            kholaqohDiampu: ["Semua Kholaqoh"],
+            kelasDiampu: cfg.kelasDiampu || ["Semua Kelas"],
+            mapelDiampu: cfg.mapelDiampu || ["Semua Mapel"],
+            kholaqohDiampu: cfg.kholaqohDiampu || ["Semua Kholaqoh"],
             loginTime: new Date().toISOString()
           };
           this.setSession(userSession);

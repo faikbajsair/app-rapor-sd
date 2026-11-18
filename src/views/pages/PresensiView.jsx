@@ -185,7 +185,7 @@ export function PresensiView({
   // Summary Statistik Daftar Hadir Kelas
   const summaryStats = useMemo(() => {
     let sumT = 0, sumS = 0, sumI = 0, sumA = 0;
-    const hariEfektif = 75;
+    const hariEfektif = selectedRombel.toLowerCase().includes('4 ali') ? 25 : 75;
     const jmlSiswa = filteredSiswa.length || 1;
     filteredSiswa.forEach(s => {
       const r = getRecord(s.id);
@@ -208,7 +208,7 @@ export function PresensiView({
       jmlSiswa: filteredSiswa.length,
       hariEfektif
     };
-  }, [filteredSiswa, presensiList]);
+  }, [filteredSiswa, presensiList, selectedRombel]);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -249,6 +249,7 @@ export function PresensiView({
               >
                 <option value="1 Abdullah Ibnu Abbas">1 Abdullah Ibnu Abbas (21 Santri)</option>
                 <option value="1 Abdullah Ibnu Umar">1 Abdullah Ibnu Umar (20 Santri)</option>
+                <option value="4 Ali Bin Abi Thalib">4 Ali Bin Abi Thalib (21 Santri)</option>
                 <option value="SEMUA">Semua Rombel</option>
               </select>
             </div>

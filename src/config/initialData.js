@@ -55,6 +55,12 @@ import {
   PRESENSI_KELAS_1_UMAR,
   SIKAP_KELAS_1_UMAR
 } from './data1Umar';
+import {
+  SISWA_KELAS_4_ALI,
+  NILAI_KELAS_4_ALI,
+  PRESENSI_KELAS_4_ALI,
+  SIKAP_KELAS_4_ALI
+} from './data4Ali';
 
 export const DEFAULT_MAPEL = [
   { id: "PP", kode: "PP", nama: "Pendidikan Pancasila", kelompok: "Wajib", kkm: 75, guru: "Guru Wali Kelas" },
@@ -297,6 +303,7 @@ const MOCK_SISWA_LEGACY = [
 export const DEFAULT_SISWA = [
   ...SISWA_KELAS_1_ABBAS,
   ...SISWA_KELAS_1_UMAR_FORMATTED,
+  ...SISWA_KELAS_4_ALI,
   ...MOCK_SISWA_LEGACY
 ];
 
@@ -407,6 +414,7 @@ const MOCK_NILAI_LEGACY = [
 export const DEFAULT_NILAI = [
   ...NILAI_KELAS_1_ABBAS,
   ...NILAI_KELAS_1_UMAR,
+  ...NILAI_KELAS_4_ALI,
   ...MOCK_NILAI_LEGACY
 ];
 
@@ -498,6 +506,7 @@ const MOCK_SIKAP_LEGACY = [
 export const DEFAULT_SIKAP = [
   ...SIKAP_KELAS_1_ABBAS,
   ...SIKAP_KELAS_1_UMAR,
+  ...SIKAP_KELAS_4_ALI,
   ...MOCK_SIKAP_LEGACY
 ];
 
@@ -539,5 +548,6 @@ const MOCK_PRESENSI_LEGACY = [
 export const DEFAULT_PRESENSI = [
   ...PRESENSI_KELAS_1_ABBAS,
   ...PRESENSI_KELAS_1_UMAR,
+  ...PRESENSI_KELAS_4_ALI,
   ...MOCK_PRESENSI_LEGACY
 ];

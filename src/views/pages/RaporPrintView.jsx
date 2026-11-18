@@ -24,6 +24,26 @@ const MUATAN_LOKAL_RAPOR = [
   { no: 11, id: 'INF', nama: 'Informatika' }
 ];
 
+const MUATAN_WAJIB_RAPOR_KELAS4 = [
+  { no: 1, id: 'PP', nama: 'Pendidikan Pancasila' },
+  { no: 2, id: 'BIN', nama: 'Bahasa Indonesia' },
+  { no: 3, id: 'IPAS', nama: 'Ilmu Pengetahuan Alam dan Sosial' },
+  { no: 4, id: 'SB', nama: 'Seni Rupa' },
+  { no: 5, id: 'PJOK', nama: 'Pendidikan Jasmani Olahraga dan Kesehatan' },
+  { no: 6, id: 'MAT', nama: 'Mathematics' }
+];
+
+const MUATAN_LOKAL_RAPOR_KELAS4 = [
+  { no: 7, id: 'BS', nama: 'Bahasa Sunda' },
+  { no: 8, id: 'AKD', nama: 'Akidah Ahlak' },
+  { no: 9, id: 'FQH', nama: 'Fiqih Ibadah' },
+  { no: 10, id: 'SKI', nama: 'Sejarah Islam' },
+  { no: 11, id: 'ADB', nama: 'Adab Ahlak' },
+  { no: 12, id: 'BAR', nama: 'Bahasa Arab' },
+  { no: 13, id: 'BIG', nama: 'Bahasa Inggris' },
+  { no: 14, id: 'INF', nama: 'Informatika' }
+];
+
 const BUKU_INDUK_MAPEL_ROWS = [
   { no: 1, id: 'PP', nama: 'Pendidikan Pancasila', active: true },
   { no: 2, id: 'BIN', nama: 'Bahasa Indonesia', active: true },
@@ -114,6 +134,7 @@ export function RaporPrintView({
                 >
                   <option value="1 Abdullah Ibnu Abbas">1 Abdullah Ibnu Abbas (21 Santri)</option>
                   <option value="1 Abdullah Ibnu Umar">1 Abdullah Ibnu Umar (20 Santri)</option>
+                  <option value="4 Ali Bin Abi Thalib">4 Ali Bin Abi Thalib (21 Santri)</option>
                   <option value="SEMUA">Semua Rombel</option>
                 </select>
               </div>
@@ -238,7 +259,12 @@ export function RaporPrintView({
 
           const narasiSikap = SikapController.generateNarasiSikap(siswa.nama, studentSikap);
           const isKelasUmar = (siswa.kelas || '').toLowerCase().includes('umar');
-          const waliKelasNama = isKelasUmar ? 'Siti Habzah Diniyanti, S.Sos' : 'Putri Hidayah, S.Pd';
+          const isKelas4Ali = (siswa.kelas || '').toLowerCase().includes('4 ali');
+          const waliKelasNama = isKelas4Ali
+            ? 'Zahra Aulia, S.Pd'
+            : isKelasUmar
+            ? 'Siti Habzah Diniyanti, S.Sos'
+            : 'Putri Hidayah, S.Pd';
 
           return (
             <div 
@@ -299,11 +325,11 @@ export function RaporPrintView({
                     <div className="sm:col-span-5 space-y-0.5">
                       <div className="grid grid-cols-12">
                         <span className="col-span-5">Kelas</span>
-                        <span className="col-span-7">: I (Satu)</span>
+                        <span className="col-span-7">: {isKelas4Ali ? 'IV (empat)' : 'I (Satu)'}</span>
                       </div>
                       <div className="grid grid-cols-12">
                         <span className="col-span-5">Fase</span>
-                        <span className="col-span-7">: A</span>
+                        <span className="col-span-7">: {isKelas4Ali ? 'B' : 'A'}</span>
                       </div>
                       <div className="grid grid-cols-12">
                         <span className="col-span-5">Semester</span>
@@ -365,11 +391,11 @@ export function RaporPrintView({
                           <td className="py-1 px-2 border-r border-slate-900 text-center">A</td>
                           <td colSpan={4} className="py-1 px-2.5">Muatan Wajib</td>
                         </tr>
-                        {MUATAN_WAJIB_RAPOR.map((m) => {
+                        {(isKelas4Ali ? MUATAN_WAJIB_RAPOR_KELAS4 : MUATAN_WAJIB_RAPOR).map((m) => {
                           const rec = studentNilai.find(n => n.mapelId === m.id);
                           const val = rec ? Math.round(Number(rec.nilaiAkhir || 0)) : 90;
-                          const pred = val >= 90 ? 'A' : val >= 80 ? 'B' : 'C';
-                          const desc = val >= 90 ? 'Sangat Baik' : val >= 80 ? 'Baik' : 'Cukup';
+                          const pred = val >= 90 ? 'A' : val >= 80 ? 'B' : val >= 70 ? 'C' : 'D';
+                          const desc = val >= 90 ? 'Sangat Baik' : val >= 80 ? 'Baik' : val >= 70 ? 'Cukup' : 'Kurang';
                           return (
                             <tr key={m.id} className="border-b border-slate-900">
                               <td className="py-1 px-2 border-r border-slate-900 text-center">{m.no}</td>
@@ -386,11 +412,11 @@ export function RaporPrintView({
                           <td className="py-1 px-2 border-r border-slate-900 text-center">B</td>
                           <td colSpan={4} className="py-1 px-2.5">Muatan Lokal</td>
                         </tr>
-                        {MUATAN_LOKAL_RAPOR.map((m) => {
+                        {(isKelas4Ali ? MUATAN_LOKAL_RAPOR_KELAS4 : MUATAN_LOKAL_RAPOR).map((m) => {
                           const rec = studentNilai.find(n => n.mapelId === m.id);
                           const val = rec ? Math.round(Number(rec.nilaiAkhir || 0)) : 90;
-                          const pred = val >= 90 ? 'A' : val >= 80 ? 'B' : 'C';
-                          const desc = val >= 90 ? 'Sangat Baik' : val >= 80 ? 'Baik' : 'Cukup';
+                          const pred = val >= 90 ? 'A' : val >= 80 ? 'B' : val >= 70 ? 'C' : 'D';
+                          const desc = val >= 90 ? 'Sangat Baik' : val >= 80 ? 'Baik' : val >= 70 ? 'Cukup' : 'Kurang';
                           return (
                             <tr key={m.id} className="border-b border-slate-900">
                               <td className="py-1 px-2 border-r border-slate-900 text-center">{m.no}</td>
@@ -539,11 +565,11 @@ export function RaporPrintView({
                     <div className="sm:col-span-5 space-y-0.5">
                       <div className="grid grid-cols-12">
                         <span className="col-span-5">Kelas</span>
-                        <span className="col-span-7">: I (satu)</span>
+                        <span className="col-span-7">: {isKelas4Ali ? 'IV (empat)' : 'I (satu)'}</span>
                       </div>
                       <div className="grid grid-cols-12">
                         <span className="col-span-5">Fase</span>
-                        <span className="col-span-7">: A</span>
+                        <span className="col-span-7">: {isKelas4Ali ? 'B' : 'A'}</span>
                       </div>
                       <div className="grid grid-cols-12">
                         <span className="col-span-5">Semester</span>
@@ -570,7 +596,8 @@ export function RaporPrintView({
                         {BUKU_INDUK_MAPEL_ROWS.map((row) => {
                           const rec = studentNilai.find(n => n.mapelId === row.id);
                           const rawVal = rec ? Number(rec.nilaiInduk !== undefined ? rec.nilaiInduk : (rec.nilaiAkhir || 0)) : 0;
-                          const formattedVal = (row.active && rawVal > 0)
+                          const isActiveRow = isKelas4Ali ? row.id !== 'EXTRA_EMPTY' : row.active;
+                          const formattedVal = (isActiveRow && rawVal > 0)
                             ? rawVal.toFixed(1).replace('.', ',')
                             : '';
                           return (

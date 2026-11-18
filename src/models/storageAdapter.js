@@ -20,17 +20,17 @@ import {
 } from '../config/gtkData';
 
 const KEYS = {
-  SETTINGS: 'rapor_sd_settings_v4',
-  SISWA: 'rapor_sd_siswa_v4',
-  MAPEL: 'rapor_sd_mapel_v4',
-  NILAI: 'rapor_sd_nilai_v4',
-  ABS: 'rapor_sd_abs_v4',
-  SIKAP: 'rapor_sd_sikap_v4',
-  PRESENSI: 'rapor_sd_presensi_v4',
-  APPROVAL: 'rapor_sd_approval_v4',
-  GTK: 'rapor_sd_gtk_v4',
-  KHOLAQUH: 'rapor_sd_kholaquh_v4',
-  KHOLAQUH_NILAI: 'rapor_sd_kholaquh_nilai_v4'
+  SETTINGS: 'rapor_sd_settings_v7',
+  SISWA: 'rapor_sd_siswa_v7',
+  MAPEL: 'rapor_sd_mapel_v7',
+  NILAI: 'rapor_sd_nilai_v7',
+  ABS: 'rapor_sd_abs_v7',
+  SIKAP: 'rapor_sd_sikap_v7',
+  PRESENSI: 'rapor_sd_presensi_v7',
+  APPROVAL: 'rapor_sd_approval_v7',
+  GTK: 'rapor_sd_gtk_v7',
+  KHOLAQUH: 'rapor_sd_kholaquh_v7',
+  KHOLAQUH_NILAI: 'rapor_sd_kholaquh_nilai_v7'
 };
 
 class StorageAdapter {

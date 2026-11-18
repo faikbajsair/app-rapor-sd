@@ -62,6 +62,10 @@ import {
   NILAI_KELAS_1_UMAR
 } from '../../config/data1Umar';
 import {
+  SISWA_KELAS_4_ALI,
+  NILAI_KELAS_4_ALI
+} from '../../config/data4Ali';
+import {
   MAPEL_LATIHAN_MASTER,
   LATIHAN_CONFIG
 } from '../../config/latihanData';
@@ -144,12 +148,18 @@ export function AdministrasiWaliKelasView({ currentUser, currentRole, settings, 
     if (selectedKelasId === '1Abbas') {
       return SISWA_KELAS_1_ABBAS;
     }
+    if (selectedKelasId === '4Ali') {
+      return SISWA_KELAS_4_ALI;
+    }
     return SISWA_KELAS_1_UMAR;
   }, [selectedKelasId]);
 
   const activeNilaiKelas = useMemo(() => {
     if (selectedKelasId === '1Abbas') {
       return NILAI_KELAS_1_ABBAS;
+    }
+    if (selectedKelasId === '4Ali') {
+      return NILAI_KELAS_4_ALI;
     }
     return NILAI_KELAS_1_UMAR;
   }, [selectedKelasId]);

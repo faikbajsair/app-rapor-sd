@@ -198,6 +198,7 @@ export function SikapView({
               >
                 <option value="1 Abdullah Ibnu Abbas">1 Abdullah Ibnu Abbas (21 Santri)</option>
                 <option value="1 Abdullah Ibnu Umar">1 Abdullah Ibnu Umar (20 Santri)</option>
+                <option value="4 Ali Bin Abi Thalib">4 Ali Bin Abi Thalib (21 Santri)</option>
                 <option value="SEMUA">Semua Rombel</option>
               </select>
             </div>

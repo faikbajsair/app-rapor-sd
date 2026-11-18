@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  Calculator, 
-  Save, 
-  Sparkles, 
-  PlusCircle, 
-  AlertCircle, 
-  CheckCircle, 
-  BookOpen, 
+import {
+  Calculator,
+  Save,
+  Sparkles,
+  PlusCircle,
+  AlertCircle,
+  CheckCircle,
+  BookOpen,
   FileSpreadsheet,
   RefreshCw,
   Search
@@ -14,6 +14,7 @@ import {
 import { NilaiController } from '../../controllers/NilaiController';
 import { QRCodeSVG } from 'qrcode.react';
 import { LEGGER_MURNI_SUMMARY_ABBAS } from '../../config/data1Abbas';
+import { NA_RAPOR_SUMMARY_4_ALI, LEGGER_MURNI_SUMMARY_4_ALI } from '../../config/data4Ali';
 
 const NA_COLUMNS = [
   { colNo: 3, id: 'PP', label: 'Pendidikan Pancasila', kkm: 75, activeInKelas1: true },
@@ -32,14 +33,14 @@ const NA_COLUMNS = [
   { colNo: 16, id: 'INF', label: 'Informatika', kkm: 75, activeInKelas1: true }
 ];
 
-export function NilaiView({ 
-  siswaList, 
-  mapelList, 
-  nilaiList, 
-  onSaveNilai, 
+export function NilaiView({
+  siswaList,
+  mapelList,
+  nilaiList,
+  onSaveNilai,
   onAddMapel,
   settings,
-  currentUser 
+  currentUser
 }) {
   // Filter mapel yang boleh diakses berdasarkan penugasan guru yang sedang login
   const isGuruMapel = currentUser?.role === 'guru_mapel';
@@ -62,17 +63,37 @@ export function NilaiView({
     return activeMapels[0]?.id || 'MAT';
   });
 
-  // Filter Kelas yang diampu
-  const defaultKelas = (isWaliKelas && currentUser?.kelasDiampu?.[0]) 
-    ? currentUser.kelasDiampu[0] 
-    : '1 Abdullah Ibnu Abbas';
+  // Normalisasi nama kelas dari sesi guru ke nama rombel resmi
+  const resolveRombelFromUser = (user) => {
+    const raw = user?.kelasDiampu?.[0] || '';
+    const lower = raw.toLowerCase();
+    if (!raw || lower === 'semua kelas' || lower === 'semua' || lower === '1-a' || lower === 'kelas 1-a' || lower.includes('abbas')) {
+      return '1 Abdullah Ibnu Abbas';
+    }
+    if (lower === '1-b' || lower === 'kelas 1-b' || lower.includes('umar')) {
+      return '1 Abdullah Ibnu Umar';
+    }
+    if (lower === '4-a' || lower === 'kelas 4-a' || lower.includes('4 ali') || lower.includes('ali bin')) {
+      return '4 Ali Bin Abi Thalib';
+    }
+    return '1 Abdullah Ibnu Abbas';
+  };
+
+  const defaultKelas = isWaliKelas ? resolveRombelFromUser(currentUser) : '1 Abdullah Ibnu Abbas';
 
   const [selectedKelas, setSelectedKelas] = useState(defaultKelas);
+
+  // Sinkronkan filter kelas saat berganti peran atau akun guru
+  React.useEffect(() => {
+    if (isWaliKelas) {
+      setSelectedKelas(resolveRombelFromUser(currentUser));
+    }
+  }, [currentUser?.id, currentUser?.role, currentUser?.nama]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddMapelModal, setShowAddMapelModal] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
   const [viewLayout, setViewLayout] = useState('NA_SHEET'); // 'NA_SHEET' | 'TABLE' | 'CARDS'
-  
+
   // New Mapel State
   const [newMapelKode, setNewMapelKode] = useState('');
   const [newMapelNama, setNewMapelNama] = useState('');
@@ -108,9 +129,9 @@ export function NilaiView({
     if (!updated.deskripsiCapaian) {
       const siswa = siswaList.find(s => s.id === siswaId);
       updated.deskripsiCapaian = NilaiController.generateDeskripsi(
-        siswa?.nama, 
-        currentMapel?.nama || 'Mata Pelajaran', 
-        na, 
+        siswa?.nama,
+        currentMapel?.nama || 'Mata Pelajaran',
+        na,
         currentMapel?.kkm || 75
       );
     }
@@ -123,9 +144,9 @@ export function NilaiView({
     const siswa = siswaList.find(s => s.id === siswaId);
     const na = NilaiController.hitungNilaiAkhir(current, settings);
     const deskripsi = NilaiController.generateDeskripsi(
-      siswa?.nama, 
-      currentMapel?.nama || 'Mata Pelajaran', 
-      na, 
+      siswa?.nama,
+      currentMapel?.nama || 'Mata Pelajaran',
+      na,
       currentMapel?.kkm || 75
     );
 
@@ -171,20 +192,21 @@ export function NilaiView({
 
   // Filter Siswa berdasarkan Kelas yang diampu & Pencarian
   const filteredSiswa = siswaList.filter(s => {
-    const matchKelas = selectedKelas === 'SEMUA' || 
-      s.kelas === selectedKelas || 
-      (s.kelas && s.kelas.toLowerCase().includes(selectedKelas.toLowerCase())) ||
-      (s.rombel && s.rombel.toLowerCase().includes(selectedKelas.toLowerCase())) ||
-      (!s.kelas && selectedKelas === 'SEMUA');
+    const k = (selectedKelas || '').toLowerCase();
+    const isAll = !selectedKelas || k === 'semua' || k === 'semua kelas';
+    const matchKelas = isAll ||
+      s.kelas === selectedKelas ||
+      (s.kelas && s.kelas.toLowerCase().includes(k)) ||
+      (s.rombel && s.rombel.toLowerCase().includes(k));
     const matchSearch = s.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        (s.nis && s.nis.includes(searchQuery)) ||
-                        (s.nisn && s.nisn.includes(searchQuery));
+      (s.nis && s.nis.includes(searchQuery)) ||
+      (s.nisn && s.nisn.includes(searchQuery));
     return matchKelas && matchSearch;
   });
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      
+
       {/* Toast Alert */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-slate-900 text-white text-xs font-semibold shadow-2xl flex items-center space-x-2 animate-in slide-in-from-bottom">
@@ -197,10 +219,10 @@ export function NilaiView({
       {currentUser && (
         <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-white border border-emerald-200/80 shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center space-x-3">
-            <img 
-              src={currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"} 
-              alt={currentUser.nama} 
-              className="w-10 h-10 rounded-xl object-cover border border-emerald-300 shrink-0" 
+            <img
+              src={currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"}
+              alt={currentUser.nama}
+              className="w-10 h-10 rounded-xl object-cover border border-emerald-300 shrink-0"
             />
             <div>
               <div className="flex items-center space-x-2">
@@ -210,7 +232,7 @@ export function NilaiView({
                 </span>
               </div>
               <p className="text-[11px] text-slate-600 mt-0.5">
-                {currentUser.kelasDiampu?.length ? `Penugasan Kelas: ${currentUser.kelasDiampu.join(', ')}` : ''} 
+                {currentUser.kelasDiampu?.length ? `Penugasan Kelas: ${currentUser.kelasDiampu.join(', ')}` : ''}
                 {currentUser.mapelDiampu?.length ? ` • Mapel: ${currentUser.mapelDiampu.join(', ')}` : ''}
               </p>
             </div>
@@ -273,11 +295,10 @@ export function NilaiView({
                 <button
                   key={m.id}
                   onClick={() => setSelectedMapelId(m.id)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border cursor-pointer ${
-                    isSelected
-                      ? 'bg-pastel-300 text-pastel-950 border-pastel-400 shadow-2xs ring-2 ring-pastel-400/50'
-                      : 'bg-pastel-50/60 text-slate-600 border-slate-200 hover:bg-pastel-100/70 hover:border-pastel-300'
-                  }`}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border cursor-pointer ${isSelected
+                    ? 'bg-pastel-300 text-pastel-950 border-pastel-400 shadow-2xs ring-2 ring-pastel-400/50'
+                    : 'bg-pastel-50/60 text-slate-600 border-slate-200 hover:bg-pastel-100/70 hover:border-pastel-300'
+                    }`}
                 >
                   {m.kode} - {m.nama}
                 </button>
@@ -304,10 +325,10 @@ export function NilaiView({
 
       {/* Grade Table Card */}
       <div className="bg-white rounded-3xl border border-pastel-200 shadow-2xs overflow-hidden">
-        
+
         {/* Table Toolbar: Filter Kelas & Pencarian */}
         <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50/50">
-          
+
           <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
             {/* Class Filter */}
             <div className="flex items-center space-x-2">
@@ -320,7 +341,7 @@ export function NilaiView({
                 <option value="SEMUA">Semua Rombel ({siswaList.length} Siswa)</option>
                 <option value="1 Abdullah Ibnu Abbas">1 Abdullah Ibnu Abbas (21 Santri)</option>
                 <option value="1 Abdullah Ibnu Umar">1 Abdullah Ibnu Umar (20 Santri)</option>
-                <option value="Kelas 4">Kelas 4 (Data Simulasi)</option>
+                <option value="4 Ali Bin Abi Thalib">4 Ali Bin Abi Thalib (21 Santri)</option>
               </select>
             </div>
 
@@ -341,36 +362,32 @@ export function NilaiView({
               <button
                 type="button"
                 onClick={() => setViewLayout('NA_SHEET')}
-                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
-                  viewLayout === 'NA_SHEET' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-                }`}
+                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${viewLayout === 'NA_SHEET' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  }`}
               >
                 Sheet NA (Nilai Rapor)
               </button>
               <button
                 type="button"
                 onClick={() => setViewLayout('LEGGER_SHEET')}
-                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
-                  viewLayout === 'LEGGER_SHEET' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-                }`}
+                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${viewLayout === 'LEGGER_SHEET' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  }`}
               >
                 Sheet LEGGER (Nilai Murni)
               </button>
               <button
                 type="button"
                 onClick={() => setViewLayout('TABLE')}
-                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
-                  viewLayout === 'TABLE' ? 'bg-white text-emerald-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-                }`}
+                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${viewLayout === 'TABLE' ? 'bg-white text-emerald-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  }`}
               >
                 Input Per Mapel
               </button>
               <button
                 type="button"
                 onClick={() => setViewLayout('CARDS')}
-                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
-                  viewLayout === 'CARDS' ? 'bg-white text-emerald-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-                }`}
+                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${viewLayout === 'CARDS' ? 'bg-white text-emerald-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  }`}
               >
                 Kartu Mobile
               </button>
@@ -404,11 +421,13 @@ export function NilaiView({
               <div className="text-xs font-bold text-slate-900 space-y-0.5 max-w-xs">
                 <div className="grid grid-cols-3">
                   <span>Kelas</span>
-                  <span className="col-span-2">: I (satu) • {selectedKelas === 'SEMUA' ? '1 Abdullah Ibnu Abbas' : selectedKelas}</span>
+                  <span className="col-span-2">
+                    : {selectedKelas.includes('4 Ali') ? 'IV (empat)' : 'I (satu)'} • {selectedKelas === 'SEMUA' ? '1 Abdullah Ibnu Abbas' : selectedKelas}
+                  </span>
                 </div>
                 <div className="grid grid-cols-3">
                   <span>Semester</span>
-                  <span className="col-span-2">: I (satu)</span>
+                  <span className="col-span-2">: I (Satu)</span>
                 </div>
               </div>
 
@@ -428,9 +447,9 @@ export function NilaiView({
                     <tr className="bg-slate-50 text-slate-800 font-bold border-b-2 border-slate-900 text-[10px]">
                       <th className="py-0.5 px-1 border-r border-slate-900">1</th>
                       <th className="py-0.5 px-2 border-r border-slate-900">2</th>
-                      {NA_COLUMNS.map((col) => (
+                      {NA_COLUMNS.map((col, idx) => (
                         <th key={col.id} className="py-0.5 px-1 border-r border-slate-900">
-                          {col.colNo}
+                          {selectedKelas.includes('4 Ali') && idx >= 13 ? 15 : col.colNo}
                         </th>
                       ))}
                     </tr>
@@ -445,13 +464,12 @@ export function NilaiView({
                         {NA_COLUMNS.map((col) => {
                           const rec = nilaiList.find(n => n.siswaId === siswa.id && n.mapelId === col.id);
                           const val = rec ? Number(rec.nilaiAkhir || NilaiController.hitungNilaiAkhir(rec, settings) || 0) : 0;
-                          const isInactive = !col.activeInKelas1 && val === 0;
+                          const isInactive = !selectedKelas.includes('4 Ali') && !col.activeInKelas1 && val === 0;
                           return (
                             <td
                               key={col.id}
-                              className={`py-1 px-1.5 border-r border-slate-800 font-mono ${
-                                isInactive ? 'bg-yellow-300' : ''
-                              }`}
+                              className={`py-1 px-1.5 border-r border-slate-800 font-mono ${isInactive ? 'bg-yellow-300' : ''
+                                }`}
                             >
                               {val > 0 ? Math.round(val) : ''}
                             </td>
@@ -462,36 +480,39 @@ export function NilaiView({
                   </tbody>
                   {/* 9 Baris Statistik Bawah Persis Gambar 5 */}
                   {(() => {
-                    const colStats = NA_COLUMNS.map((col) => {
-                      const vals = filteredSiswa
-                        .map((s) => {
-                          const r = nilaiList.find((n) => n.siswaId === s.id && n.mapelId === col.id);
-                          return r ? Number(r.nilaiAkhir || NilaiController.hitungNilaiAkhir(r, settings) || 0) : 0;
-                        })
-                        .filter((v) => v > 0);
+                    const isKelas4Ali = selectedKelas.includes('4 Ali');
+                    const colStats = isKelas4Ali
+                      ? NA_RAPOR_SUMMARY_4_ALI
+                      : NA_COLUMNS.map((col) => {
+                          const vals = filteredSiswa
+                            .map((s) => {
+                              const r = nilaiList.find((n) => n.siswaId === s.id && n.mapelId === col.id);
+                              return r ? Number(r.nilaiAkhir || NilaiController.hitungNilaiAkhir(r, settings) || 0) : 0;
+                            })
+                            .filter((v) => v > 0);
 
-                      if (vals.length === 0) {
-                        return { active: false };
-                      }
-                      const sum = vals.reduce((a, b) => a + b, 0);
-                      const avg = Math.round(sum / vals.length);
-                      const max = Math.max(...vals);
-                      const min = Math.min(...vals);
-                      const belowKkm = vals.filter((v) => v < col.kkm).length;
-                      const tuntasCount = vals.length; // Sesuai sheet NA: KKM - 100 = 21 (100% daya serap)
-                      const dayaSerap = 100;
+                          if (vals.length === 0) {
+                            return { active: false };
+                          }
+                          const sum = vals.reduce((a, b) => a + b, 0);
+                          const avg = Math.round(sum / vals.length);
+                          const max = Math.max(...vals);
+                          const min = Math.min(...vals);
+                          const belowKkm = vals.filter((v) => v < col.kkm).length;
+                          const tuntasCount = vals.length;
+                          const dayaSerap = 100;
 
-                      return {
-                        active: true,
-                        sum: sum.toLocaleString('id-ID'),
-                        avg,
-                        max,
-                        min,
-                        belowKkm: belowKkm > 0 ? belowKkm : '-',
-                        tuntasCount,
-                        dayaSerap
-                      };
-                    });
+                          return {
+                            active: true,
+                            sum: sum.toLocaleString('id-ID'),
+                            avg,
+                            max,
+                            min,
+                            belowKkm: belowKkm > 0 ? belowKkm : '-',
+                            tuntasCount,
+                            dayaSerap
+                          };
+                        });
 
                     const summaryRows = [
                       { label: 'Jumlah', key: 'sum' },
@@ -534,7 +555,7 @@ export function NilaiView({
                   </div>
                   <div className="py-1">
                     <QRCodeSVG
-                      value="https://app-rapor-sd.vercel.app/verify/SD-ALIMAM-NA-1ABBAS-2026"
+                      value="https://app-rapor-sd.vercel.app/verify/SD-ALIMAM-NA-2026"
                       size={68}
                       bgColor="#FFFFFF"
                       fgColor="#0f172a"
@@ -550,7 +571,11 @@ export function NilaiView({
                     <div className="font-semibold">Wali Kelas</div>
                   </div>
                   <div className="font-bold underline">
-                    {selectedKelas.includes('Umar') ? 'Siti Habzah Diniyanti, S.Sos' : 'Putri Hidayah, S.Pd'}
+                    {selectedKelas.includes('4 Ali')
+                      ? 'Zahra Aulia, S.Pd'
+                      : selectedKelas.includes('Umar')
+                      ? 'Siti Habzah Diniyanti, S.Sos'
+                      : 'Putri Hidayah, S.Pd'}
                   </div>
                 </div>
               </div>
@@ -580,7 +605,9 @@ export function NilaiView({
               <div className="text-xs font-bold text-slate-900 space-y-0.5 max-w-xs">
                 <div className="grid grid-cols-3">
                   <span>Kelas</span>
-                  <span className="col-span-2">: I (satu) • {selectedKelas === 'SEMUA' ? '1 Abdullah Ibnu Abbas' : selectedKelas}</span>
+                  <span className="col-span-2">
+                    : {selectedKelas.includes('4 Ali') ? 'IV (empat)' : 'I (satu)'} • {selectedKelas === 'SEMUA' ? '1 Abdullah Ibnu Abbas' : selectedKelas}
+                  </span>
                 </div>
                 <div className="grid grid-cols-3">
                   <span>Semester</span>
@@ -612,13 +639,12 @@ export function NilaiView({
                         {NA_COLUMNS.map((col) => {
                           const rec = nilaiList.find(n => n.siswaId === siswa.id && n.mapelId === col.id);
                           const val = rec ? Number(rec.nilaiMurni !== undefined ? rec.nilaiMurni : (rec.nilaiAkhir || 0)) : 0;
-                          const isInactive = !col.activeInKelas1 && val === 0;
+                          const isInactive = !selectedKelas.includes('4 Ali') && !col.activeInKelas1 && val === 0;
                           return (
                             <td
                               key={col.id}
-                              className={`py-1 px-1.5 border-r border-slate-800 font-mono ${
-                                isInactive ? 'bg-yellow-300' : (val > 0 && val < col.kkm ? 'text-rose-700 font-black bg-rose-50/40' : '')
-                              }`}
+                              className={`py-1 px-1.5 border-r border-slate-800 font-mono ${isInactive ? 'bg-yellow-300' : (val > 0 && val < col.kkm ? 'text-rose-700 font-black bg-rose-50/40' : '')
+                                }`}
                             >
                               {val > 0 ? Math.round(val) : ''}
                             </td>
@@ -639,18 +665,23 @@ export function NilaiView({
                       { label: 'Daya Serap %', key: 'dayaSerap' },
                       { label: 'Nilai Minimum', key: 'min' },
                       { label: 'Nilai Maksimum', key: 'max' }
-                    ].map((sRow) => (
-                      <tr key={sRow.label}>
-                        <td colSpan={2} className="py-1 px-3 border-r border-slate-800 text-center font-bold">
-                          {sRow.label}
-                        </td>
-                        {LEGGER_MURNI_SUMMARY_ABBAS.map((st) => (
-                          <td key={st.id} className="py-1 px-1.5 border-r border-slate-800 text-right font-mono">
-                            {st[sRow.key] !== undefined && (st.active || sRow.key === 'belowKkm') ? st[sRow.key] : '-'}
+                    ].map((sRow) => {
+                      const activeSummaryList = selectedKelas.includes('4 Ali')
+                        ? LEGGER_MURNI_SUMMARY_4_ALI
+                        : LEGGER_MURNI_SUMMARY_ABBAS;
+                      return (
+                        <tr key={sRow.label}>
+                          <td colSpan={2} className="py-1 px-3 border-r border-slate-800 text-center font-bold">
+                            {sRow.label}
                           </td>
-                        ))}
-                      </tr>
-                    ))}
+                          {activeSummaryList.map((st) => (
+                            <td key={st.id} className="py-1 px-1.5 border-r border-slate-800 text-right font-mono">
+                              {st[sRow.key] !== undefined && (st.active || sRow.key === 'belowKkm') ? st[sRow.key] : '-'}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })}
                   </tfoot>
                 </table>
               </div>
@@ -680,7 +711,11 @@ export function NilaiView({
                     <div className="font-semibold">Wali Kelas</div>
                   </div>
                   <div className="font-bold underline">
-                    {selectedKelas.includes('Umar') ? 'Siti Habzah Diniyanti, S.Sos' : 'Putri Hidayah, S.Pd'}
+                    {selectedKelas.includes('4 Ali')
+                      ? 'Zahra Aulia, S.Pd'
+                      : selectedKelas.includes('Umar')
+                      ? 'Siti Habzah Diniyanti, S.Sos'
+                      : 'Putri Hidayah, S.Pd'}
                   </div>
                 </div>
               </div>
@@ -782,7 +817,7 @@ export function NilaiView({
               <tr className="bg-pastel-100/70 border-b border-pastel-200 text-slate-800">
                 <th className="py-3 px-3 font-bold w-10 text-center">No</th>
                 <th className="py-3 px-3 font-bold min-w-[180px]">Nama Siswa & NISN</th>
-                
+
                 {/* Asesmen Formatif (Lingkup Materi) */}
                 <th className="py-2 px-1.5 font-bold text-center bg-pastel-200/50 w-12" title="Formatif TP 1">F1</th>
                 <th className="py-2 px-1.5 font-bold text-center bg-pastel-200/50 w-12" title="Formatif TP 2">F2</th>
@@ -813,7 +848,7 @@ export function NilaiView({
                 return (
                   <tr key={siswa.id} className="hover:bg-pastel-50/40 transition-colors group">
                     <td className="py-2.5 px-3 text-center text-slate-400 font-medium">{idx + 1}</td>
-                    
+
                     <td className="py-2.5 px-3">
                       <div className="font-bold text-slate-800">{siswa.nama}</div>
                       <div className="text-[10px] text-slate-400">NISN: {siswa.nisn}</div>
@@ -943,7 +978,7 @@ export function NilaiView({
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-pastel-300 space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100">
               <h3 className="text-base font-bold text-slate-800">Tambah Mata Pelajaran Baru</h3>
-              <button 
+              <button
                 onClick={() => setShowAddMapelModal(false)}
                 className="text-slate-400 hover:text-slate-600 text-sm"
               >

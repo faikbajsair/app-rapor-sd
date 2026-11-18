@@ -300,10 +300,10 @@ export const INITIAL_GTK_LIST = [
     email: "putri.hidayah@alimamischool.com",
     password: "admin",
     avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80",
-    kelasDiampu: ["Kelas 1-A"],
+    kelasDiampu: ["1 Abdullah Ibnu Abbas"],
     mapelDiampu: ["PP", "BIN", "SB"],
     kholaqohDiampu: [],
-    badge: "Wali Kelas 1-A"
+    badge: "Wali Kelas 1 Abbas"
   },
   {
     id: "GTK_13",
@@ -322,10 +322,10 @@ export const INITIAL_GTK_LIST = [
     email: "siti.habzah@alimamischool.com",
     password: "admin",
     avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
-    kelasDiampu: ["Kelas 1-B"],
+    kelasDiampu: ["1 Abdullah Ibnu Umar"],
     mapelDiampu: ["PP", "BIN", "SB"],
     kholaqohDiampu: [],
-    badge: "Wali Kelas 1-B"
+    badge: "Wali Kelas 1 Umar"
   },
   {
     id: "GTK_14",
@@ -432,10 +432,10 @@ export const INITIAL_GTK_LIST = [
     email: "zahra.aulia@alimamischool.com",
     password: "admin",
     avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80",
-    kelasDiampu: ["Kelas 4-A"],
+    kelasDiampu: ["4 Ali Bin Abi Thalib"],
     mapelDiampu: ["PP", "BIN", "IPAS", "SB"],
     kholaqohDiampu: [],
-    badge: "Wali Kelas 4-A"
+    badge: "Wali Kelas 4 Ali"
   },
   {
     id: "GTK_19",

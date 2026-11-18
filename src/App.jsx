@@ -121,7 +121,10 @@ export function App() {
         role: newRole,
         roleLabel: targetConfig.label,
         nama: targetConfig.nama || currentUser?.nama,
-        avatar: targetConfig.avatar
+        avatar: targetConfig.avatar,
+        badge: targetConfig.badge,
+        kelasDiampu: targetConfig.kelasDiampu || ["Semua Kelas"],
+        mapelDiampu: targetConfig.mapelDiampu || ["Semua Mapel"]
       };
       setCurrentUser(updatedUser);
       AuthController.setSession(updatedUser);
