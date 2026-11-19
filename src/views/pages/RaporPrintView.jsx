@@ -76,7 +76,12 @@ export function RaporPrintView({
   const isParent = currentRole === 'wali_murid';
   const parentChildId = currentUser?.siswaId || siswaList[0]?.id;
 
-  const [selectedRombel, setSelectedRombel] = useState('1 Abdullah Ibnu Abbas');
+  const [selectedRombel, setSelectedRombel] = useState(() => {
+    const k = (currentUser?.kelasDiampu?.[0] || '').toLowerCase();
+    if (k.includes('4 ali') || k.includes('4-a')) return '4 Ali Bin Abi Thalib';
+    if (k.includes('umar') || k.includes('1-b')) return '1 Abdullah Ibnu Umar';
+    return '1 Abdullah Ibnu Abbas';
+  });
   const [selectedSiswaId, setSelectedSiswaId] = useState(isParent ? parentChildId : (siswaList[0]?.id || 'S_1ABBAS_01'));
   const [documentType, setDocumentType] = useState('rapor_pts'); // 'rapor_pts' | 'buku_induk' | 'rapor_akhir' | 'cover'
   const [isBulkPrint, setIsBulkPrint] = useState(false);

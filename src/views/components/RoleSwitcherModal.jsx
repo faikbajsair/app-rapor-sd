@@ -2,17 +2,61 @@ import React from 'react';
 import { X, CheckCircle, Sparkles, ShieldCheck } from 'lucide-react';
 import { ROLES, ROLE_CONFIG } from '../../config/roles';
 
-export function RoleSwitcherModal({ isOpen, onClose, currentRole, onSelectRole }) {
+export function RoleSwitcherModal({ isOpen, onClose, currentRole, currentUser, gtkList = [], onSelectRole, onSelectGTK }) {
   if (!isOpen) return null;
 
-  // Hanya tampilkan peran Civitas Akademika di modal switch
-  const staffRoles = [
-    ROLES.ADMIN, 
-    ROLES.KEPSEK, 
-    ROLES.WALI_KELAS, 
-    ROLES.GURU_MAPEL, 
-    ROLES.GURU_QURAN, 
-    ROLES.PENDAMPING
+  // Akun khusus uji coba cepat (Kepsek + Wali Kelas 1 & 4 + Admin)
+  const featuredAccounts = [
+    {
+      key: 'KEPSEK_KHOLID',
+      email: 'kholid.hasan@alimamischool.com',
+      role: ROLES.KEPSEK,
+      label: 'Kepala Sekolah',
+      nama: 'Kholid Hasan, S.Pd',
+      badge: 'Executive & Approval',
+      color: 'bg-teal-100 text-teal-800 border-teal-300',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop&q=80'
+    },
+    {
+      key: 'WK_1_ABBAS',
+      email: 'putri.hidayah@alimamischool.com',
+      role: ROLES.WALI_KELAS,
+      label: 'Wali Kelas 1 Abdullah Ibnu Abbas',
+      nama: 'Putri Hidayah, S.Pd',
+      badge: 'Wali Kelas 1 Abbas',
+      color: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80'
+    },
+    {
+      key: 'WK_1_UMAR',
+      email: 'siti.habzah@alimamischool.com',
+      role: ROLES.WALI_KELAS,
+      label: 'Wali Kelas 1 Abdullah Ibnu Umar',
+      nama: 'Siti Habzah Diniyanti, S.Sos',
+      badge: 'Wali Kelas 1 Umar',
+      color: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80'
+    },
+    {
+      key: 'WK_4_ALI',
+      email: 'zahra.aulia@alimamischool.com',
+      role: ROLES.WALI_KELAS,
+      label: 'Wali Kelas 4 Ali Bin Abi Thalib',
+      nama: 'Zahra Aulia, S.Pd',
+      badge: 'Wali Kelas 4 Ali',
+      color: 'bg-amber-100 text-amber-900 border-amber-300',
+      avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80'
+    },
+    {
+      key: 'ADMIN_IT',
+      email: 'admin@alimamischool.com',
+      role: ROLES.ADMIN,
+      label: 'Administrator Sekolah',
+      nama: 'Faik Bajsair (Admin IT)',
+      badge: 'Super Admin & CMS',
+      color: 'bg-slate-100 text-slate-800 border-slate-300',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'
+    }
   ];
 
   return (
@@ -41,40 +85,44 @@ export function RoleSwitcherModal({ isOpen, onClose, currentRole, onSelectRole }
         </div>
 
         {/* Roles List */}
-        <div className="mt-4 space-y-2.5">
-          {staffRoles.map((roleKey) => {
-            const cfg = ROLE_CONFIG[roleKey];
-            const isSelected = currentRole === roleKey;
+        <div className="mt-4 space-y-2 max-h-[60vh] overflow-y-auto pr-1">
+          {featuredAccounts.map((acc) => {
+            const isSelected = (currentUser?.email || '').toLowerCase() === acc.email.toLowerCase();
 
             return (
               <button
-                key={roleKey}
+                key={acc.key}
                 onClick={() => {
-                  onSelectRole(roleKey);
+                  const foundGtk = gtkList.find(g => (g.email || '').toLowerCase() === acc.email.toLowerCase());
+                  if (foundGtk && onSelectGTK) {
+                    onSelectGTK(foundGtk);
+                  } else {
+                    onSelectRole(acc.role);
+                  }
                   onClose();
                 }}
-                className={`w-full flex items-center space-x-3.5 p-3 rounded-2xl border text-left transition-all group ${
+                className={`w-full flex items-center space-x-3.5 p-3 rounded-2xl border text-left transition-all group cursor-pointer ${
                   isSelected 
                     ? 'bg-pastel-100/90 border-pastel-400 shadow-2xs' 
                     : 'bg-white border-slate-200 hover:border-pastel-300 hover:bg-pastel-50/50'
                 }`}
               >
                 <img 
-                  src={cfg.avatar} 
-                  alt={cfg.label} 
+                  src={acc.avatar} 
+                  alt={acc.label} 
                   className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-2xs shrink-0" 
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <span className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-pastel-950 truncate">
-                      {cfg.label}
+                      {acc.nama}
                     </span>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border whitespace-nowrap shrink-0 ml-2 ${cfg.color}`}>
-                      {cfg.badge}
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border whitespace-nowrap shrink-0 ml-2 ${acc.color}`}>
+                      {acc.badge}
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-500 mt-0.5 truncate">
-                    {cfg.nama}
+                    {acc.label} • <span className="font-mono text-[10px] text-slate-400">{acc.email}</span>
                   </p>
                 </div>
                 {isSelected && (

@@ -69,10 +69,18 @@ export function LoginView({ settings, siswaList, gtkList = [], onLoginSuccess })
     if (res.success) onLoginSuccess(res.user);
   };
 
+  const handleQuickLoginGTK = (email) => {
+    setCivitasUser(email);
+    setCivitasPass('admin');
+    const res = AuthController.loginCivitas(email, 'admin', gtkList);
+    if (res.success) onLoginSuccess(res.user);
+  };
+
   const handleQuickLoginWali = (siswa) => {
-    setNisnInput(siswa.nisn);
+    const loginId = (siswa.nisn && siswa.nisn !== '-') ? siswa.nisn : (siswa.nis || siswa.id);
+    setNisnInput(loginId);
     setBirthInput(siswa.tanggalLahir);
-    const res = AuthController.loginWaliMurid(siswa.nisn, siswa.tanggalLahir, siswaList);
+    const res = AuthController.loginWaliMurid(loginId, siswa.tanggalLahir, siswaList);
     if (res.success) onLoginSuccess(res.user);
   };
 
@@ -260,44 +268,97 @@ export function LoginView({ settings, siswaList, gtkList = [], onLoginSuccess })
                 </div>
               )}
 
-              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center">
-                <span>Peran Utama Sistem:</span>
+              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center justify-between">
+                <span>Akun Uji Coba Utama (Kepala Sekolah & Wali Kelas 1 & 4):</span>
+                <span className="text-[10px] text-emerald-700 font-extrabold normal-case">Password: admin</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {[
-                  ROLES.ADMIN, 
-                  ROLES.KEPSEK, 
-                  ROLES.WALI_KELAS, 
-                  ROLES.GURU_MAPEL,
-                  ROLES.GURU_QURAN,
-                  ROLES.PENDAMPING
-                ].map((rKey) => {
-                  const cfg = ROLE_CONFIG[rKey];
-                  if (!cfg) return null;
-                  return (
-                    <button
-                      key={rKey}
-                      type="button"
-                      onClick={() => handleQuickLoginCivitas(rKey)}
-                      className="p-2.5 rounded-xl border border-slate-200 hover:border-pastel-400 hover:bg-pastel-50/60 text-left transition-all flex items-center space-x-2.5 group cursor-pointer"
-                    >
-                      <img 
-                        src={cfg.avatar} 
-                        alt={cfg.label} 
-                        className="w-8 h-8 rounded-full object-cover border border-white shadow-xs shrink-0"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="text-xs font-bold text-slate-800 truncate group-hover:text-pastel-900">
-                          {cfg.label}
-                        </div>
-                        <div className="text-[10px] text-slate-400 truncate">
-                          {cfg.nama}
-                        </div>
+                  {
+                    email: 'kholid.hasan@alimamischool.com',
+                    label: 'Kepala Sekolah',
+                    nama: 'Kholid Hasan, S.Pd',
+                    sub: 'Monitoring & Approval Seluruh Kelas',
+                    badge: 'Kepsek',
+                    badgeColor: 'bg-teal-100 text-teal-800 border-teal-300',
+                    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop&q=80'
+                  },
+                  {
+                    email: 'putri.hidayah@alimamischool.com',
+                    label: 'Wali Kelas 1 Abbas',
+                    nama: 'Putri Hidayah, S.Pd',
+                    sub: '1 Abdullah Ibnu Abbas (21 Santri)',
+                    badge: 'Kelas 1',
+                    badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+                    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80'
+                  },
+                  {
+                    email: 'siti.habzah@alimamischool.com',
+                    label: 'Wali Kelas 1 Umar',
+                    nama: 'Siti Habzah Diniyanti, S.Sos',
+                    sub: '1 Abdullah Ibnu Umar (20 Santri)',
+                    badge: 'Kelas 1',
+                    badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+                    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80'
+                  },
+                  {
+                    email: 'zahra.aulia@alimamischool.com',
+                    label: 'Wali Kelas 4 Ali',
+                    nama: 'Zahra Aulia, S.Pd',
+                    sub: '4 Ali Bin Abi Thalib (21 Santri)',
+                    badge: 'Kelas 4',
+                    badgeColor: 'bg-amber-100 text-amber-900 border-amber-300',
+                    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80'
+                  },
+                  {
+                    email: 'afrida.rosita@alimamischool.com',
+                    label: 'Wali Kelas 4-B',
+                    nama: 'Afrida Rosita Dewi, S.Pd., Gr',
+                    sub: 'Wali Kelas IV & Koord Literasi',
+                    badge: 'Kelas 4',
+                    badgeColor: 'bg-amber-100 text-amber-900 border-amber-300',
+                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'
+                  },
+                  {
+                    email: 'admin@alimamischool.com',
+                    label: 'Administrator IT',
+                    nama: 'Faik Bajsair (Super Admin)',
+                    sub: 'Akses Penuh CMS & Database',
+                    badge: 'Admin',
+                    badgeColor: 'bg-slate-100 text-slate-800 border-slate-300',
+                    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80'
+                  }
+                ].map((acc) => (
+                  <button
+                    key={acc.email}
+                    type="button"
+                    onClick={() => handleQuickLoginGTK(acc.email)}
+                    className="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/50 text-left transition-all flex items-center space-x-2.5 group cursor-pointer"
+                  >
+                    <img 
+                      src={acc.avatar} 
+                      alt={acc.nama} 
+                      className="w-9 h-9 rounded-xl object-cover border border-white shadow-xs shrink-0"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="text-xs font-extrabold text-slate-800 truncate group-hover:text-emerald-950">
+                          {acc.nama}
+                        </span>
+                        <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold border shrink-0 ${acc.badgeColor}`}>
+                          {acc.badge}
+                        </span>
                       </div>
-                    </button>
-                  );
-                })}
+                      <div className="text-[10px] font-semibold text-emerald-700 truncate">
+                        {acc.label} • {acc.sub}
+                      </div>
+                      <div className="text-[9.5px] text-slate-400 font-mono truncate">
+                        {acc.email}
+                      </div>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
           </div>

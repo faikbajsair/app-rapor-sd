@@ -442,6 +442,7 @@ export function App() {
               sikapList={sikapList}
               onSaveSikap={handleSaveSikap}
               settings={settings}
+              currentUser={currentUser}
             />
           )}
 
@@ -451,6 +452,7 @@ export function App() {
               presensiList={presensiList}
               onSavePresensi={handleSavePresensi}
               settings={settings}
+              currentUser={currentUser}
             />
           )}
 
@@ -512,7 +514,10 @@ export function App() {
           isOpen={isRoleModalOpen}
           onClose={() => setIsRoleModalOpen(false)}
           currentRole={currentRole}
+          currentUser={currentUser}
+          gtkList={gtkList}
           onSelectRole={handleSelectRole}
+          onSelectGTK={handleSwitchToGTK}
         />
       )}
 

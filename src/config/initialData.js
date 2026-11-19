@@ -11,7 +11,7 @@ export const DEFAULT_SETTINGS = {
   telepon: "(021) 82491234",
   email: "info@alimamischool.com",
   website: "https://alimamischool.com",
-  kepalaSekolah: "M.umu Hani, S.Pd",
+  kepalaSekolah: "Kholid Hasan, S.Pd",
   nipKepalaSekolah: "-",
   waliKelas: "Putri Hidayah, S.Pd",
   nipWaliKelas: "-",

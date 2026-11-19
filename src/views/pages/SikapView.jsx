@@ -59,11 +59,17 @@ export function SikapView({
   siswaList, 
   sikapList, 
   onSaveSikap, 
-  settings 
+  settings,
+  currentUser
 }) {
   // Tabs: 'SPIRITUAL' (Image 2) | 'SOSIAL' (Image 3) | 'PANCASILA'
   const [activeSubTab, setActiveSubTab] = useState('SPIRITUAL');
-  const [selectedRombel, setSelectedRombel] = useState('1 Abdullah Ibnu Abbas');
+  const [selectedRombel, setSelectedRombel] = useState(() => {
+    const k = (currentUser?.kelasDiampu?.[0] || '').toLowerCase();
+    if (k.includes('4 ali') || k.includes('4-a')) return '4 Ali Bin Abi Thalib';
+    if (k.includes('umar') || k.includes('1-b')) return '1 Abdullah Ibnu Umar';
+    return '1 Abdullah Ibnu Abbas';
+  });
   const [selectedSiswaId, setSelectedSiswaId] = useState(siswaList[0]?.id || 'S_1ABBAS_01');
   const [toastMessage, setToastMessage] = useState(null);
 

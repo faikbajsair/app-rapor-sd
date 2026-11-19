@@ -45,9 +45,9 @@ export const INITIAL_GTK_LIST = [
     tanggalLahir: "1996-02-05",
     usia: "30 Tahun 8 Bulan",
     pendidikan: "S1",
-    statusJabatan: "Guru Tetap",
-    jabatan: "Wakil Kepala Sekolah",
-    jabatanLainnya: "",
+    statusJabatan: "Kepala Sekolah",
+    jabatan: "Kepala Sekolah",
+    jabatanLainnya: "Penanggung Jawab Akademik & Rapor",
     role: ROLES.KEPSEK,
     email: "kholid.hasan@alimamischool.com",
     password: "admin",
@@ -55,7 +55,7 @@ export const INITIAL_GTK_LIST = [
     kelasDiampu: ["Semua Kelas"],
     mapelDiampu: ["Semua Mapel"],
     kholaqohDiampu: ["Semua Kholaqoh"],
-    badge: "Wakil Kepala Sekolah"
+    badge: "Kepala Sekolah"
   },
 
   // --- GURU MATA PELAJARAN ---

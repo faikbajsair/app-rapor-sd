@@ -484,35 +484,35 @@ export function NilaiView({
                     const colStats = isKelas4Ali
                       ? NA_RAPOR_SUMMARY_4_ALI
                       : NA_COLUMNS.map((col) => {
-                          const vals = filteredSiswa
-                            .map((s) => {
-                              const r = nilaiList.find((n) => n.siswaId === s.id && n.mapelId === col.id);
-                              return r ? Number(r.nilaiAkhir || NilaiController.hitungNilaiAkhir(r, settings) || 0) : 0;
-                            })
-                            .filter((v) => v > 0);
+                        const vals = filteredSiswa
+                          .map((s) => {
+                            const r = nilaiList.find((n) => n.siswaId === s.id && n.mapelId === col.id);
+                            return r ? Number(r.nilaiAkhir || NilaiController.hitungNilaiAkhir(r, settings) || 0) : 0;
+                          })
+                          .filter((v) => v > 0);
 
-                          if (vals.length === 0) {
-                            return { active: false };
-                          }
-                          const sum = vals.reduce((a, b) => a + b, 0);
-                          const avg = Math.round(sum / vals.length);
-                          const max = Math.max(...vals);
-                          const min = Math.min(...vals);
-                          const belowKkm = vals.filter((v) => v < col.kkm).length;
-                          const tuntasCount = vals.length;
-                          const dayaSerap = 100;
+                        if (vals.length === 0) {
+                          return { active: false };
+                        }
+                        const sum = vals.reduce((a, b) => a + b, 0);
+                        const avg = Math.round(sum / vals.length);
+                        const max = Math.max(...vals);
+                        const min = Math.min(...vals);
+                        const belowKkm = vals.filter((v) => v < col.kkm).length;
+                        const tuntasCount = vals.length;
+                        const dayaSerap = 100;
 
-                          return {
-                            active: true,
-                            sum: sum.toLocaleString('id-ID'),
-                            avg,
-                            max,
-                            min,
-                            belowKkm: belowKkm > 0 ? belowKkm : '-',
-                            tuntasCount,
-                            dayaSerap
-                          };
-                        });
+                        return {
+                          active: true,
+                          sum: sum.toLocaleString('id-ID'),
+                          avg,
+                          max,
+                          min,
+                          belowKkm: belowKkm > 0 ? belowKkm : '-',
+                          tuntasCount,
+                          dayaSerap
+                        };
+                      });
 
                     const summaryRows = [
                       { label: 'Jumlah', key: 'sum' },
@@ -574,8 +574,8 @@ export function NilaiView({
                     {selectedKelas.includes('4 Ali')
                       ? 'Zahra Aulia, S.Pd'
                       : selectedKelas.includes('Umar')
-                      ? 'Siti Habzah Diniyanti, S.Sos'
-                      : 'Putri Hidayah, S.Pd'}
+                        ? 'Siti Habzah Diniyanti, S.Sos'
+                        : 'Putri Hidayah, S.Pd'}
                   </div>
                 </div>
               </div>
@@ -714,8 +714,8 @@ export function NilaiView({
                     {selectedKelas.includes('4 Ali')
                       ? 'Zahra Aulia, S.Pd'
                       : selectedKelas.includes('Umar')
-                      ? 'Siti Habzah Diniyanti, S.Sos'
-                      : 'Putri Hidayah, S.Pd'}
+                        ? 'Siti Habzah Diniyanti, S.Sos'
+                        : 'Putri Hidayah, S.Pd'}
                   </div>
                 </div>
               </div>
