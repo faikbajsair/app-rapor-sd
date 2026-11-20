@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { 
-  Printer, 
+import {
+  Printer,
   School
 } from 'lucide-react';
 import { NilaiController } from '../../controllers/NilaiController';
@@ -62,13 +62,13 @@ const BUKU_INDUK_MAPEL_ROWS = [
   { no: 15, id: 'EXTRA_EMPTY', nama: '', active: false }
 ];
 
-export function RaporPrintView({ 
-  siswaList, 
-  mapelList, 
-  nilaiList, 
-  sikapList, 
-  presensiList, 
-  settings, 
+export function RaporPrintView({
+  siswaList,
+  mapelList,
+  nilaiList,
+  sikapList,
+  presensiList,
+  settings,
   approval,
   currentRole,
   currentUser
@@ -88,13 +88,13 @@ export function RaporPrintView({
 
   const filteredSiswaByRombel = useMemo(() => {
     if (selectedRombel === 'SEMUA') return siswaList;
-    return siswaList.filter(s => 
+    return siswaList.filter(s =>
       (s.kelas && s.kelas.toLowerCase().includes(selectedRombel.toLowerCase())) ||
       (s.rombel && s.rombel.toLowerCase().includes(selectedRombel.toLowerCase()))
     );
   }, [siswaList, selectedRombel]);
 
-  const activeSiswa = isParent 
+  const activeSiswa = isParent
     ? (siswaList.find(s => s.id === parentChildId) || siswaList[0])
     : (filteredSiswaByRombel.find(s => s.id === selectedSiswaId) || filteredSiswaByRombel[0] || siswaList[0]);
 
@@ -106,7 +106,7 @@ export function RaporPrintView({
 
   return (
     <div className="space-y-6">
-      
+
       {/* Control Panel (Hidden during Print) */}
       <div className="no-print p-5 sm:p-6 rounded-3xl bg-white border border-slate-200 shadow-2xs space-y-4">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -148,11 +148,10 @@ export function RaporPrintView({
             {!isParent && (
               <button
                 onClick={() => setIsBulkPrint(!isBulkPrint)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-extrabold border transition-all cursor-pointer ${
-                  isBulkPrint 
-                    ? 'bg-amber-400 text-slate-950 border-amber-500 shadow-2xs' 
-                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                }`}
+                className={`px-3.5 py-2 rounded-xl text-xs font-extrabold border transition-all cursor-pointer ${isBulkPrint
+                  ? 'bg-amber-400 text-slate-950 border-amber-500 shadow-2xs'
+                  : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
               >
                 {isBulkPrint ? `✓ Mode Cetak Massal (${filteredSiswaByRombel.length} Siswa)` : 'Cetak Siswa Terpilih'}
               </button>
@@ -170,40 +169,36 @@ export function RaporPrintView({
 
         {/* Format Selector & Student Picker */}
         <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
-          
+
           {/* Format Document Selector */}
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-bold text-slate-500">Pilih Lembar Cetak:</span>
             <div className="inline-flex flex-wrap rounded-xl p-1 bg-slate-100 border border-slate-200 gap-1">
               <button
                 onClick={() => setDocumentType('rapor_pts')}
-                className={`px-3 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${
-                  documentType === 'rapor_pts' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-                }`}
+                className={`px-3 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${documentType === 'rapor_pts' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  }`}
               >
                 Sheet RAPOR (PTS Al-Imam)
               </button>
               <button
                 onClick={() => setDocumentType('buku_induk')}
-                className={`px-3 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${
-                  documentType === 'buku_induk' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-                }`}
+                className={`px-3 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${documentType === 'buku_induk' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  }`}
               >
                 Sheet INDUK (Buku Induk)
               </button>
               <button
                 onClick={() => setDocumentType('rapor_akhir')}
-                className={`px-3 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${
-                  documentType === 'rapor_akhir' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-                }`}
+                className={`px-3 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${documentType === 'rapor_akhir' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  }`}
               >
                 Rapor Akhir Semester (PAS)
               </button>
               <button
                 onClick={() => setDocumentType('cover')}
-                className={`px-3 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${
-                  documentType === 'cover' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-                }`}
+                className={`px-3 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${documentType === 'cover' ? 'bg-emerald-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                  }`}
               >
                 Sampul / Cover Rapor
               </button>
@@ -268,23 +263,22 @@ export function RaporPrintView({
           const waliKelasNama = isKelas4Ali
             ? 'Zahra Aulia, S.Pd'
             : isKelasUmar
-            ? 'Siti Habzah Diniyanti, S.Sos'
-            : 'Putri Hidayah, S.Pd';
+              ? 'Siti Habzah Diniyanti, S.Sos'
+              : 'Putri Hidayah, S.Pd';
 
           return (
-            <div 
-              key={siswa.id} 
-              className={`bg-white p-6 sm:p-10 rounded-3xl border border-slate-300 shadow-xl font-serif text-slate-950 ${
-                studentIdx > 0 ? 'page-break' : ''
-              }`}
+            <div
+              key={siswa.id}
+              className={`bg-white p-6 sm:p-10 rounded-3xl border border-slate-300 shadow-xl font-serif text-slate-950 ${studentIdx > 0 ? 'page-break' : ''
+                }`}
             >
-              
+
               {/* =========================================================================
                * 1. SHEET RAPOR (PERSIS GAMBAR 2: YAYASAN SEKOLAH ANAK PINTAR "SAPIN" DARUSSALAM)
                * ========================================================================= */}
               {documentType === 'rapor_pts' && (
                 <div className="space-y-4 text-[11.5px] leading-snug">
-                  
+
                   {/* Top Title & Yellow Student Number Badge */}
                   <div className="relative border-b-2 border-slate-900 pb-2 text-center">
                     <div className="font-bold text-xs sm:text-sm uppercase">
@@ -518,7 +512,7 @@ export function RaporPrintView({
                       <div>Mengetahui,</div>
                       <div>Kepala Sekolah</div>
                       <div className="py-1">
-                        <QRCodeSVG 
+                        <QRCodeSVG
                           value={`https://app-rapor-sd.vercel.app/verify?siswa=${siswa.id}`}
                           size={60}
                           level="M"
@@ -687,9 +681,9 @@ export function RaporPrintView({
               {documentType === 'cover' && (
                 <div className="min-h-[920px] flex flex-col justify-between items-center text-center p-6 border-8 border-double border-emerald-800/80 rounded-2xl bg-gradient-to-b from-white via-emerald-50/20 to-white font-sans">
                   <div className="space-y-4 pt-8">
-                    <img 
-                      src={settings.logoUrl} 
-                      alt="Logo Sekolah" 
+                    <img
+                      src={settings.logoUrl}
+                      alt="Logo Sekolah"
                       className="w-28 h-28 mx-auto object-contain p-2"
                     />
                     <div className="space-y-1">

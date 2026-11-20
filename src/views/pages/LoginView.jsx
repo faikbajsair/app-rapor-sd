@@ -18,12 +18,12 @@ export function LoginView({ settings, siswaList, gtkList = [], onLoginSuccess })
   const [activeTab, setActiveTab] = useState('civitas'); // 'civitas' | 'wali_murid'
   
   // Form states for Civitas
-  const [civitasUser, setCivitasUser] = useState('admin@alimamischool.com');
-  const [civitasPass, setCivitasPass] = useState('admin');
+  const [civitasUser, setCivitasUser] = useState('');
+  const [civitasPass, setCivitasPass] = useState('');
   
   // Form states for Wali Murid
-  const [nisnInput, setNisnInput] = useState('0134567891');
-  const [birthInput, setBirthInput] = useState('2015-04-12');
+  const [nisnInput, setNisnInput] = useState('');
+  const [birthInput, setBirthInput] = useState('');
   
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -211,156 +211,12 @@ export function LoginView({ settings, siswaList, gtkList = [], onLoginSuccess })
 
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl bg-pastel-400 hover:bg-pastel-500 text-pastel-950 font-extrabold text-xs transition-all shadow-soft flex items-center justify-center space-x-2"
+                className="w-full py-3 rounded-xl bg-pastel-400 hover:bg-pastel-500 text-pastel-950 font-extrabold text-xs transition-all shadow-soft flex items-center justify-center space-x-2 cursor-pointer"
               >
                 <span>Masuk ke Dashboard Akademik</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
-
-            {/* Quick Demo Civitas Login Buttons & GTK Selector */}
-            <div className="pt-4 border-t border-slate-100 space-y-3">
-              
-              {/* Dropdown 34 Akun GTK Resmi */}
-              {gtkList && gtkList.length > 0 && (
-                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
-                  <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
-                    <span className="flex items-center">
-                      <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-600" />
-                      Pilih Cepat Akun Guru (34 GTK):
-                    </span>
-                    <span className="text-[10px] text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-full font-extrabold">
-                      1-Klik Masuk
-                    </span>
-                  </label>
-                  <select
-                    onChange={handleSelectGTKQuick}
-                    defaultValue=""
-                    className="w-full px-3 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
-                  >
-                    <option value="" disabled>-- Pilih Guru / Tenaga Kependidikan --</option>
-                    <optgroup label="Pimpinan Sekolah">
-                      {gtkList.filter(g => g.role === ROLES.KEPSEK).map(g => (
-                        <option key={g.id} value={g.email}>{g.nama} ({g.jabatan})</option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Guru Wali Kelas (Kelas I - VI)">
-                      {gtkList.filter(g => g.role === ROLES.WALI_KELAS).map(g => (
-                        <option key={g.id} value={g.email}>{g.nama} ({g.badge})</option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Guru Mata Pelajaran">
-                      {gtkList.filter(g => g.role === ROLES.GURU_MAPEL).map(g => (
-                        <option key={g.id} value={g.email}>{g.nama} ({g.jabatan})</option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Guru Al-Qur'an & Kholaqoh (10 Guru + Kabid)">
-                      {gtkList.filter(g => g.role === ROLES.GURU_QURAN).map(g => (
-                        <option key={g.id} value={g.email}>{g.nama} ({g.badge || g.jabatan})</option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Guru Pendamping">
-                      {gtkList.filter(g => g.role === ROLES.PENDAMPING).map(g => (
-                        <option key={g.id} value={g.email}>{g.nama} (Pendamping)</option>
-                      ))}
-                    </optgroup>
-                  </select>
-                </div>
-              )}
-
-              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center justify-between">
-                <span>Akun Uji Coba Utama (Kepala Sekolah & Wali Kelas 1 & 4):</span>
-                <span className="text-[10px] text-emerald-700 font-extrabold normal-case">Password: admin</span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {[
-                  {
-                    email: 'kholid.hasan@alimamischool.com',
-                    label: 'Kepala Sekolah',
-                    nama: 'Kholid Hasan, S.Pd',
-                    sub: 'Monitoring & Approval Seluruh Kelas',
-                    badge: 'Kepsek',
-                    badgeColor: 'bg-teal-100 text-teal-800 border-teal-300',
-                    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop&q=80'
-                  },
-                  {
-                    email: 'putri.hidayah@alimamischool.com',
-                    label: 'Wali Kelas 1 Abbas',
-                    nama: 'Putri Hidayah, S.Pd',
-                    sub: '1 Abdullah Ibnu Abbas (21 Santri)',
-                    badge: 'Kelas 1',
-                    badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-                    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80'
-                  },
-                  {
-                    email: 'siti.habzah@alimamischool.com',
-                    label: 'Wali Kelas 1 Umar',
-                    nama: 'Siti Habzah Diniyanti, S.Sos',
-                    sub: '1 Abdullah Ibnu Umar (20 Santri)',
-                    badge: 'Kelas 1',
-                    badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-                    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80'
-                  },
-                  {
-                    email: 'zahra.aulia@alimamischool.com',
-                    label: 'Wali Kelas 4 Ali',
-                    nama: 'Zahra Aulia, S.Pd',
-                    sub: '4 Ali Bin Abi Thalib (21 Santri)',
-                    badge: 'Kelas 4',
-                    badgeColor: 'bg-amber-100 text-amber-900 border-amber-300',
-                    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80'
-                  },
-                  {
-                    email: 'afrida.rosita@alimamischool.com',
-                    label: 'Wali Kelas 4-B',
-                    nama: 'Afrida Rosita Dewi, S.Pd., Gr',
-                    sub: 'Wali Kelas IV & Koord Literasi',
-                    badge: 'Kelas 4',
-                    badgeColor: 'bg-amber-100 text-amber-900 border-amber-300',
-                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'
-                  },
-                  {
-                    email: 'admin@alimamischool.com',
-                    label: 'Administrator IT',
-                    nama: 'Faik Bajsair (Super Admin)',
-                    sub: 'Akses Penuh CMS & Database',
-                    badge: 'Admin',
-                    badgeColor: 'bg-slate-100 text-slate-800 border-slate-300',
-                    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80'
-                  }
-                ].map((acc) => (
-                  <button
-                    key={acc.email}
-                    type="button"
-                    onClick={() => handleQuickLoginGTK(acc.email)}
-                    className="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/50 text-left transition-all flex items-center space-x-2.5 group cursor-pointer"
-                  >
-                    <img 
-                      src={acc.avatar} 
-                      alt={acc.nama} 
-                      className="w-9 h-9 rounded-xl object-cover border border-white shadow-xs shrink-0"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="text-xs font-extrabold text-slate-800 truncate group-hover:text-emerald-950">
-                          {acc.nama}
-                        </span>
-                        <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold border shrink-0 ${acc.badgeColor}`}>
-                          {acc.badge}
-                        </span>
-                      </div>
-                      <div className="text-[10px] font-semibold text-emerald-700 truncate">
-                        {acc.label} • {acc.sub}
-                      </div>
-                      <div className="text-[9.5px] text-slate-400 font-mono truncate">
-                        {acc.email}
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
         )}
 
@@ -416,48 +272,12 @@ export function LoginView({ settings, siswaList, gtkList = [], onLoginSuccess })
 
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs transition-all shadow-soft flex items-center justify-center space-x-2"
+                className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs transition-all shadow-soft flex items-center justify-center space-x-2 cursor-pointer"
               >
                 <span>Buka Rapor & Nilai Ananda</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
-
-            {/* Quick Demo Wali Murid Accounts */}
-            <div className="pt-4 border-t border-slate-100 space-y-2.5">
-              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
-                <span className="flex items-center">
-                  <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-600" />
-                  Pilih Siswa untuk Demo Login Orang Tua:
-                </span>
-                <span className="text-[10px] text-emerald-700 font-medium">1-Klik Akses Privat</span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1">
-                {siswaList.map((siswa) => (
-                  <button
-                    key={siswa.id}
-                    type="button"
-                    onClick={() => handleQuickLoginWali(siswa)}
-                    className="p-2 rounded-xl border border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/50 text-left transition-all flex items-center space-x-2.5 group"
-                  >
-                    <img 
-                      src={siswa.foto} 
-                      alt={siswa.nama} 
-                      className="w-8 h-8 rounded-full object-cover border border-emerald-200 shadow-2xs shrink-0"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <div className="text-xs font-bold text-slate-800 truncate group-hover:text-emerald-900">
-                        {siswa.nama}
-                      </div>
-                      <div className="text-[10px] text-slate-500 font-mono">
-                        NISN: {siswa.nisn}
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
 
           </div>
         )}
